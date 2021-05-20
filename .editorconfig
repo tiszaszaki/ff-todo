@@ -1,0 +1,12 @@
+root = true
+
+[*.{java, html, json, properties, sql, xml, md, yml}]
+indent_style = tab
+indent_size = 4
+block_comment_start = /*
+block_comment = *
+block_comment_end = */
+end_of_line = crlf
+trim_trailing_whitespace = true
+insert_final_newline = true
+charset = utf-8
