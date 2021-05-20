@@ -1,4 +1,4 @@
-package hu.feketefamily.spawnstrike;
+package hu.feketefamily.fftodo;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
