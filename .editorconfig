@@ -1,6 +1,6 @@
 root = true
 
-[*.{java, html, json, properties, sql, xml, md, yml}]
+[*.{java, js, html, json, properties, sql, xml, md, yml}]
 indent_style = tab
 indent_size = 4
 block_comment_start = /*
