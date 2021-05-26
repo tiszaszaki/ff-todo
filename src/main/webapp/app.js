@@ -1,4 +1,4 @@
-var baseurl = window.location.host;
+var baseurl = window.location.origin;
 
 $.ajax({
 	url: baseurl + "/test",
