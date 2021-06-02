@@ -23,5 +23,6 @@ public class Todo {
 	private Long id;
 	@Column(nullable = false, unique = true)
 	private String name;
+	@Column(length = Integer.MAX_VALUE)
 	private String description;
 }

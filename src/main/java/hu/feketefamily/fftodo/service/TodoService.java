@@ -20,11 +20,13 @@ public class TodoService {
 	}
 
 	public Todo addTodo(Todo todo) {
+		log.info("Saving Todo: {{}}", todo.toString());
 		return todoRepository.save(todo);
 	}
 
 	public void removeTodo(Long id) {
 		if (todoRepository.existsById(id)) {
+			log.info("Deleting Todo with id: {{}}", id);
 			todoRepository.deleteById(id);
 		} else {
 			log.warn("Deleting non-existing Todo with id {{}}", id);
