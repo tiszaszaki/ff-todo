@@ -4,6 +4,9 @@
 	<script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/jquery.growl@1.3.5/javascripts/jquery.growl.min.js"></script>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jquery.growl@1.3.5/stylesheets/jquery.growl.css">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
 	<script src="app.js"></script>
 	<meta charset="UTF-8">
 	<title>FF Todo</title>
@@ -11,7 +14,37 @@
 <body>
 <div class="container">
 	<h1 class="display-3 my-5">Test Todo application</h1>
-	<div id="todo-container"></div>
+	<div style="width: 18rem;">
+		<div id="todo-container"></div>
+		<div class="d-grid gap-2">
+			<button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addTodoModal"><i class="bi bi-plus-lg"></i></button>
+		</div>
+	</div>
+	<div class="modal fade" id="addTodoModal" tabindex="-1">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title">Add Todo</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+				</div>
+				<div class="modal-body">
+					<form>
+						<div class="mb-3">
+							<label for="todo-name" class="col-form-label">Name:</label>
+							<input type="text" class="form-control" id="todo-name">
+						</div>
+						<div class="mb-3">
+							<label for="todo-description" class="col-form-label">Description:</label>
+							<textarea class="form-control" id="todo-description"></textarea>
+						</div>
+					</form>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-primary" onclick="addTodo()" data-bs-dismiss="modal">Add</button>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>
 </body>
 </html>
