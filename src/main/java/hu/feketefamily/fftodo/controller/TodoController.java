@@ -17,7 +17,6 @@ import hu.feketefamily.fftodo.model.entity.Todo;
 import hu.feketefamily.fftodo.service.TodoService;
 import lombok.extern.log4j.Log4j2;
 
-@Log4j2
 @RestController
 @RequestMapping("/todo")
 public class TodoController {

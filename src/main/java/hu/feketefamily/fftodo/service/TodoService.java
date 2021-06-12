@@ -8,11 +8,13 @@ import java.util.List;
 import hu.feketefamily.fftodo.model.entity.Todo;
 import hu.feketefamily.fftodo.model.repository.TodoRepository;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.validation.annotation.Validated;
 
 import javax.validation.Valid;
 
 @Log4j2
 @Service
+@Validated
 public class TodoService {
 
 	@Autowired
