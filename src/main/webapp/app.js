@@ -38,6 +38,13 @@ var fetchTodos = function () {
 
 fetchTodos();
 
+function validateFormGroup(formGroupId) {
+	var fromGroup = $('#' + formGroupId);
+	if(!fromGroup.hasClass("was-validated")){
+		fromGroup.addClass("was-validated");
+	}
+}
+
 function addTodo() {
 	$.ajax({
 		url: baseurl + "/todo",

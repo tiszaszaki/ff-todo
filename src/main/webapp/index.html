@@ -28,14 +28,18 @@
 					<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
 				</div>
 				<div class="modal-body">
-					<form>
-						<div class="mb-3">
+					<form novalidate>
+						<div id="add-todo-name-form-group" class="mb-3">
 							<label for="add-todo-name" class="col-form-label">Name:</label>
-							<input type="text" class="form-control" id="add-todo-name">
+							<input type="text" class="form-control" id="add-todo-name"
+								   oninput="validateFormGroup('add-todo-name-form-group')" required>
+							<div id="add-todo-name-validator" class="invalid-feedback">
+								Please provide a name.
+							</div>
 						</div>
 						<div class="mb-3">
 							<label for="add-todo-description" class="col-form-label">Description:</label>
-							<textarea class="form-control" id="add-todo-description"></textarea>
+							<textarea class="form-control" id="add-todo-description" maxlength="1024"></textarea>
 						</div>
 					</form>
 				</div>
@@ -53,14 +57,18 @@
 					<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
 				</div>
 				<div class="modal-body">
-					<form>
-						<div class="mb-3">
+					<form novalidate>
+						<div id="edit-todo-name-form-group" class="mb-3">
 							<label for="edit-todo-name" class="col-form-label">Name:</label>
-							<input type="text" class="form-control" id="edit-todo-name">
+							<input type="text" class="form-control" id="edit-todo-name"
+								   oninput="validateFormGroup('edit-todo-name-form-group')" required>
+							<div id="edit-todo-name-validator" class="invalid-feedback">
+								Please provide a name.
+							</div>
 						</div>
 						<div class="mb-3">
 							<label for="edit-todo-description" class="col-form-label">Description:</label>
-							<textarea class="form-control" id="edit-todo-description"></textarea>
+							<textarea class="form-control" id="edit-todo-description" maxlength="1024"></textarea>
 						</div>
 					</form>
 				</div>

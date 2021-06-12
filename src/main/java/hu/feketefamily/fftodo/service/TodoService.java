@@ -9,6 +9,8 @@ import hu.feketefamily.fftodo.model.entity.Todo;
 import hu.feketefamily.fftodo.model.repository.TodoRepository;
 import lombok.extern.log4j.Log4j2;
 
+import javax.validation.Valid;
+
 @Log4j2
 @Service
 public class TodoService {
@@ -20,7 +22,7 @@ public class TodoService {
 		return todoRepository.findAll();
 	}
 
-	public Todo addTodo(Todo todo) {
+	public Todo addTodo(@Valid Todo todo) {
 		log.info("Saving Todo: {{}}", todo.toString());
 		return todoRepository.save(todo);
 	}
@@ -35,7 +37,7 @@ public class TodoService {
 	}
 
 	@Transactional
-	public void updateTodo(Long id, Todo patchedTodo) {
+	public void updateTodo(Long id, @Valid Todo patchedTodo) {
 		if (todoRepository.updateById(id, patchedTodo.getName(), patchedTodo.getDescription()) < 1) {
 			log.warn("No Todos were updated with id {{}}", id);
 		}
