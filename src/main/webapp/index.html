@@ -14,10 +14,27 @@
 <body>
 <div class="container">
 	<h1 class="display-3 my-5">Test Todo application</h1>
-	<div style="width: 18rem;">
-		<div id="todo-container"></div>
-		<div class="d-grid gap-2">
-			<button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addTodoModal"><i class="bi bi-plus-lg"></i></button>
+	<div class="row">
+		<div class="col">
+			<div>
+				<h1 class="display-5 my-5">Todo</h1>
+				<div id="todo-container-phase0"></div>
+				<div class="d-grid gap-2">
+					<button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addTodoModal"><i class="bi bi-plus-lg"></i></button>
+				</div>
+			</div>
+		</div>
+		<div class="col">
+			<div>
+				<h1 class="display-5 my-5">In progress</h1>
+				<div id="todo-container-phase1"></div>
+			</div>
+		</div>
+		<div class="col">
+			<div>
+				<h1 class="display-5 my-5">Done</h1>
+				<div id="todo-container-phase2"></div>
+			</div>
 		</div>
 	</div>
 	<div class="modal fade" id="addTodoModal" tabindex="-1">
@@ -40,6 +57,19 @@
 						<div class="mb-3">
 							<label for="add-todo-description" class="col-form-label">Description:</label>
 							<textarea class="form-control" id="add-todo-description" maxlength="1024"></textarea>
+						</div>
+						<div>
+						<label class="col-form-label">Phase:</label>
+						</div>
+						<div class="btn-group" role="group">
+							<input type="radio" class="btn-check" name="add-todo-phase" id="add-todo-phase0" value="0" checked>
+							<label class="btn btn-outline-primary" for="add-todo-phase0">Todo</label>
+
+							<input type="radio" class="btn-check" name="add-todo-phase" id="add-todo-phase1" value="1">
+							<label class="btn btn-outline-primary" for="add-todo-phase1">In progress</label>
+
+							<input type="radio" class="btn-check" name="add-todo-phase" id="add-todo-phase2" value="2">
+							<label class="btn btn-outline-primary" for="add-todo-phase2">Done</label>
 						</div>
 					</form>
 				</div>
@@ -69,6 +99,19 @@
 						<div class="mb-3">
 							<label for="edit-todo-description" class="col-form-label">Description:</label>
 							<textarea class="form-control" id="edit-todo-description" maxlength="1024"></textarea>
+						</div>
+						<div>
+							<label class="col-form-label">Phase:</label>
+						</div>
+						<div class="btn-group" role="group">
+							<input type="radio" class="btn-check" name="edit-todo-phase" id="edit-todo-phase0" value="0">
+							<label class="btn btn-outline-primary" for="edit-todo-phase0">Todo</label>
+
+							<input type="radio" class="btn-check" name="edit-todo-phase" id="edit-todo-phase1" value="1">
+							<label class="btn btn-outline-primary" for="edit-todo-phase1">In progress</label>
+
+							<input type="radio" class="btn-check" name="edit-todo-phase" id="edit-todo-phase2" value="2">
+							<label class="btn btn-outline-primary" for="edit-todo-phase2">Done</label>
 						</div>
 					</form>
 				</div>

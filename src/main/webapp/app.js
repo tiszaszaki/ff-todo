@@ -1,9 +1,9 @@
-var tplCard = ({id, name, description}) => `
+var tplCard = ({id, name, description, phase}) => `
 <div class="card mb-2">
 	<div class="card-body">
 		<h5 class="card-title">${name}</h5>
 		<p class="card-text">${description}</p>
-		<button type="button" class="btn btn-primary btn-sm text-end" onclick="prepareEditModal(${id}, '${name}', '${description}')"
+		<button type="button" class="btn btn-primary btn-sm text-end" onclick="prepareEditModal(${id}, '${name}', '${description}', '${phase}')"
 					data-bs-toggle="modal" data-bs-target="#editTodoModal">
 			<i class="bi bi-pencil"></i>
 		</button>
@@ -11,15 +11,17 @@ var tplCard = ({id, name, description}) => `
 	</div>
 </div>
 `
+var PHASE_CNT = 3
 
 var currentlyEditedTodoId;
 
-function prepareEditModal(id, name, description) {
+function prepareEditModal(id, name, description, phase) {
 	currentlyEditedTodoId = id;
 
 	$('#edit-todo-title').html('Edit Todo: ' + name);
 	$('#edit-todo-name').val(name);
 	$('#edit-todo-description').val(description);
+	$('#edit-todo-phase' + phase).prop("checked", true);
 }
 
 var baseurl = window.location.origin;
@@ -28,9 +30,13 @@ var fetchTodos = function () {
 	$.ajax({
 		url: baseurl + "/todo",
 		success: function(result){
-			$('#todo-container').empty();
+			for (var i = 0; i < PHASE_CNT; i++) {
+				$('#todo-container-phase' + i).empty();
+			}
 			for (var i = 0; i < result.length; i++) {
-				$('#todo-container').append([{id: result[i].id, name: result[i].name, description: result[i].description}].map(tplCard));
+				$('#todo-container-phase' + result[i].phase).append(
+					[{id: result[i].id, name: result[i].name, description: result[i].description, phase: result[i].phase}].map(tplCard)
+				);
 			}
 		}
 	});
@@ -51,7 +57,8 @@ function addTodo() {
 		method: 'PUT',
 		data: JSON.stringify({
 			name: $('#add-todo-name').val(),
-			description: $('#add-todo-description').val()
+			description: $('#add-todo-description').val(),
+			phase: $('input[name=add-todo-phase]:checked').val()
 		}),
 		contentType: "application/json; charset=utf-8",
 		dataType: "json",
@@ -64,7 +71,7 @@ function addTodo() {
 		error: function() {
 			$.growl.error({message: 'Failed to add Todo!'});
 		}
-	})
+	});
 }
 
 function removeTodo(id) {
@@ -87,7 +94,8 @@ function editTodo() {
 		method: 'PATCH',
 		data: JSON.stringify({
 			name: $('#edit-todo-name').val(),
-			description: $('#edit-todo-description').val()
+			description: $('#edit-todo-description').val(),
+			phase: $('input[name=edit-todo-phase]:checked').val()
 		}),
 		contentType: "application/json; charset=utf-8",
 		success: function(){

@@ -30,6 +30,7 @@ public class TodoIntegrationTests {
 	private static Long VALID_ID = 1L;
 	private static String VALID_NAME = "validName";
 	private static String VALID_DESCRIPTION = "validDescription";
+	private static int VALID_PHASE = 0;
 
 	@Autowired
 	private MockMvc mockMvc;
@@ -45,6 +46,7 @@ public class TodoIntegrationTests {
 				Todo.builder()
 					.name(VALID_NAME)
 					.description(VALID_DESCRIPTION)
+					.phase(VALID_PHASE)
 					.build()
 			))
 			.contentType(MediaType.APPLICATION_JSON)
@@ -84,6 +86,7 @@ public class TodoIntegrationTests {
 					Todo.builder()
 						.name(VALID_NAME)
 						.description(VALID_DESCRIPTION)
+						.phase(VALID_PHASE)
 						.build()
 				))
 				.contentType(MediaType.APPLICATION_JSON)

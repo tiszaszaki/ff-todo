@@ -40,7 +40,7 @@ public class TodoService {
 
 	@Transactional
 	public void updateTodo(Long id, @Valid Todo patchedTodo) {
-		if (todoRepository.updateById(id, patchedTodo.getName(), patchedTodo.getDescription()) < 1) {
+		if (todoRepository.updateById(id, patchedTodo.getName(), patchedTodo.getDescription(), patchedTodo.getPhase()) < 1) {
 			log.warn("No Todos were updated with id {{}}", id);
 		}
 	}
