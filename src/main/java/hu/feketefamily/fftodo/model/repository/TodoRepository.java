@@ -8,9 +8,11 @@ import org.springframework.stereotype.Repository;
 
 import hu.feketefamily.fftodo.model.entity.Todo;
 
+import java.util.Date;
+
 @Repository
 public interface TodoRepository extends JpaRepository<Todo, Long> {
 	@Modifying
-	@Query("UPDATE Todo t SET t.name = :name, t.description = :description, t.phase = :phase WHERE t.id = :id")
-	int updateById(@Param("id") Long id, @Param("name") String name, @Param("description") String description, @Param("phase") int phase);
+	@Query("UPDATE Todo t SET t.name = :name, t.description = :description, t.phase = :phase, t.dateModified= :now WHERE t.id = :id")
+	int updateById(@Param("id") Long id, @Param("name") String name, @Param("description") String description, @Param("phase") int phase, @Param("now") Date dateModified);
 }

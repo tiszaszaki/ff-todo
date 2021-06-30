@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.List;
 import hu.feketefamily.fftodo.model.entity.Todo;
 import hu.feketefamily.fftodo.model.repository.TodoRepository;
@@ -25,6 +26,9 @@ public class TodoService {
 	}
 
 	public Todo addTodo(@Valid Todo todo) {
+		Date now=new Date();
+		todo.setDateCreated(now);
+		todo.setDateModified(now);
 		log.info("Saving Todo: {{}}", todo.toString());
 		return todoRepository.save(todo);
 	}
@@ -40,7 +44,7 @@ public class TodoService {
 
 	@Transactional
 	public void updateTodo(Long id, @Valid Todo patchedTodo) {
-		if (todoRepository.updateById(id, patchedTodo.getName(), patchedTodo.getDescription(), patchedTodo.getPhase()) < 1) {
+		if (todoRepository.updateById(id, patchedTodo.getName(), patchedTodo.getDescription(), patchedTodo.getPhase(), new Date()) < 1) {
 			log.warn("No Todos were updated with id {{}}", id);
 		}
 	}

@@ -17,6 +17,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
+
 @Data
 @Builder
 @NoArgsConstructor
@@ -37,4 +39,8 @@ public class Todo {
 	@Min(0)
 	@Max(2)
 	private Integer phase;
+	@Column(nullable = false)
+	private Date dateCreated;
+	@Column(nullable = false)
+	private Date dateModified;
 }
