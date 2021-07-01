@@ -1,4 +1,4 @@
-var tplCard = ({id, name, description, phase}) => `
+var tplCard = ({id, name, description, phase, dateModified}) => `
 <div class="card mb-2">
 	<div class="card-body">
 		<h5 class="card-title">${name}</h5>
@@ -9,6 +9,7 @@ var tplCard = ({id, name, description, phase}) => `
 		</button>
 		<button type="button" class="btn btn-danger btn-sm text-end" onclick="removeTodo(${id})"><i class="bi bi-trash"></i></button>
 	</div>
+	<div class="card-footer text-muted">Updated ${moment(dateModified).fromNow()}</p>
 </div>
 `
 var PHASE_CNT = 3
@@ -35,7 +36,7 @@ var fetchTodos = function () {
 			}
 			for (var i = 0; i < result.length; i++) {
 				$('#todo-container-phase' + result[i].phase).append(
-					[{id: result[i].id, name: result[i].name, description: result[i].description, phase: result[i].phase}].map(tplCard)
+					[{id: result[i].id, name: result[i].name, description: result[i].description, phase: result[i].phase, dateModified: result[i].dateModified}].map(tplCard)
 				);
 			}
 		}
