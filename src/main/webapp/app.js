@@ -16,6 +16,21 @@ var PHASE_CNT = 3
 
 var currentlyEditedTodoId;
 
+var modalDescriptionMaxCharCount=1024;
+
+function setTodoModalCharCount(modalPrefix)
+{
+	var textAreaLength = $('#' + modalPrefix + '-todo-description').val().length;
+	var charCountStr = textAreaLength + ' / ' + modalDescriptionMaxCharCount;
+
+	$('#' + modalPrefix + '-todo-description-char-count').html(charCountStr);
+}
+
+function prepareAddModal()
+{
+	setTodoModalCharCount('add');
+}
+
 function prepareEditModal(id, name, description, phase) {
 	currentlyEditedTodoId = id;
 
@@ -23,6 +38,8 @@ function prepareEditModal(id, name, description, phase) {
 	$('#edit-todo-name').val(name);
 	$('#edit-todo-description').val(description);
 	$('#edit-todo-phase' + phase).prop("checked", true);
+
+	setTodoModalCharCount('edit');
 }
 
 var baseurl = window.location.origin;
