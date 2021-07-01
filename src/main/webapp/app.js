@@ -8,6 +8,10 @@ var tplCard = ({id, name, description, phase, dateModified}) => `
 			<i class="bi bi-pencil"></i>
 		</button>
 		<button type="button" class="btn btn-danger btn-sm text-end" onclick="removeTodo(${id})"><i class="bi bi-trash"></i></button>
+		<button type="button" class="btn btn-primary btn-sm text-end"
+			onclick="shiftTodo(${id}, '${name}', '${description}', ${phase - 1})"><i class="bi bi-arrow-left"></i></button>
+		<button type="button" class="btn btn-primary btn-sm text-end"
+			onclick="shiftTodo(${id}, '${name}', '${description}', ${phase + 1})"><i class="bi bi-arrow-right"></i></button>
 	</div>
 	<div class="card-footer text-muted">Updated ${moment(dateModified).fromNow()}</p>
 </div>
@@ -124,4 +128,29 @@ function editTodo() {
 			$.growl.error({message: 'Failed to save Todo!'});
 		}
 	})
+}
+
+function shiftTodo(id2, name2, description2, phase_new) {
+	if ((phase_new >= 0) && (phase_new < PHASE_CNT))
+	{
+		$.ajax({
+			url: baseurl + "/todo/" + id2,
+			method: 'PATCH',
+			data: JSON.stringify({
+				name: name2,
+				description: description2,
+				phase: phase_new
+			}),
+			contentType: "application/json; charset=utf-8",
+			success: function(){
+				$.growl.notice({message: 'Todo shifted successfully!'});
+				fetchTodos();
+			},
+			error: function() {
+				$.growl.error({message: 'Failed to shift Todo!'});
+			}
+		})
+	}
+	else
+		$.growl.warning({message: 'Todo cannot be shifted this way!'});
 }
