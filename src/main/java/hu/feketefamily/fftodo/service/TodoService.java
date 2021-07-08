@@ -1,5 +1,7 @@
 package hu.feketefamily.fftodo.service;
 
+import static hu.feketefamily.fftodo.constants.ErrorMessages.TODO_NOT_EXIST_MESSAGE;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,6 +22,10 @@ public class TodoService {
 
 	@Autowired
 	private TodoRepository todoRepository;
+
+	public Todo getTodo(Long id) {
+		return todoRepository.findById(id).orElseThrow(() -> new RuntimeException(TODO_NOT_EXIST_MESSAGE));
+	}
 
 	public List<Todo> getTodos() {
 		return todoRepository.findAll();
