@@ -21,7 +21,7 @@
 				<h1 class="display-5 my-5">Todo</h1>
 				<div id="todo-container-phase0"></div>
 				<div class="d-grid gap-2">
-					<button class="btn btn-primary" onclick="prepareAddModal()"
+					<button class="btn btn-primary" onclick="App.prepareAddModal()"
 							data-bs-toggle="modal" data-bs-target="#addTodoModal"><i class="bi bi-plus-lg"></i></button>
 				</div>
 			</div>
@@ -52,14 +52,14 @@
 							<label for="add-todo-name" class="col-form-label">Name:</label>
 							<input type="text" class="form-control" id="add-todo-name"
 								   placeholder="Enter name for new Todo..."
-								   oninput="validateFormGroup('add-todo-name-form-group')" required>
+								   oninput="App.validateFormGroup('add-todo-name-form-group')" required>
 							<div id="add-todo-name-validator" class="invalid-feedback">
 								Please provide a name.
 							</div>
 						</div>
 						<div class="mb-3">
 							<label for="add-todo-description" class="col-form-label">Description:</label>
-							<textarea class="form-control" id="add-todo-description" onkeyup="setTodoModalCharCount('add')"
+							<textarea class="form-control" id="add-todo-description" onkeyup="App.setTodoModalCharCount('add')"
 									  placeholder="Enter description for new Todo (optional)..."
 									  maxlength="1024"></textarea>
 							<span class="pull-right label label-default" id="add-todo-description-char-count"></span>
@@ -80,7 +80,7 @@
 					</form>
 				</div>
 				<div class="modal-footer">
-					<button type="button" class="btn btn-primary" onclick="addTodo()" data-bs-dismiss="modal">Add</button>
+					<button type="button" class="btn btn-primary" onclick="App.addTodo()" data-bs-dismiss="modal">Add</button>
 				</div>
 			</div>
 		</div>
@@ -98,14 +98,14 @@
 							<label for="edit-todo-name" class="col-form-label">Name:</label>
 							<input type="text" class="form-control" id="edit-todo-name"
 								   placeholder="Change name for this Todo..."
-								   oninput="validateFormGroup('edit-todo-name-form-group')" required>
+								   oninput="App.validateFormGroup('edit-todo-name-form-group')" required>
 							<div id="edit-todo-name-validator" class="invalid-feedback">
 								Please provide a name.
 							</div>
 						</div>
 						<div class="mb-3">
 							<label for="edit-todo-description" class="col-form-label">Description:</label>
-							<textarea class="form-control" id="edit-todo-description" onkeyup="setTodoModalCharCount('edit')"
+							<textarea class="form-control" id="edit-todo-description" onkeyup="App.setTodoModalCharCount('edit')"
 									  placeholder="Change description for this Todo..."
 									  maxlength="1024"></textarea>
 							<div class="text-end">
@@ -129,7 +129,7 @@
 					</form>
 				</div>
 				<div class="modal-footer">
-					<button type="button" class="btn btn-primary" onclick="editTodo()" data-bs-dismiss="modal">Save</button>
+					<button type="button" class="btn btn-primary" onclick="App.editTodo()" data-bs-dismiss="modal">Save</button>
 				</div>
 			</div>
 		</div>
