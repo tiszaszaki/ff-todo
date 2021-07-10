@@ -4,6 +4,7 @@ let App = {
 	baseurl: window.location.origin,
 	currentlyEditedTodoId: undefined,
 	doModalPrepare: false,
+	editModalTitlePrefix: '',
 
 	tplCard: function ({id, name, description, phase, dateModified}) {
 		return `
@@ -36,7 +37,7 @@ let App = {
 			<div class="modal-dialog">
 				<div class="modal-content">
 					<div class="modal-header">
-						<h5 class="modal-title">${modalTitle}</h5>
+						<h5 class="modal-title" id="${modalPrefix}-todo-title">${modalTitle}</h5>
 						<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
 					</div>
 					<div class="modal-body">
@@ -96,7 +97,7 @@ let App = {
 	prepareEditModal: function(id, name, description, phase) {
 		App.currentlyEditedTodoId = id;
 
-		$('#edit-todo-title').html('Edit Todo: ' + name);
+		$('#edit-todo-title').html(editModalTitlePrefix + name);
 		$('#edit-todo-name').val(name);
 		$('#edit-todo-description').val(description);
 		$('#edit-todo-phase' + phase).prop("checked", true);
@@ -217,8 +218,11 @@ let App = {
 					placeholderName: 'Enter name for new Todo...', placeholderDescription: 'Enter description for new Todo (optional)...',
 					submitButtonCaption: 'Add'}].map(App.tplModal)
 			);
+
+			editModalTitlePrefix = 'Edit todo: ',
+
 			$('#modal-container').append(
-				[{modalPrefix: 'edit', modalTitle: '',
+				[{modalPrefix: 'edit', modalTitle: editModalTitlePrefix,
 					placeholderName: 'Change name for this Todo...', placeholderDescription: 'Change description for this Todo...',
 					submitButtonCaption: 'Save'}].map(App.tplModal)
 			);
