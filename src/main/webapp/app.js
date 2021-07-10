@@ -3,6 +3,7 @@ let App = {
 	modalDescriptionMaxCharCount: 1024,
 	baseurl: window.location.origin,
 	currentlyEditedTodoId: undefined,
+	doModalPrepare: false,
 
 	tplCard: function ({id, name, description, phase, dateModified}) {
 		return `
@@ -25,6 +26,57 @@ let App = {
 				</div>
 			</div>
 			<div class="card-footer text-muted">Updated ${moment(dateModified).fromNow()}</p>
+		</div>
+		`
+	},
+	tplModal: function ({modalPrefix, modalTitle, placeholderName, placeholderDescription, submitButtonCaption})
+	{
+		return `
+		<div class="modal fade" id="${modalPrefix}TodoModal" tabindex="-1">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title">${modalTitle}</h5>
+						<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+					</div>
+					<div class="modal-body">
+						<form novalidate>
+							<div id="${modalPrefix}-todo-name-form-group" class="mb-3">
+								<label for="${modalPrefix}-todo-name" class="col-form-label">Name:</label>
+								<input type="text" class="form-control" id="${modalPrefix}-todo-name"
+									   placeholder="${placeholderName}"
+									   oninput="App.validateFormGroup('${modalPrefix}-todo-name-form-group')" required>
+								<div id="${modalPrefix}-todo-name-validator" class="invalid-feedback">
+									Please provide a name.
+								</div>
+							</div>
+							<div class="mb-3">
+								<label for="${modalPrefix}-todo-description" class="col-form-label">Description:</label>
+								<textarea class="form-control" id="${modalPrefix}-todo-description" onkeyup="App.setTodoModalCharCount('${modalPrefix}')"
+										  placeholder="${placeholderDescription}"
+										  maxlength="${App.modalDescriptionMaxCharCount}"></textarea>
+								<span class="pull-right label label-default" id="${modalPrefix}-todo-description-char-count"></span>
+							</div>
+							<div>
+							<label class="col-form-label">Phase:</label>
+							</div>
+							<div class="btn-group" role="group">
+								<input type="radio" class="btn-check" name="${modalPrefix}-todo-phase" id="${modalPrefix}-todo-phase0" value="0" checked>
+								<label class="btn btn-outline-primary" for="${modalPrefix}-todo-phase0">Todo</label>
+
+								<input type="radio" class="btn-check" name="${modalPrefix}-todo-phase" id="${modalPrefix}-todo-phase1" value="1">
+								<label class="btn btn-outline-primary" for="${modalPrefix}-todo-phase1">In progress</label>
+
+								<input type="radio" class="btn-check" name="${modalPrefix}-todo-phase" id="${modalPrefix}-todo-phase2" value="2">
+								<label class="btn btn-outline-primary" for="${modalPrefix}-todo-phase2">Done</label>
+							</div>
+						</form>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-primary" onclick="App.${modalPrefix}Todo()" data-bs-dismiss="modal">${submitButtonCaption}</button>
+					</div>
+				</div>
+			</div>
 		</div>
 		`
 	},
@@ -86,6 +138,7 @@ let App = {
 				$.growl.notice({message: 'Todo added successfully!'});
 				$('#add-todo-name').val('');
 				$('#add-todo-description').val('');
+				$('#add-todo-phase0').prop("checked", true);
 				App.fetchTodos();
 			},
 			error: function() {
@@ -153,7 +206,27 @@ let App = {
 		if(!fromGroup.hasClass("was-validated")){
 			fromGroup.addClass("was-validated");
 		}
+	},
+	prepareModals: function () {
+		if (!App.doModalPrepare)
+		{
+			App.doModalPrepare = true;
+
+			$('#modal-container').append(
+				[{modalPrefix: 'add', modalTitle: 'Add Todo',
+					placeholderName: 'Enter name for new Todo...', placeholderDescription: 'Enter description for new Todo (optional)...',
+					submitButtonCaption: 'Add'}].map(App.tplModal)
+			);
+			$('#modal-container').append(
+				[{modalPrefix: 'edit', modalTitle: '',
+					placeholderName: 'Change name for this Todo...', placeholderDescription: 'Change description for this Todo...',
+					submitButtonCaption: 'Save'}].map(App.tplModal)
+			);
+		}
 	}
 }
 
-App.fetchTodos();
+$(document).ready(function () {
+	App.prepareModals();
+	App.fetchTodos();
+});
