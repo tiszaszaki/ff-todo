@@ -6,6 +6,14 @@ let App = {
 	doModalPrepare: false,
 	editModalTitlePrefix: '',
 
+	tplConfirmModalIdPrefix: function ({modalPrefix})
+	{
+		return `${modalPrefix}-confirm-modal`
+	},
+	tplConfirmDeleteMessage: function ({name})
+	{
+		return `Are you sure to delete this Todo (${name})?`
+	},
 	tplCard: function ({id, name, description, phase, dateModified}) {
 		return `
 		<div class="card mb-2">
@@ -16,7 +24,10 @@ let App = {
 							data-bs-toggle="modal" data-bs-target="#editTodoModal">
 					<i class="bi bi-pencil"></i>
 				</button>
-				<button type="button" class="btn btn-danger btn-sm text-end" onclick="App.removeTodo(${id})"><i class="bi bi-trash"></i></button>
+				<button type="button" class="btn btn-danger btn-sm text-end" onclick="App.prepareDeleteConfirmModal(${id}, '${name}')"
+							data-bs-toggle="modal" data-bs-target="#deleteConfirmModal">
+					<i class="bi bi-trash"></i>
+				</button>
 				<div class="btn-group" role="group">
 					<button type="button" class="btn btn-primary btn-sm text-end"
 						id = "shift-todo-left-${id}"
@@ -30,7 +41,7 @@ let App = {
 		</div>
 		`
 	},
-	tplModal: function ({modalPrefix, modalTitle, placeholderName, placeholderDescription, submitButtonCaption})
+	tplTodoModal: function ({modalPrefix, modalTitle, placeholderName, placeholderDescription, submitButtonCaption})
 	{
 		return `
 		<div class="modal fade" id="${modalPrefix}TodoModal" tabindex="-1">
@@ -75,6 +86,30 @@ let App = {
 					</div>
 					<div class="modal-footer">
 						<button type="button" class="btn btn-primary" onclick="App.${modalPrefix}Todo()" data-bs-dismiss="modal">${submitButtonCaption}</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		`
+	},
+	tplConfirmModal: function ({modalPrefix2, modalTitle, modalMessage, submitButtonCaption, dismissButtonCaption})
+	{
+		var modalName = modalPrefix2 + 'ConfirmModal';
+		var modalIdPrefix = [{modalPrefix: modalPrefix2}].map(App.tplConfirmModalIdPrefix);
+		return `
+		<div class="modal fade" id="${modalName}" tabindex="-1">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title">${modalTitle}</h5>
+						<button type="button" class="btn-close" data-dismiss="modal"></button>
+					</div>
+					<div class="modal-body">
+						<p><div id="${modalIdPrefix}-message">${modalMessage}</div></p>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-danger" id="${modalIdPrefix}-submit-button">${submitButtonCaption}</button>
+						<button type="button" class="btn btn-secondary" data-dismiss="modal">${dismissButtonCaption}</button>
 					</div>
 				</div>
 			</div>
@@ -216,7 +251,7 @@ let App = {
 			$('#modal-container').append(
 				[{modalPrefix: 'add', modalTitle: 'Add Todo',
 					placeholderName: 'Enter name for new Todo...', placeholderDescription: 'Enter description for new Todo (optional)...',
-					submitButtonCaption: 'Add'}].map(App.tplModal)
+					submitButtonCaption: 'Add'}].map(App.tplTodoModal)
 			);
 
 			editModalTitlePrefix = 'Edit todo: ',
@@ -224,9 +259,22 @@ let App = {
 			$('#modal-container').append(
 				[{modalPrefix: 'edit', modalTitle: editModalTitlePrefix,
 					placeholderName: 'Change name for this Todo...', placeholderDescription: 'Change description for this Todo...',
-					submitButtonCaption: 'Save'}].map(App.tplModal)
+					submitButtonCaption: 'Save'}].map(App.tplTodoModal)
+			);
+
+			$('#modal-container').append(
+				[{modalPrefix2: 'delete', modalTitle: 'Deleting a Todo', modalMessage: '',
+					submitButtonCaption: 'Delete', dismissButtonCaption: 'Close'}].map(App.tplConfirmModal)
 			);
 		}
+	},
+	prepareDeleteConfirmModal: function (id2, name2)
+	{
+		var modalIdPrefix = [{modalPrefix: 'delete'}].map(App.tplConfirmModalIdPrefix);
+		$('#' + modalIdPrefix + '-submit-button').on('click', App.removeTodo(id2));
+		$('#' + modalIdPrefix + '-message').html(
+			[{name: name2}].map(App.tplConfirmDeleteMessage)
+		);
 	}
 }
 
