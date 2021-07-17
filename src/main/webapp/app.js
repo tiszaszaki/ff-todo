@@ -92,13 +92,13 @@ let App = {
 				<div class="modal-content">
 					<div class="modal-header">
 						<h5 class="modal-title">${modalTitle}</h5>
-						<button type="button" class="btn-close" data-dismiss="modal"></button>
+						<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
 					</div>
 					<div class="modal-body">
 						<p><div id="${modalPrefix}-confirm-modal-message">${modalMessage}</div></p>
 					</div>
 					<div class="modal-footer">
-						<button type="button" class="btn btn-danger" onclick="App.submitConfirmDeleteModal()" data-dismiss="modal">${submitButtonCaption}</button>
+						<button type="button" class="btn btn-danger" onclick="App.submitConfirmDeleteModal()">${submitButtonCaption}</button>
 					</div>
 				</div>
 			</div>
@@ -171,11 +171,12 @@ let App = {
 			}
 		});
 	},
-	removeTodo: function(id) {
+	removeTodo: function(id, successCallback) {
 		$.ajax({
 			url: App.baseurl + "/todo/" + id,
 			method: 'DELETE',
 			success: function(){
+				successCallback();
 				$.growl.notice({message: 'Todo removed successfully!'});
 				App.fetchTodos();
 			},
@@ -254,7 +255,9 @@ let App = {
 	},
 	submitConfirmDeleteModal: function ()
 	{
-		App.removeTodo(currentlyPickedTodoId)
+		App.removeTodo(currentlyPickedTodoId, function () {
+			$('#deleteConfirmModal').modal('hide');
+		})
 	},
 	prepareDeleteConfirmModal: function (id2, name2)
 	{
