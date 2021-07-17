@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
-import java.util.List;
 import hu.feketefamily.fftodo.model.entity.Task;
 import hu.feketefamily.fftodo.model.repository.TaskRepository;
 import lombok.extern.log4j.Log4j2;
@@ -23,5 +22,14 @@ public class TaskService {
 	public void addTask(Long todoId, Task task) {
 		task.setTodo(todoService.getTodo(todoId));
 		taskRepository.save(task);
+	}
+
+	public void removeTask(Long id) {
+		if (taskRepository.existsById(id)) {
+			log.info("Deleting Task with id: {{}}", id);
+			taskRepository.deleteById(id);
+		} else {
+			log.warn("Deleting non-existing Task with id {{}}", id);
+		}
 	}
 }
