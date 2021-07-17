@@ -32,7 +32,7 @@ let App = {
 		</div>
 		`
 	},
-	tplTodoModal: function ({modalPrefix, modalTitle, placeholderName, placeholderDescription, submitButtonCaption})
+	tplTodoModal: function ({modalPrefix, modalTitle, placeholderName, placeholderDescription, submitButtonCaption, dismissButtonCaption})
 	{
 		return `
 		<div class="modal fade" id="${modalPrefix}TodoModal" tabindex="-1">
@@ -77,13 +77,14 @@ let App = {
 					</div>
 					<div class="modal-footer">
 						<button type="button" class="btn btn-primary" onclick="App.${modalPrefix}Todo()" data-bs-dismiss="modal">${submitButtonCaption}</button>
+						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">${dismissButtonCaption}</button>
 					</div>
 				</div>
 			</div>
 		</div>
 		`
 	},
-	tplConfirmModal: function ({modalPrefix, modalTitle, modalMessage, submitButtonCaption})
+	tplConfirmModal: function ({modalPrefix, modalTitle, modalMessage, submitButtonCaption, dismissButtonCaption})
 	{
 		var modalName = modalPrefix + 'ConfirmModal';
 		return `
@@ -99,6 +100,7 @@ let App = {
 					</div>
 					<div class="modal-footer">
 						<button type="button" class="btn btn-danger" onclick="App.submitConfirmDeleteModal()">${submitButtonCaption}</button>
+						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">${dismissButtonCaption}</button>
 					</div>
 				</div>
 			</div>
@@ -237,7 +239,7 @@ let App = {
 		$('#modal-container').append(
 			[{modalPrefix: 'add', modalTitle: 'Add Todo',
 				placeholderName: 'Enter name for new Todo...', placeholderDescription: 'Enter description for new Todo (optional)...',
-				submitButtonCaption: 'Add'}].map(App.tplTodoModal)
+				submitButtonCaption: 'Add', dismissButtonCaption: 'Close'}].map(App.tplTodoModal)
 		);
 
 		editModalTitlePrefix = 'Edit todo: ',
@@ -245,18 +247,23 @@ let App = {
 		$('#modal-container').append(
 			[{modalPrefix: 'edit', modalTitle: '',
 				placeholderName: 'Change name for this Todo...', placeholderDescription: 'Change description for this Todo...',
-				submitButtonCaption: 'Save'}].map(App.tplTodoModal)
+				submitButtonCaption: 'Save', dismissButtonCaption: 'Cancel'}].map(App.tplTodoModal)
 		);
 
 		$('#modal-container').append(
 			[{modalPrefix: 'delete', modalTitle: 'Deleting a Todo', modalMessage: '',
-				submitButtonCaption: 'Delete'}].map(App.tplConfirmModal)
+				submitButtonCaption: 'Delete', dismissButtonCaption: 'Cancel'}].map(App.tplConfirmModal)
 		);
+	},
+	dismissModal(modalPrefix)
+	{
+		$('#' + modalPrefix + 'Modal').modal('hide');
 	},
 	submitConfirmDeleteModal: function ()
 	{
-		App.removeTodo(currentlyPickedTodoId, function () {
-			$('#deleteConfirmModal').modal('hide');
+		App.removeTodo(currentlyPickedTodoId, function()
+		{
+			App.dismissModal('deleteConfirm');
 		})
 	},
 	prepareDeleteConfirmModal: function (id2, name2)
