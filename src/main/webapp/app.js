@@ -76,7 +76,8 @@ let App = {
 						</form>
 					</div>
 					<div class="modal-footer">
-						<button type="button" class="btn btn-primary" onclick="App.${modalPrefix}Todo()" data-bs-dismiss="modal">${submitButtonCaption}</button>
+						<button type="button" class="btn btn-primary" id="${modalPrefix}-todo-submit-button"
+							onclick="App.${modalPrefix}Todo()" data-bs-dismiss="modal">${submitButtonCaption}</button>
 						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">${dismissButtonCaption}</button>
 					</div>
 				</div>
@@ -235,12 +236,21 @@ let App = {
 			fromGroup.addClass("was-validated");
 		}
 	},
+	submitTodoModal(e, modalPrefix)
+	{
+		if (e.which == 13) {
+			$('#' + modalPrefix + '-todo-submit-button').click();
+			return false;
+		}
+	},
 	prepareModals: function () {
 		$('#modal-container').append(
 			[{modalPrefix: 'add', modalTitle: 'Add Todo',
 				placeholderName: 'Enter name for new Todo...', placeholderDescription: 'Enter description for new Todo (optional)...',
 				submitButtonCaption: 'Add', dismissButtonCaption: 'Close'}].map(App.tplTodoModal)
 		);
+
+		$('#add-todo-name').keypress(function (e) { App.submitTodoModal(e, 'add'); });
 
 		editModalTitlePrefix = 'Edit todo: ',
 
@@ -254,6 +264,8 @@ let App = {
 			[{modalPrefix: 'delete', modalTitle: 'Deleting a Todo', modalMessage: '',
 				submitButtonCaption: 'Delete', dismissButtonCaption: 'Cancel'}].map(App.tplConfirmModal)
 		);
+
+		$('#edit-todo-name').keypress(function (e) { App.submitTodoModal(e, 'edit'); });
 	},
 	dismissModal(modalPrefix)
 	{
