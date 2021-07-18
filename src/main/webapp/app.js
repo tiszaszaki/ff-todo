@@ -3,6 +3,7 @@ let App = {
 	modalDescriptionMaxCharCount: 1024,
 	baseurl: window.location.origin,
 	currentlyPickedTodoId: undefined,
+	currentlyPickedTodoName: undefined,
 	editModalTitlePrefix: undefined,
 
 	tplCard: function ({id, name, description, phase, dateModified}) {
@@ -152,58 +153,60 @@ let App = {
 		});
 	},
 	addTodo: function() {
+		var todo_name=$('#add-todo-name').val();
 		$.ajax({
 			url: App.baseurl + "/todo",
 			method: 'PUT',
 			data: JSON.stringify({
-				name: $('#add-todo-name').val(),
+				name: todo_name,
 				description: $('#add-todo-description').val(),
 				phase: $('input[name=add-todo-phase]:checked').val()
 			}),
 			contentType: "application/json; charset=utf-8",
 			dataType: "json",
 			success: function(){
-				$.growl.notice({message: 'Todo added successfully!'});
+				$.growl.notice({message: 'Todo (' + todo_name + ') added successfully!'});
 				$('#add-todo-name').val('');
 				$('#add-todo-description').val('');
 				$('#add-todo-phase0').prop("checked", true);
 				App.fetchTodos();
 			},
 			error: function() {
-				$.growl.error({message: 'Failed to add Todo!'});
+				$.growl.error({message: 'Failed to add Todo (' + todo_name + ')!'});
 			}
 		});
 	},
-	removeTodo: function(id, successCallback) {
+	removeTodo: function(id, name, successCallback) {
 		$.ajax({
 			url: App.baseurl + "/todo/" + id,
 			method: 'DELETE',
 			success: function(){
 				successCallback();
-				$.growl.notice({message: 'Todo removed successfully!'});
+				$.growl.notice({message: 'Todo (' + name + ') removed successfully!'});
 				App.fetchTodos();
 			},
 			error: function() {
-				$.growl.error({message: 'Failed to remove Todo!'});
+				$.growl.error({message: 'Failed to remove Todo (' + name + ')!'});
 			}
 		})
 	},
 	editTodo: function() {
+		var todo_name=$('#edit-todo-name').val();
 		$.ajax({
 			url: App.baseurl + "/todo/" + App.currentlyPickedTodoId,
 			method: 'PATCH',
 			data: JSON.stringify({
-				name: $('#edit-todo-name').val(),
+				name: todo_name,
 				description: $('#edit-todo-description').val(),
 				phase: $('input[name=edit-todo-phase]:checked').val()
 			}),
 			contentType: "application/json; charset=utf-8",
 			success: function(){
-				$.growl.notice({message: 'Todo saved successfully!'});
+				$.growl.notice({message: 'Todo (' + todo_name + ') saved successfully!'});
 				App.fetchTodos();
 			},
 			error: function() {
-				$.growl.error({message: 'Failed to save Todo!'});
+				$.growl.error({message: 'Failed to save Todo (' + todo_name + ')!'});
 			}
 		})
 	},
@@ -219,15 +222,15 @@ let App = {
 				}),
 				contentType: "application/json; charset=utf-8",
 				success: function(){
-					$.growl.notice({message: 'Todo shifted successfully!'});
+					$.growl.notice({message: 'Todo (' + name2 + ') shifted successfully!'});
 					App.fetchTodos();
 				},
 				error: function() {
-					$.growl.error({message: 'Failed to shift Todo!'});
+					$.growl.error({message: 'Failed to shift Todo (' + name2 + ')!'});
 				}
 			})
 		} else {
-			$.growl.warning({message: 'Todo cannot be shifted this way!'});
+			$.growl.warning({message: 'Todo (' + name2 + ') cannot be shifted this way!'});
 		}
 	},
 	validateFormGroup: function(formGroupId) {
@@ -273,15 +276,16 @@ let App = {
 	},
 	submitConfirmDeleteModal: function ()
 	{
-		App.removeTodo(currentlyPickedTodoId, function()
+		App.removeTodo(currentlyPickedTodoId, currentlyPickedTodoName, function()
 		{
 			App.dismissModal('deleteConfirm');
 		})
 	},
-	prepareDeleteConfirmModal: function (id2, name2)
+	prepareDeleteConfirmModal: function (id, name)
 	{
-		currentlyPickedTodoId = id2;
-		$('#delete-confirm-modal-message').html('Are you sure to delete this Todo (' + name2 + ')?');
+		currentlyPickedTodoId = id;
+		currentlyPickedTodoName = name;
+		$('#delete-confirm-modal-message').html('Are you sure to delete this Todo (' + name + ')?');
 	}
 }
 
