@@ -1,5 +1,7 @@
 package hu.feketefamily.fftodo.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -31,5 +33,6 @@ public class Task {
 	private Boolean done;
 	@ManyToOne
 	@JoinColumn(name = "todo_id")
+	@JsonIgnore
 	private Todo todo;
 }

@@ -6,12 +6,24 @@ let App = {
 	currentlyPickedTodoName: undefined,
 	editModalTitlePrefix: undefined,
 
+	tplTask: function ({task}) {
+		return `
+		<li class="list-group-item d-flex justify-content-between">
+			${task.name}
+			<input id="task-done-checkbox-${task.id}" class="form-check-input" type="checkbox">
+		</li>`
+	},
+
 	tplCard: function ({id, name, description, phase, dateModified}) {
 		return `
 		<div class="card mb-2">
 			<div class="card-body">
 				<h5 class="card-title">${name}</h5>
 				<p class="card-text">${description}</p>
+				<ul id="task-list-container-${id}" class="list-group p-2">
+				</ul>
+				<div class="d-flex justify-content-between">
+				<div class="btn-group" role="group">
 				<button type="button" class="btn btn-primary btn-sm text-end" onclick="App.prepareEditModal(${id}, '${name}', '${description}', '${phase}')"
 							data-bs-toggle="modal" data-bs-target="#editTodoModal">
 					<i class="bi bi-pencil"></i>
@@ -20,6 +32,7 @@ let App = {
 							data-bs-toggle="modal" data-bs-target="#deleteConfirmModal">
 					<i class="bi bi-trash"></i>
 				</button>
+				</div>
 				<div class="btn-group" role="group">
 					<button type="button" class="btn btn-primary btn-sm text-end"
 						id = "shift-todo-left-${id}"
@@ -27,6 +40,7 @@ let App = {
 					<button type="button" class="btn btn-primary btn-sm text-end"
 						id = "shift-todo-right-${id}"
 						onclick="App.shiftTodo(${id}, '${name}', '${description}', ${phase + 1})"><i class="bi bi-arrow-right"></i></button>
+				</div>
 				</div>
 			</div>
 			<div class="card-footer text-muted">Updated ${moment(dateModified).fromNow()}</p>
@@ -142,10 +156,18 @@ let App = {
 				for (var i = 0; i < result.length; i++) {
 					var temp_id=result[i].id;
 					var temp_phase=result[i].phase;
+					var temp_tasks = result[i].tasks;
 
 					$('#todo-container-phase' + result[i].phase).append(
 						[{id: temp_id, name: result[i].name, description: result[i].description, phase: temp_phase, dateModified: result[i].dateModified}].map(App.tplCard)
 					);
+
+					for (var j = 0; j < temp_tasks.length; j++) {
+						$('#task-list-container-' + temp_id).append(
+							[{task: temp_tasks[j]}].map(App.tplTask)
+						);
+						$('#task-done-checkbox-' + temp_tasks[j].id).prop('checked', temp_tasks[j].done);
+					}
 
 					App.checkShiftTodoButtons(temp_id, temp_phase);
 				}

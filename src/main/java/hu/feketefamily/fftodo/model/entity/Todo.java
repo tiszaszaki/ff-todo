@@ -1,12 +1,13 @@
 package hu.feketefamily.fftodo.model.entity;
 
+import java.util.Date;
+import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.Max;
@@ -14,15 +15,10 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
 
 @Data
 @Builder
@@ -49,5 +45,5 @@ public class Todo {
 	@Column(nullable = false)
 	private Date dateModified;
 	@OneToMany(cascade = CascadeType.REMOVE, mappedBy = "todo")
-	private Set<Task> tasks;
+	private List<Task> tasks;
 }
