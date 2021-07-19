@@ -243,7 +243,7 @@ let App = {
 	{
 		if (e.which == 13) {
 			$('#' + modalPrefix + '-todo-submit-button').click();
-			return false;
+			e.preventDefault();
 		}
 	},
 	prepareModals: function () {
