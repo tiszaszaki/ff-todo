@@ -1,11 +1,10 @@
 package hu.feketefamily.fftodo.controller;
 
+import hu.feketefamily.fftodo.model.entity.Task;
+import hu.feketefamily.fftodo.model.entity.Todo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import hu.feketefamily.fftodo.service.TaskService;
 
@@ -19,6 +18,12 @@ public class TaskController {
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Void> removeTask(@PathVariable Long id) {
 		taskService.removeTask(id);
+		return ResponseEntity.ok().build();
+	}
+
+	@PatchMapping("/{id}")
+	public ResponseEntity<Void> updateTask(@PathVariable Long id, @RequestBody Task patchedTask) {
+		taskService.updateTask(id, patchedTask);
 		return ResponseEntity.ok().build();
 	}
 }

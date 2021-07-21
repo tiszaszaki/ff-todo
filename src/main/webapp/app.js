@@ -7,11 +7,16 @@ let App = {
 	addTaskModalTitlePrefix: undefined,
 	editTodoModalTitlePrefix: undefined,
 
-	tplTask: function({task}) {
+	tplTask: function({task, todo}) {
 		return `
 		<li class="list-group-item d-flex justify-content-between">
+			<button type="button" class="btn btn-danger btn-sm text-end" onclick="App.removeTask(${task.id}, '${task.name}', '${todo.name}')"
+						data-toggle="tooltip" data-placement="bottom" title="Remove Task">
+				<i class="bi bi-trash"></i>
+			</button>
 			${task.name}
-			<input id="task-done-checkbox-${task.id}" class="form-check-input" type="checkbox">
+			<input id="task-done-checkbox-${task.id}" class="form-check-input" type="checkbox"
+				onclick="App.checkTask(${task.id}, '${task.name}')">
 		</li>`
 	},
 	tplCard: function({id, name, description, phase, dateModified}) {
@@ -25,7 +30,7 @@ let App = {
 				<div class="d-flex justify-content-between">
 					<div class="btn-group" role="group">
 						<button type="button" class="btn btn-primary btn-sm text-end" onclick="App.prepareAddTaskModal(${id}, '${name}')"
-									data-bs-toggle="modal" data-bs-target="#addTaskModal" data-toggle="tooltip" data-placement="bottom" title="Edit Todo">
+									data-bs-toggle="modal" data-bs-target="#addTaskModal" data-toggle="tooltip" data-placement="bottom" title="Add new Task">
 							<i class="bi bi-plus-lg"></i>
 						</button>
 						<button type="button" class="btn btn-primary btn-sm text-end" onclick="App.prepareEditTodoModal(${id}, '${name}', '${description}', '${phase}')"
@@ -207,7 +212,7 @@ let App = {
 
 					for (var j = 0; j < temp_tasks.length; j++) {
 						$('#task-list-container-' + temp_id).append(
-							[{task: temp_tasks[j]}].map(App.tplTask)
+							[{task: temp_tasks[j], todo: result[i]}].map(App.tplTask)
 						);
 						$('#task-done-checkbox-' + temp_tasks[j].id).prop('checked', temp_tasks[j].done);
 					}
@@ -255,7 +260,7 @@ let App = {
 			}
 		})
 	},
-	patchTodoRequest(id, name, description, phase, successMessageVerb, errorMessageVerb)
+	patchTodoRequest: function(id, name, description, phase, successMessageVerb, errorMessageVerb)
 	{
 		$.ajax({
 			url: App.baseurl + "/todo/" + id,
@@ -318,6 +323,41 @@ let App = {
 			}
 		});
 	},
+	removeTask: function(id, name, todo_name) {
+		$.ajax({
+			url: App.baseurl + "/task/" + id,
+			method: 'DELETE',
+			success: function(){
+				$.growl.notice({message: 'Task (' + name + ') removed successfully from Todo (' + todo_name + ')!'});
+				App.fetchTodos();
+			},
+			error: function() {
+				$.growl.error({message: 'Failed to remove Task (' + name + ') from Todo (' + todo_name + ')!'});
+			}
+		})
+	},
+	checkTask: function(id, name)
+	{
+		var temp_done=$('input[name=task-done-checkbox-' + id + ']:checked').val();
+		console.log(temp_done);
+
+		$.ajax({
+			url: App.baseurl + "/task/" + id,
+			method: 'PATCH',
+			data: JSON.stringify({
+				name: name,
+				done: temp_done,
+			}),
+			contentType: "application/json; charset=utf-8",
+			success: function(){
+				$.growl.notice({message: 'Task (' + name + ') ' + 'checked successfully!'});
+				App.fetchTodos();
+			},
+			error: function() {
+				$.growl.error({message: 'Failed to check Task (' + name + ')!'});
+			}
+		})
+	},
 	validateFormGroup: function(formGroupId) {
 		var fromGroup = $('#' + formGroupId);
 		if(!fromGroup.hasClass("was-validated")){
@@ -365,20 +405,20 @@ let App = {
 				submitButtonCaption: 'Remove', dismissButtonCaption: 'Cancel'}].map(App.tplConfirmModal)
 		);
 
-		$('#remove-confirm-modal-submit-button').click(function(e) { App.submitConfirmRemoveModal(); });
+		$('#remove-confirm-modal-submit-button').click(function(e) { App.submitRemoveConfirmModal(); });
 	},
 	dismissModal: function(modalPrefix)
 	{
 		$('#' + modalPrefix + 'Modal').modal('hide');
 	},
-	submitConfirmRemoveModal: function()
+	submitRemoveConfirmTodoModal: function()
 	{
 		App.removeTodo(App.currentlyPickedTodoId, App.currentlyPickedTodoName, function()
 		{
 			App.dismissModal('removeConfirm');
 		})
 	},
-	prepareRemoveConfirmModal: function(id, name)
+	prepareRemoveConfirmTodoModal: function(id, name)
 	{
 		App.currentlyPickedTodoId = id;
 		App.currentlyPickedTodoName = name;
