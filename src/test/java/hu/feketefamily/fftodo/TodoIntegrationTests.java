@@ -1,36 +1,36 @@
 package hu.feketefamily.fftodo;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
-import hu.feketefamily.fftodo.constants.ErrorMessages;
-import hu.feketefamily.fftodo.model.entity.Todo;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.stream.Stream;
-
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import hu.feketefamily.fftodo.constants.ErrorMessages;
+import hu.feketefamily.fftodo.model.entity.Todo;
 
 @SpringBootTest
 @AutoConfigureMockMvc
 public class TodoIntegrationTests {
 
-	private static Long VALID_ID = 1L;
-	private static String VALID_NAME = "validName";
-	private static String VALID_DESCRIPTION = "validDescription";
-	private static int VALID_PHASE = 0;
+	private static final String VALID_NAME = "validName";
+	private static final String VALID_DESCRIPTION = "validDescription";
+	private static final int VALID_PHASE = 0;
+	private static final Long NON_EXISTENT_ID = 1L;
 
 	@Autowired
 	private MockMvc mockMvc;
@@ -74,14 +74,14 @@ public class TodoIntegrationTests {
 	@Test
 	void removeNonExistentTodo() throws Exception {
 		mockMvc.perform(
-			delete("/todo/" + VALID_ID)
+			delete("/todo/" + NON_EXISTENT_ID)
 		).andExpect(status().is(HttpStatus.OK.value()));
 	}
 
 	@Test
 	void updateNonExistentTodo() throws Exception {
 		mockMvc.perform(
-			patch("/todo/" + VALID_ID)
+			patch("/todo/" + NON_EXISTENT_ID)
 				.content(mapper.writeValueAsString(
 					Todo.builder()
 						.name(VALID_NAME)
@@ -97,7 +97,7 @@ public class TodoIntegrationTests {
 	@MethodSource("provideInvalidTodos")
 	void updateInvalidTodo(Todo invalidTodo) throws Exception {
 		mockMvc.perform(
-			patch("/todo/" + VALID_ID)
+			patch("/todo/" + NON_EXISTENT_ID)
 				.content(mapper.writeValueAsString(invalidTodo))
 				.contentType(MediaType.APPLICATION_JSON)
 		).andExpect(status().is(HttpStatus.BAD_REQUEST.value()));

@@ -5,15 +5,15 @@ import static hu.feketefamily.fftodo.constants.ErrorMessages.TODO_NOT_EXIST_MESS
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
 
 import java.util.Date;
 import java.util.List;
+import javax.validation.Valid;
+import hu.feketefamily.fftodo.exception.NotExistException;
 import hu.feketefamily.fftodo.model.entity.Todo;
 import hu.feketefamily.fftodo.model.repository.TodoRepository;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.validation.annotation.Validated;
-
-import javax.validation.Valid;
 
 @Log4j2
 @Service
@@ -24,7 +24,7 @@ public class TodoService {
 	private TodoRepository todoRepository;
 
 	public Todo getTodo(Long id) {
-		return todoRepository.findById(id).orElseThrow(() -> new RuntimeException(TODO_NOT_EXIST_MESSAGE));
+		return todoRepository.findById(id).orElseThrow(() -> new NotExistException(TODO_NOT_EXIST_MESSAGE) );
 	}
 
 	public List<Todo> getTodos() {

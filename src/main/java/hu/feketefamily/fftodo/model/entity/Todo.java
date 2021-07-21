@@ -5,6 +5,7 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -44,6 +45,6 @@ public class Todo {
 	private Date dateCreated;
 	@Column(nullable = false)
 	private Date dateModified;
-	@OneToMany(cascade = CascadeType.REMOVE, mappedBy = "todo")
+	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE, mappedBy = "todo")
 	private List<Task> tasks;
 }
