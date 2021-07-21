@@ -39,10 +39,10 @@ let App = {
 					</div>
 					<div class="btn-group" role="group">
 						<button type="button" class="btn btn-primary btn-sm text-end" id = "shift-todo-left-${id}"
-							onclick="App.shiftTodo(${id}, '${name}', '${description}', ${phase - 1})"
+							onclick="App.shiftTodo(${id}, '${name}', '${description}', ${phase}, -1)"
 							data-toggle="tooltip" data-placement="bottom" title="Shift Todo"><i class="bi bi-arrow-left"></i></button>
 						<button type="button" class="btn btn-primary btn-sm text-end" id = "shift-todo-right-${id}"
-							onclick="App.shiftTodo(${id}, '${name}', '${description}', ${phase + 1})"
+							onclick="App.shiftTodo(${id}, '${name}', '${description}', ${phase}, 1)"
 							data-toggle="tooltip" data-placement="bottom" title="Shift Todo"><i class="bi bi-arrow-right"></i></button>
 					</div>
 				</div>
@@ -255,47 +255,41 @@ let App = {
 			}
 		})
 	},
-	editTodo: function() {
-		var todo_name = $('#edit-todo-name').val();
+	patchTodoRequest(id, name, description, phase, successMessageVerb, errorMessageVerb)
+	{
 		$.ajax({
-			url: App.baseurl + "/todo/" + App.currentlyPickedTodoId,
+			url: App.baseurl + "/todo/" + id,
 			method: 'PATCH',
 			data: JSON.stringify({
-				name: todo_name,
-				description: $('#edit-todo-description').val(),
-				phase: $('input[name=edit-todo-phase]:checked').val()
+				name: name,
+				description: description,
+				phase: phase
 			}),
 			contentType: "application/json; charset=utf-8",
 			success: function(){
-				$.growl.notice({message: 'Todo (' + todo_name + ') saved successfully!'});
+				$.growl.notice({message: 'Todo (' + name + ') ' + successMessageVerb + ' successfully!'});
 				App.fetchTodos();
 			},
 			error: function() {
-				$.growl.error({message: 'Failed to save Todo (' + todo_name + ')!'});
+				$.growl.error({message: 'Failed to ' + errorMessageVerb + ' Todo (' + name + ')!'});
 			}
 		})
 	},
-	shiftTodo: function(id2, name2, description2, phase_new) {
-		if ((phase_new >= 0) && (phase_new < App.PHASE_CNT)) {
-			$.ajax({
-				url: App.baseurl + "/todo/" + id2,
-				method: 'PATCH',
-				data: JSON.stringify({
-					name: name2,
-					description: description2,
-					phase: phase_new
-				}),
-				contentType: "application/json; charset=utf-8",
-				success: function(){
-					$.growl.notice({message: 'Todo (' + name2 + ') shifted successfully!'});
-					App.fetchTodos();
-				},
-				error: function() {
-					$.growl.error({message: 'Failed to shift Todo (' + name2 + ')!'});
-				}
-			})
+	editTodo: function() {
+		App.patchTodoRequest(App.currentlyPickedTodoId, $('#edit-todo-name').val(),
+			$('#edit-todo-description').val(), $('input[name=edit-todo-phase]:checked').val(), 'saved', 'save');
+	},
+	shiftTodo: function(id, name, description, phase, phase_diff) {
+		if ((phase_diff == -1) || (phase_diff == 1))
+		{
+			var phase_new = phase + phase_diff;
+			if ((phase_new >= 0) && (phase_new < App.PHASE_CNT)) {
+				App.patchTodoRequest(id, name, description, phase_new, 'shifted', 'shift');
+			} else {
+				$.growl.warning({message: 'Todo (' + name + ') cannot be shifted this way!'});
+			}
 		} else {
-			$.growl.warning({message: 'Todo (' + name2 + ') cannot be shifted this way!'});
+			$.growl.error({message: "Invalid value (" + phase_diff + ") for parameter 'phase_diff' of function 'shiftTodo'!"});
 		}
 	},
 	addTask: function() {
@@ -354,7 +348,7 @@ let App = {
 				submitButtonCaption: 'Save', dismissButtonCaption: 'Cancel'}].map(App.tplTodoModal)
 		);
 
-		$('#edit-todo-name').keypress(function(e) { App.submitTodoModal(e, 'edit'); });
+		$('#edit-todo-name').keypress(function(e) { App.submitModal(e, 'edit-todo'); });
 
 		addTaskModalTitlePrefix = 'Add task for this Todo: ',
 
