@@ -24,6 +24,7 @@ public class TaskService {
 
 	public void addTask(Long todoId, Task task) {
 		task.setTodo(todoService.getTodo(todoId));
+		log.info("Saving Task: {{}}", task.toString());
 		taskRepository.save(task);
 	}
 

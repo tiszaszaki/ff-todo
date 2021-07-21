@@ -10,13 +10,15 @@ let App = {
 	tplTask: function({task, todo}) {
 		return `
 		<li class="list-group-item d-flex justify-content-between">
-			<button type="button" class="btn btn-danger btn-sm text-end" onclick="App.removeTask(${task.id}, '${task.name}', '${todo.name}')"
-						data-toggle="tooltip" data-placement="bottom" title="Remove Task">
-				<i class="bi bi-trash"></i>
-			</button>
-			${task.name}
+			<div>
+				<button type="button" class="btn btn-danger btn-sm text-end" onclick="App.removeTask(${task.id}, '${task.name}', '${todo.name}')"
+							data-toggle="tooltip" data-placement="bottom" title="Remove Task">
+					<i class="bi bi-trash"></i>
+				</button>
+				${task.name}
+			</div>
 			<input id="task-done-checkbox-${task.id}" class="form-check-input" type="checkbox"
-				onclick="App.checkTask(${task.id}, '${task.name}')">
+				onclick="App.checkTask(${task.id}, '${task.name}', ${task.done})">
 		</li>`
 	},
 	tplCard: function({id, name, description, phase, dateModified}) {
@@ -310,12 +312,9 @@ let App = {
 				done: false,
 			}),
 			contentType: "application/json; charset=utf-8",
-			dataType: "json",
 			success: function(){
 				$.growl.notice({message: 'Task (' + task_name + ') added successfully for Todo (' + todo_name + ')!'});
-				$('#add-todo-name').val('');
-				$('#add-todo-description').val('');
-				$('#add-todo-phase0').prop("checked", true);
+				$('#add-task-name').val('');
 				App.fetchTodos();
 			},
 			error: function() {
@@ -336,25 +335,22 @@ let App = {
 			}
 		})
 	},
-	checkTask: function(id, name)
+	checkTask: function(id, name, done)
 	{
-		var temp_done=$('input[name=task-done-checkbox-' + id + ']:checked').val();
-		console.log(temp_done);
-
 		$.ajax({
 			url: App.baseurl + "/task/" + id,
 			method: 'PATCH',
 			data: JSON.stringify({
 				name: name,
-				done: temp_done,
+				done: !done,
 			}),
 			contentType: "application/json; charset=utf-8",
 			success: function(){
-				$.growl.notice({message: 'Task (' + name + ') ' + 'checked successfully!'});
+				$.growl.notice({message: 'Task (' + id + ',' + name + ') ' + 'checked successfully!'});
 				App.fetchTodos();
 			},
 			error: function() {
-				$.growl.error({message: 'Failed to check Task (' + name + ')!'});
+				$.growl.error({message: 'Failed to check Task (' + id + ',' + name + ')!'});
 			}
 		})
 	},
