@@ -48,6 +48,15 @@ public class TodoService {
 		}
 	}
 
+	public void removeAllTodos() {
+		if (todoRepository.count() > 0) {
+			log.info("Deleting all Todos...");
+			todoRepository.deleteAll();
+		} else {
+			log.warn("No Todos were deleted.");
+		}
+	}
+
 	@Transactional
 	public void updateTodo(Long id, @Valid Todo patchedTodo) {
 		if (todoRepository.updateById(id, patchedTodo.getName(), patchedTodo.getDescription(), patchedTodo.getPhase(), new Date()) < 1) {

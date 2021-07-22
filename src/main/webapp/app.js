@@ -39,8 +39,8 @@ let App = {
 									data-bs-toggle="modal" data-bs-target="#editTodoModal" data-toggle="tooltip" data-placement="bottom" title="Edit Todo">
 							<i class="bi bi-pencil"></i>
 						</button>
-						<button type="button" class="btn btn-danger btn-sm text-end" onclick="App.prepareRemoveConfirmModal(${id}, '${name}')"
-									data-bs-toggle="modal" data-bs-target="#removeConfirmModal" data-toggle="tooltip" data-placement="bottom" title="Remove Todo">
+						<button type="button" class="btn btn-danger btn-sm text-end" onclick="App.prepareRemoveTodoConfirmModal(${id}, '${name}')"
+									data-bs-toggle="modal" data-bs-target="#remove-todo-confirm-modal" data-toggle="tooltip" data-placement="bottom" title="Remove Todo">
 							<i class="bi bi-trash"></i>
 						</button>
 					</div>
@@ -146,7 +146,7 @@ let App = {
 	},
 	tplConfirmModal: function({modalPrefix, modalTitle, modalMessage, submitButtonCaption, dismissButtonCaption})
 	{
-		var modalName = modalPrefix + 'ConfirmModal';
+		var modalName = modalPrefix + '-confirm-modal';
 		return `
 		<div class="modal fade" id="${modalName}" tabindex="-1">
 			<div class="modal-dialog">
@@ -156,10 +156,10 @@ let App = {
 						<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
 					</div>
 					<div class="modal-body">
-						<p><div id="${modalPrefix}-confirm-modal-message">${modalMessage}</div></p>
+						<p><div id="${modalName}-message">${modalMessage}</div></p>
 					</div>
 					<div class="modal-footer">
-						<button type="button" class="btn btn-danger" id="${modalPrefix}-confirm-modal-submit-button">${submitButtonCaption}</button>
+						<button type="button" class="btn btn-danger" id="${modalName}-submit-button">${submitButtonCaption}</button>
 						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">${dismissButtonCaption}</button>
 					</div>
 				</div>
@@ -259,6 +259,20 @@ let App = {
 			},
 			error: function() {
 				$.growl.error({message: 'Failed to remove Todo (' + name + ')!'});
+			}
+		})
+	},
+	removeAllTodos: function(successCallback) {
+		$.ajax({
+			url: App.baseurl + "/todo/clear",
+			method: 'DELETE',
+			success: function(){
+				successCallback();
+				$.growl.notice({message: 'All Todos were removed successfully!'});
+				App.fetchTodos();
+			},
+			error: function() {
+				$.growl.error({message: 'Failed to remove all Todos!'});
 			}
 		})
 	},
@@ -397,29 +411,44 @@ let App = {
 		$('#add-task-name').keypress(function(e) { App.submitModal(e, 'add-task'); });
 
 		$('#modal-container').append(
-			[{modalPrefix: 'remove', modalTitle: 'Confirm removing a Todo', modalMessage: '',
+			[{modalPrefix: 'remove-todo', modalTitle: 'Confirm removing a Todo', modalMessage: '',
 				submitButtonCaption: 'Remove', dismissButtonCaption: 'Cancel'}].map(App.tplConfirmModal)
 		);
 
-		$('#remove-confirm-modal-submit-button').click(function(e) { App.submitRemoveConfirmModal(); });
+		$('#remove-todo-confirm-modal-submit-button').click(function(e) { App.submitRemoveTodoConfirmModal(); });
+
+		$('#modal-container').append(
+			[{modalPrefix: 'remove-all-todos', modalTitle: 'Confirm removing all Todos',
+				modalMessage: 'Are you sure to remove all Todos?',
+				submitButtonCaption: 'Remove All', dismissButtonCaption: 'Cancel'}].map(App.tplConfirmModal)
+		);
+
+		$('#remove-all-todos-confirm-modal-submit-button').click(function(e) { App.submitRemoveAllTodosConfirmModal(); });
 	},
 	dismissModal: function(modalPrefix)
 	{
-		$('#' + modalPrefix + 'Modal').modal('hide');
+		$('#' + modalPrefix + '-modal').modal('hide');
 	},
-	submitRemoveConfirmTodoModal: function()
+	submitRemoveTodoConfirmModal: function()
 	{
 		App.removeTodo(App.currentlyPickedTodoId, App.currentlyPickedTodoName, function()
 		{
-			App.dismissModal('removeConfirm');
+			App.dismissModal('remove-todo-confirm');
 		})
 	},
-	prepareRemoveConfirmTodoModal: function(id, name)
+	submitRemoveAllTodosConfirmModal: function()
+	{
+		App.removeAllTodos(function()
+		{
+			App.dismissModal('remove-all-todos-confirm');
+		})
+	},
+	prepareRemoveTodoConfirmModal: function(id, name)
 	{
 		App.currentlyPickedTodoId = id;
 		App.currentlyPickedTodoName = name;
 
-		$('#remove-confirm-modal-message').html('Are you sure to remove this Todo (' + name + ')?');
+		$('#remove-todo-confirm-modal-message').html('Are you sure to remove this Todo (' + name + ')?');
 	}
 }
 

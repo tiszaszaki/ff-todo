@@ -43,6 +43,12 @@ public class TodoController {
 		return ResponseEntity.ok().build();
 	}
 
+	@DeleteMapping("/clear")
+	public ResponseEntity<Void> removeAllTodos() {
+		todoService.removeAllTodos();
+		return ResponseEntity.ok().build();
+	}
+
 	@PatchMapping("/{id}")
 	public ResponseEntity<Void> updateTodo(@PathVariable Long id, @RequestBody Todo patchedTodo) {
 		todoService.updateTodo(id, patchedTodo);
