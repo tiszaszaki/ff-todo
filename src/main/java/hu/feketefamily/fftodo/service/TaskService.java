@@ -1,5 +1,6 @@
 package hu.feketefamily.fftodo.service;
 
+import hu.feketefamily.fftodo.model.entity.Todo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,6 +42,15 @@ public class TaskService {
 	public void updateTask(Long id, @Valid Task patchedTask) {
 		if (taskRepository.updateById(id, patchedTask.getName(), patchedTask.getDone()) < 1) {
 			log.warn("No Tasks were updated with id {{}}", id);
+		}
+	}
+
+	public void removeAllTasksFromTodo(Long id) {
+		for (Task t : taskRepository.findAll())
+		{
+			Todo t2=t.getTodo();
+			if (t2.getId().equals(id))
+				removeTask(t.getId());
 		}
 	}
 }

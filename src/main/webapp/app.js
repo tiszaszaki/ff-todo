@@ -18,6 +18,7 @@ let App = {
 				${task.name}
 			</div>
 			<input id="task-done-checkbox-${task.id}" class="form-check-input" type="checkbox"
+				data-toggle="tooltip" data-placement="bottom" title="Check Task"
 				onclick="App.checkTask(${task.id}, '${task.name}', ${task.done})">
 		</li>`
 	},
@@ -41,6 +42,10 @@ let App = {
 						</button>
 						<button type="button" class="btn btn-danger btn-sm text-end" onclick="App.prepareRemoveTodoConfirmModal(${id}, '${name}')"
 									data-bs-toggle="modal" data-bs-target="#remove-todo-confirm-modal" data-toggle="tooltip" data-placement="bottom" title="Remove Todo">
+							<i class="bi bi-trash"></i>
+						</button>
+						<button type="button" class="btn btn-danger btn-sm text-end" onclick="App.prepareRemoveAllTasksConfirmModal(${id}, '${name}')"
+									data-bs-toggle="modal" data-bs-target="#remove-all-tasks-confirm-modal" data-toggle="tooltip" data-placement="bottom" title="Remove All Tasks">
 							<i class="bi bi-trash"></i>
 						</button>
 					</div>
@@ -368,6 +373,20 @@ let App = {
 			}
 		})
 	},
+	removeAllTasks: function(id, name, successCallback) {
+		$.ajax({
+			url: App.baseurl + "/todo/" + id + "/task/clear",
+			method: 'DELETE',
+			success: function(){
+				successCallback();
+				$.growl.notice({message: 'All tasks removed successfully from Todo (' + name + ')!'});
+				App.fetchTodos();
+			},
+			error: function() {
+				$.growl.error({message: 'Failed to remove any Task from Todo (' + name + ')!'});
+			}
+		})
+	},
 	validateFormGroup: function(formGroupId) {
 		var fromGroup = $('#' + formGroupId);
 		if(!fromGroup.hasClass("was-validated")){
@@ -424,6 +443,13 @@ let App = {
 		);
 
 		$('#remove-all-todos-confirm-modal-submit-button').click(function(e) { App.submitRemoveAllTodosConfirmModal(); });
+
+		$('#modal-container').append(
+			[{modalPrefix: 'remove-all-tasks', modalTitle: 'Confirm removing all Tasks', modalMessage: '',
+				submitButtonCaption: 'Remove All', dismissButtonCaption: 'Cancel'}].map(App.tplConfirmModal)
+		);
+
+		$('#remove-all-tasks-confirm-modal-submit-button').click(function(e) { App.submitRemoveAllTasksConfirmModal(); });
 	},
 	dismissModal: function(modalPrefix)
 	{
@@ -443,12 +469,26 @@ let App = {
 			App.dismissModal('remove-all-todos-confirm');
 		})
 	},
+	submitRemoveAllTasksConfirmModal: function()
+	{
+		App.removeAllTasks(App.currentlyPickedTodoId, App.currentlyPickedTodoName, function()
+		{
+			App.dismissModal('remove-all-tasks-confirm');
+		})
+	},
 	prepareRemoveTodoConfirmModal: function(id, name)
 	{
 		App.currentlyPickedTodoId = id;
 		App.currentlyPickedTodoName = name;
 
 		$('#remove-todo-confirm-modal-message').html('Are you sure to remove this Todo (' + name + ')?');
+	},
+	prepareRemoveAllTasksConfirmModal: function(id, name)
+	{
+		App.currentlyPickedTodoId = id;
+		App.currentlyPickedTodoName = name;
+
+		$('#remove-all-tasks-confirm-modal-message').html('Are you sure to remove all Tasks from this Todo (' + name + ')?');
 	}
 }
 

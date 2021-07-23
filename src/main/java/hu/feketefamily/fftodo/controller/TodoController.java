@@ -60,4 +60,10 @@ public class TodoController {
 		taskService.addTask(id, task);
 		return ResponseEntity.ok().build();
 	}
+
+	@DeleteMapping("/{id}/task/clear")
+	public ResponseEntity<Void> removeAllTasks(@PathVariable Long id) {
+		taskService.removeAllTasksFromTodo(id);
+		return ResponseEntity.ok().build();
+	}
 }
