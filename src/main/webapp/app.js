@@ -44,7 +44,8 @@ let App = {
 									data-bs-toggle="modal" data-bs-target="#remove-todo-confirm-modal" data-toggle="tooltip" data-placement="bottom" title="Remove Todo">
 							<i class="bi bi-trash"></i>
 						</button>
-						<button type="button" class="btn btn-danger btn-sm text-end" onclick="App.prepareRemoveAllTasksConfirmModal(${id}, '${name}')"
+						<button type="button" class="btn btn-danger btn-sm text-end" id="remove-all-tasks-for-todo-${id}-button"
+									onclick="App.prepareRemoveAllTasksConfirmModal(${id}, '${name}')"
 									data-bs-toggle="modal" data-bs-target="#remove-all-tasks-confirm-modal" data-toggle="tooltip" data-placement="bottom" title="Remove All Tasks">
 							<i class="bi bi-trash"></i>
 						</button>
@@ -176,6 +177,9 @@ let App = {
 		$("#shift-todo-left-" + id).prop("disabled", !((phase > 0) && (phase < App.PHASE_CNT)));
 		$("#shift-todo-right-" + id).prop("disabled", !((phase >= 0) && (phase < App.PHASE_CNT-1)));
 	},
+	checkRemoveButton: function(buttonPrefix, count) {
+		$("#remove-" + buttonPrefix + "-button").prop("disabled", !(count > 0));
+	},
 	setTodoModalCharCount: function(modalPrefix) {
 		var textAreaLength = $('#' + modalPrefix + '-todo-description').val().length;
 		var charCountStr = textAreaLength + ' / ' + App.modalDescriptionMaxCharCount;
@@ -205,19 +209,27 @@ let App = {
 		$.ajax({
 			url: App.baseurl + "/todo",
 			success: function(result){
+				var todo_count=result.length;
+
 				for (var i = 0; i < App.PHASE_CNT; i++) {
 					$('#todo-container-phase' + i).empty();
 				}
-				for (var i = 0; i < result.length; i++) {
+
+				App.checkRemoveButton('all-todos', todo_count);
+
+				for (var i = 0; i < todo_count; i++) {
 					var temp_id = result[i].id;
 					var temp_phase = result[i].phase;
 					var temp_tasks = result[i].tasks;
+					var task_count = temp_tasks.length;
 
 					$('#todo-container-phase' + result[i].phase).append(
 						[{id: temp_id, name: result[i].name, description: result[i].description, phase: temp_phase, dateModified: result[i].dateModified}].map(App.tplCard)
 					);
 
-					for (var j = 0; j < temp_tasks.length; j++) {
+					App.checkRemoveButton('all-tasks-for-todo-' + temp_id, task_count);
+
+					for (var j = 0; j < task_count; j++) {
 						$('#task-list-container-' + temp_id).append(
 							[{task: temp_tasks[j], todo: result[i]}].map(App.tplTask)
 						);
