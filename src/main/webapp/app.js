@@ -47,7 +47,7 @@ let App = {
 						<button type="button" class="btn btn-danger btn-sm text-end" id="remove-all-tasks-for-todo-${id}-button"
 									onclick="App.prepareRemoveAllTasksConfirmModal(${id}, '${name}')"
 									data-bs-toggle="modal" data-bs-target="#remove-all-tasks-confirm-modal" data-toggle="tooltip" data-placement="bottom" title="Remove All Tasks">
-							<i class="bi bi-trash"></i>
+							<i class="fas fa-broom"></i>
 						</button>
 					</div>
 					<div class="btn-group" role="group">
