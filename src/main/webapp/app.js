@@ -34,15 +34,15 @@ let App = {
 					<div class="btn-group" role="group">
 						<button type="button" class="btn btn-primary btn-sm text-end" onclick="App.prepareAddTaskModal(${id}, '${name}')"
 									data-bs-toggle="modal" data-bs-target="#addTaskModal" data-toggle="tooltip" data-placement="bottom" title="Add new Task">
-							<i class="bi bi-plus-lg"></i>
+							<i class="fas fa-plus"></i>
 						</button>
 						<button type="button" class="btn btn-primary btn-sm text-end" onclick="App.prepareEditTodoModal(${id}, '${name}', '${description}', '${phase}')"
 									data-bs-toggle="modal" data-bs-target="#editTodoModal" data-toggle="tooltip" data-placement="bottom" title="Edit Todo">
-							<i class="bi bi-pencil"></i>
+							<i class="fas fa-pencil-alt"></i>
 						</button>
 						<button type="button" class="btn btn-danger btn-sm text-end" onclick="App.prepareRemoveTodoConfirmModal(${id}, '${name}')"
 									data-bs-toggle="modal" data-bs-target="#remove-todo-confirm-modal" data-toggle="tooltip" data-placement="bottom" title="Remove Todo">
-							<i class="bi bi-trash"></i>
+							<i class="fas fa-trash-alt"></i>
 						</button>
 						<button type="button" class="btn btn-danger btn-sm text-end" id="remove-all-tasks-for-todo-${id}-button"
 									onclick="App.prepareRemoveAllTasksConfirmModal(${id}, '${name}')"
@@ -53,10 +53,14 @@ let App = {
 					<div class="btn-group" role="group">
 						<button type="button" class="btn btn-primary btn-sm text-end" id = "shift-todo-left-${id}"
 							onclick="App.shiftTodo(${id}, '${name}', '${description}', ${phase}, -1)"
-							data-toggle="tooltip" data-placement="bottom" title="Shift Todo"><i class="bi bi-arrow-left"></i></button>
+							data-toggle="tooltip" data-placement="bottom" title="Shift Todo">
+								<i class="fas fa-arrow-left"></i></i>
+						</button>
 						<button type="button" class="btn btn-primary btn-sm text-end" id = "shift-todo-right-${id}"
 							onclick="App.shiftTodo(${id}, '${name}', '${description}', ${phase}, 1)"
-							data-toggle="tooltip" data-placement="bottom" title="Shift Todo"><i class="bi bi-arrow-right"></i></button>
+							data-toggle="tooltip" data-placement="bottom" title="Shift Todo">
+								<i class="fas fa-arrow-right"></i></i>
+						</button>
 					</div>
 				</div>
 			</div>
