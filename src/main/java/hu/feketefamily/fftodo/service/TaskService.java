@@ -45,12 +45,19 @@ public class TaskService {
 		}
 	}
 
-	public void removeAllTasksFromTodo(Long id) {
+	public Long removeAllTasksFromTodo(Long id) {
+		Long temp_count=0L;
+
 		for (Task t : taskRepository.findAll())
 		{
 			Todo t2=t.getTodo();
-			if (t2.getId().equals(id))
+
+			if (t2.getId().equals(id)) {
 				removeTask(t.getId());
+				temp_count++;
+			}
 		}
+
+		return temp_count;
 	}
 }

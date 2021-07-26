@@ -44,9 +44,8 @@ public class TodoController {
 	}
 
 	@DeleteMapping("/clear")
-	public ResponseEntity<Void> removeAllTodos() {
-		todoService.removeAllTodos();
-		return ResponseEntity.ok().build();
+	public ResponseEntity<Long> removeAllTodos() {
+		return ResponseEntity.ok(todoService.removeAllTodos());
 	}
 
 	@PatchMapping("/{id}")
@@ -62,8 +61,7 @@ public class TodoController {
 	}
 
 	@DeleteMapping("/{id}/task/clear")
-	public ResponseEntity<Void> removeAllTasks(@PathVariable Long id) {
-		taskService.removeAllTasksFromTodo(id);
-		return ResponseEntity.ok().build();
+	public ResponseEntity<Long> removeAllTasks(@PathVariable Long id) {
+		return ResponseEntity.ok(taskService.removeAllTasksFromTodo(id));
 	}
 }

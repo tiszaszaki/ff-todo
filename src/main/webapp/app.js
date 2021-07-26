@@ -283,12 +283,15 @@ let App = {
 		$.ajax({
 			url: App.baseurl + "/todo/clear",
 			method: 'DELETE',
-			success: function(){
+			success: function(result) {
 				successCallback();
-				$.growl.notice({message: 'All Todos were removed successfully!'});
+				if (result > 0)
+					$.growl.notice({message: 'All Todos were removed successfully!'});
+				else
+					$.growl.warning({message: 'No Todos were removed.'});
 				App.fetchTodos();
 			},
-			error: function() {
+			error: function(result) {
 				$.growl.error({message: 'Failed to remove all Todos!'});
 			}
 		})
@@ -377,7 +380,7 @@ let App = {
 			}),
 			contentType: "application/json; charset=utf-8",
 			success: function(){
-				$.growl.notice({message: 'Task (' + id + ',' + name + ') ' + 'checked successfully!'});
+				$.growl.notice({message: 'Task (' + id + ',' + name + ') checked successfully!'});
 				App.fetchTodos();
 			},
 			error: function() {
@@ -389,12 +392,15 @@ let App = {
 		$.ajax({
 			url: App.baseurl + "/todo/" + id + "/task/clear",
 			method: 'DELETE',
-			success: function(){
+			success: function(result) {
 				successCallback();
-				$.growl.notice({message: 'All tasks removed successfully from Todo (' + name + ')!'});
+				if (result > 0)
+					$.growl.notice({message: 'All Tasks were removed successfully from Todo (' + name + ')!'});
+				else
+					$.growl.warning({message: 'No Tasks were removed from Todo (' + name + ').'});
 				App.fetchTodos();
 			},
-			error: function() {
+			error: function(result) {
 				$.growl.error({message: 'Failed to remove any Task from Todo (' + name + ')!'});
 			}
 		})

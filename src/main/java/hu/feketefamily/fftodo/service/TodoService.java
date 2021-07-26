@@ -48,13 +48,17 @@ public class TodoService {
 		}
 	}
 
-	public void removeAllTodos() {
-		if (todoRepository.count() > 0) {
+	public Long removeAllTodos() {
+		Long temp_count=todoRepository.count();
+
+		if (temp_count > 0) {
 			log.info("Deleting all Todos...");
 			todoRepository.deleteAll();
 		} else {
 			log.warn("No Todos were deleted.");
 		}
+
+		return temp_count;
 	}
 
 	@Transactional
