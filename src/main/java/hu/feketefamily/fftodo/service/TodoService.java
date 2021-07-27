@@ -49,7 +49,7 @@ public class TodoService {
 	}
 
 	public Long removeAllTodos() {
-		Long temp_count=todoRepository.count();
+		long temp_count=todoRepository.count();
 
 		if (temp_count > 0) {
 			log.info("Deleting all Todos...");
