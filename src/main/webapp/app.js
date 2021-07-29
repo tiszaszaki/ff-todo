@@ -7,6 +7,9 @@ let App = {
 	addTaskModalTitlePrefix: undefined,
 	editTodoModalTitlePrefix: undefined,
 
+	todoModalCharCountRemainingDisplayed: true,
+	checkIfRemoveAllButtonsCanBeDisabled: true, // debug purpose only
+
 	tplTask: function({task, todo}) {
 		return `
 		<li class="list-group-item d-flex justify-content-between">
@@ -124,7 +127,7 @@ let App = {
 							</div>
 							<div class="mb-3">
 								<label for="${modalPrefix}-todo-description" class="col-form-label">Description:</label>
-								<textarea class="form-control" id="${modalPrefix}-todo-description" onkeyup="App.setTodoModalCharCount('${modalPrefix}')"
+								<textarea class="form-control" id="${modalPrefix}-todo-description" onkeyup="App.setTodoModalCharCount('${modalPrefix}', ${App.todoModalCharCountRemainingDisplayed})"
 										  placeholder="${placeholderDescription}"
 										  maxlength="${App.modalDescriptionMaxCharCount}"></textarea>
 								<span class="pull-right label label-default" id="${modalPrefix}-todo-description-char-count"></span>
@@ -184,14 +187,20 @@ let App = {
 	checkRemoveButton: function(buttonPrefix, count) {
 		$("#remove-" + buttonPrefix + "-button").prop("disabled", !(count > 0));
 	},
-	setTodoModalCharCount: function(modalPrefix) {
+	setTodoModalCharCount: function(modalPrefix, displayRemaining) {
 		var textAreaLength = $('#' + modalPrefix + '-todo-description').val().length;
-		var charCountStr = textAreaLength + ' / ' + App.modalDescriptionMaxCharCount;
+		var remainingLength = App.modalDescriptionMaxCharCount - textAreaLength;
+		var charCountStr = "";
+
+		if (displayRemaining)
+			charCountStr += remainingLength;
+		else
+			charCountStr += textAreaLength + ' / ' + App.modalDescriptionMaxCharCount;
 
 		$('#' + modalPrefix + '-todo-description-char-count').html(charCountStr);
 	},
 	prepareAddTodoModal: function() {
-		App.setTodoModalCharCount('add');
+		App.setTodoModalCharCount('add', App.todoModalCharCountRemainingDisplayed);
 	},
 	prepareEditTodoModal: function(id, name, description, phase) {
 		App.currentlyPickedTodoId = id;
@@ -201,7 +210,7 @@ let App = {
 		$('#edit-todo-description').val(description);
 		$('#edit-todo-phase' + phase).prop("checked", true);
 
-		App.setTodoModalCharCount('edit');
+		App.setTodoModalCharCount('edit', App.todoModalCharCountRemainingDisplayed);
 	},
 	prepareAddTaskModal: function(id, name) {
 		App.currentlyPickedTodoId = id;
@@ -209,7 +218,7 @@ let App = {
 
 		$('#add-task-title').html(addTaskModalTitlePrefix + name);
 	},
-	fetchTodos: function () {
+	fetchTodos: function (disableRemoveAllButtons) {
 		$.ajax({
 			url: App.baseurl + "/todo",
 			success: function(result){
@@ -219,7 +228,8 @@ let App = {
 					$('#todo-container-phase' + i).empty();
 				}
 
-				App.checkRemoveButton('all-todos', todo_count);
+				if (disableRemoveAllButtons)
+					App.checkRemoveButton('all-todos', todo_count);
 
 				for (var i = 0; i < todo_count; i++) {
 					var temp_id = result[i].id;
@@ -231,7 +241,8 @@ let App = {
 						[{id: temp_id, name: result[i].name, description: result[i].description, phase: temp_phase, dateModified: result[i].dateModified}].map(App.tplCard)
 					);
 
-					App.checkRemoveButton('all-tasks-for-todo-' + temp_id, task_count);
+					if (disableRemoveAllButtons)
+						App.checkRemoveButton('all-tasks-for-todo-' + temp_id, task_count);
 
 					for (var j = 0; j < task_count; j++) {
 						$('#task-list-container-' + temp_id).append(
@@ -262,7 +273,7 @@ let App = {
 				$('#add-todo-name').val('');
 				$('#add-todo-description').val('');
 				$('#add-todo-phase0').prop("checked", true);
-				App.fetchTodos();
+				App.fetchTodos(App.checkIfRemoveAllButtonsCanBeDisabled);
 			},
 			error: function() {
 				$.growl.error({message: 'Failed to add Todo (' + todo_name + ')!'});
@@ -276,7 +287,7 @@ let App = {
 			success: function(){
 				successCallback();
 				$.growl.notice({message: 'Todo (' + name + ') removed successfully!'});
-				App.fetchTodos();
+				App.fetchTodos(App.checkIfRemoveAllButtonsCanBeDisabled);
 			},
 			error: function() {
 				$.growl.error({message: 'Failed to remove Todo (' + name + ')!'});
@@ -293,7 +304,7 @@ let App = {
 					$.growl.notice({message: 'All Todos were removed successfully!'});
 				else
 					$.growl.warning({message: 'No Todos were removed.'});
-				App.fetchTodos();
+				App.fetchTodos(App.checkIfRemoveAllButtonsCanBeDisabled);
 			},
 			error: function(result) {
 				$.growl.error({message: 'Failed to remove all Todos!'});
@@ -313,7 +324,7 @@ let App = {
 			contentType: "application/json; charset=utf-8",
 			success: function(){
 				$.growl.notice({message: 'Todo (' + name + ') ' + successMessageVerb + ' successfully!'});
-				App.fetchTodos();
+				App.fetchTodos(App.checkIfRemoveAllButtonsCanBeDisabled);
 			},
 			error: function() {
 				$.growl.error({message: 'Failed to ' + errorMessageVerb + ' Todo (' + name + ')!'});
@@ -353,7 +364,7 @@ let App = {
 			success: function(){
 				$.growl.notice({message: 'Task (' + task_name + ') added successfully for Todo (' + todo_name + ')!'});
 				$('#add-task-name').val('');
-				App.fetchTodos();
+				App.fetchTodos(App.checkIfRemoveAllButtonsCanBeDisabled);
 			},
 			error: function() {
 				$.growl.error({message: 'Failed to add Task (' + task_name + ')!'});
@@ -366,7 +377,7 @@ let App = {
 			method: 'DELETE',
 			success: function(){
 				$.growl.notice({message: 'Task (' + name + ') removed successfully from Todo (' + todo_name + ')!'});
-				App.fetchTodos();
+				App.fetchTodos(App.checkIfRemoveAllButtonsCanBeDisabled);
 			},
 			error: function() {
 				$.growl.error({message: 'Failed to remove Task (' + name + ') from Todo (' + todo_name + ')!'});
@@ -385,7 +396,7 @@ let App = {
 			contentType: "application/json; charset=utf-8",
 			success: function(){
 				$.growl.notice({message: 'Task (' + id + ',' + name + ') checked successfully!'});
-				App.fetchTodos();
+				App.fetchTodos(App.checkIfRemoveAllButtonsCanBeDisabled);
 			},
 			error: function() {
 				$.growl.error({message: 'Failed to check Task (' + id + ',' + name + ')!'});
@@ -402,7 +413,7 @@ let App = {
 					$.growl.notice({message: 'All Tasks were removed successfully from Todo (' + name + ')!'});
 				else
 					$.growl.warning({message: 'No Tasks were removed from Todo (' + name + ').'});
-				App.fetchTodos();
+				App.fetchTodos(App.checkIfRemoveAllButtonsCanBeDisabled);
 			},
 			error: function(result) {
 				$.growl.error({message: 'Failed to remove any Task from Todo (' + name + ')!'});
@@ -516,5 +527,5 @@ let App = {
 
 $(document).ready(function () {
 	App.prepareModals();
-	App.fetchTodos();
+	App.fetchTodos(App.checkIfRemoveAllButtonsCanBeDisabled);
 });
