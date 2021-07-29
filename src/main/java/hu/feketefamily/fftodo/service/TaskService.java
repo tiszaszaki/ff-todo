@@ -46,7 +46,7 @@ public class TaskService {
 	}
 
 	public Long removeAllTasksFromTodo(Long id) {
-		Long temp_count=0L;
+		long temp_count=0L;
 
 		for (Task t : taskRepository.findAll())
 		{
@@ -57,6 +57,11 @@ public class TaskService {
 				temp_count++;
 			}
 		}
+
+		if (temp_count > 0)
+			log.info("Successfully deleted Tasks from Todo with id {{}}", id);
+		else
+			log.warn("No Tasks were deleted from Todo with id {{}}", id);
 
 		return temp_count;
 	}
