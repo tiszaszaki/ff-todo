@@ -16,7 +16,7 @@ let App = {
 			<div>
 				<button type="button" class="btn btn-danger btn-sm text-end" onclick="App.removeTask(${task.id}, '${task.name}', '${todo.name}')"
 							data-toggle="tooltip" data-placement="bottom" title="Remove Task">
-					<i class="bi bi-trash"></i>
+					<i class="fas fa-trash-alt"></i>
 				</button>
 				${task.name}
 			</div>
@@ -130,7 +130,9 @@ let App = {
 								<textarea class="form-control" id="${modalPrefix}-todo-description" onkeyup="App.setTodoModalCharCount('${modalPrefix}', ${App.todoModalCharCountRemainingDisplayed})"
 										  placeholder="${placeholderDescription}"
 										  maxlength="${App.modalDescriptionMaxCharCount}"></textarea>
-								<span class="pull-right label label-default" id="${modalPrefix}-todo-description-char-count"></span>
+								<div class="d-flex justify-content-end">
+									<span class="label label-default" id="${modalPrefix}-todo-description-char-count"></span>
+								</div>
 							</div>
 							<div>
 								<label class="col-form-label">Phase:</label>
