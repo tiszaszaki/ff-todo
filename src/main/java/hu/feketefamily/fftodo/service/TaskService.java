@@ -1,6 +1,5 @@
 package hu.feketefamily.fftodo.service;
 
-import hu.feketefamily.fftodo.model.entity.Todo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -45,18 +44,9 @@ public class TaskService {
 		}
 	}
 
-	public Long removeAllTasksFromTodo(Long id) {
-		long temp_count=0L;
-
-		for (Task t : taskRepository.findAll())
-		{
-			Todo t2=t.getTodo();
-
-			if (t2.getId().equals(id)) {
-				removeTask(t.getId());
-				temp_count++;
-			}
-		}
+	@Transactional
+	public int removeAllTasksFromTodo(Long id) {
+		int temp_count=taskRepository.deleteByTodoId(id);
 
 		if (temp_count > 0)
 			log.info("Successfully deleted Tasks from Todo with id {{}}", id);

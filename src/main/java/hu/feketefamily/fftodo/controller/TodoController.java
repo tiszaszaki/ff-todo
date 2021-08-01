@@ -61,7 +61,7 @@ public class TodoController {
 	}
 
 	@DeleteMapping("/{id}/task/clear")
-	public ResponseEntity<Long> removeAllTasks(@PathVariable Long id) {
+	public ResponseEntity<Integer> removeAllTasks(@PathVariable Long id) {
 		return ResponseEntity.ok(taskService.removeAllTasksFromTodo(id));
 	}
 }
