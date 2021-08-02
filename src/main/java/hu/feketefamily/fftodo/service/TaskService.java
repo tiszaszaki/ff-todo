@@ -49,7 +49,7 @@ public class TaskService {
 		int temp_count=taskRepository.deleteByTodoId(id);
 
 		if (temp_count > 0)
-			log.info("Successfully deleted Tasks from Todo with id {{}}", id);
+			log.info("Successfully deleted {} Task(s) from Todo with id {{}}", temp_count, id);
 		else
 			log.warn("No Tasks were deleted from Todo with id {{}}", id);
 

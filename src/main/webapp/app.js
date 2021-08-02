@@ -131,7 +131,7 @@ let App = {
 										  placeholder="${placeholderDescription}"
 										  maxlength="${App.modalDescriptionMaxCharCount}"></textarea>
 								<div class="d-flex justify-content-end">
-									<span class="label label-default" id="${modalPrefix}-todo-description-char-count"></span>
+									<span class="border border-secondary label" id="${modalPrefix}-todo-description-char-count"></span>
 								</div>
 							</div>
 							<div>
