@@ -6,6 +6,8 @@ let App = {
 	currentlyPickedTodoName: undefined,
 	addTaskModalTitlePrefix: undefined,
 	editTodoModalTitlePrefix: undefined,
+	fetchTodoSortingDirection: undefined,
+	fetchTodoSortingProperty: undefined,
 
 	todoModalCharCountRemainingDisplayed: true,
 	checkIfRemoveAllButtonsCanBeDisabled: true, // debug purpose only
@@ -221,8 +223,13 @@ let App = {
 		$('#add-task-title').html(addTaskModalTitlePrefix + name);
 	},
 	fetchTodos: function (disableRemoveAllButtons) {
+		var url2=App.baseurl + "/todo";
+
+		if ((App.fetchTodoSortingDirection !== undefined) && (App.fetchTodoSortingProperty !== undefined))
+			url2 += "/sorted/" + App.fetchTodoSortingDirection + "/" + App.fetchTodoSortingProperty;
+
 		$.ajax({
-			url: App.baseurl + "/todo",
+			url: url2,
 			success: function(result){
 				var todo_count=result.length;
 

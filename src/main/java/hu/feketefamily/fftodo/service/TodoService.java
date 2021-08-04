@@ -3,6 +3,7 @@ package hu.feketefamily.fftodo.service;
 import static hu.feketefamily.fftodo.constants.ErrorMessages.TODO_NOT_EXIST_MESSAGE;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
@@ -29,6 +30,11 @@ public class TodoService {
 
 	public List<Todo> getTodos() {
 		return todoRepository.findAll();
+	}
+
+	public List<Todo> getTodosSorted(Sort.Direction dir, String propName)
+	{
+		return todoRepository.findAll(Sort.by(dir, propName));
 	}
 
 	public Todo addTodo(@Valid Todo todo) {

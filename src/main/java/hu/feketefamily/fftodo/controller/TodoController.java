@@ -1,6 +1,7 @@
 package hu.feketefamily.fftodo.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,6 +31,11 @@ public class TodoController {
 	@GetMapping
 	public ResponseEntity<List<Todo>> getTodos() {
 		return ResponseEntity.ok(todoService.getTodos());
+	}
+
+	@GetMapping("/sorted/{dir}/{propName}")
+	public ResponseEntity<List<Todo>> getTodosSorted(@PathVariable("dir") String dirStr, @PathVariable String propName) {
+		return ResponseEntity.ok(todoService.getTodosSorted(Sort.Direction.valueOf(dirStr.toUpperCase()), propName));
 	}
 
 	@PutMapping
