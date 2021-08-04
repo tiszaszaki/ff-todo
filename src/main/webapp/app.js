@@ -184,6 +184,46 @@ let App = {
 		</div>
 		`
 	},
+	tplSortingModal: function({modalPrefix, modalTitle, submitButtonCaption, dismissButtonCaption})
+	{
+		var modalName = modalPrefix + '-sorting-modal';
+		return `
+		<div class="modal fade" id="${modalName}" tabindex="-1">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title">${modalTitle}</h5>
+						<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+					</div>
+					<div class="modal-body">
+						<div>
+							<label class="col-form-label">Field:</label>
+						</div>
+						<div class="btn-group" role="group" id="${modalPrefix}-sorting-field-group"></div>
+						<div>
+							<label class="col-form-label">Direction:</label>
+						</div>
+						<div class="btn-group" role="group">
+							<input type="radio" class="btn-check" name="${modalPrefix}-sorting-direction" id="${modalPrefix}-sorting-asc" value="asc">
+							<label class="btn btn-outline-primary" for="${modalPrefix}-sorting-asc">
+								Ascending
+							</label>
+
+							<input type="radio" class="btn-check" name="${modalPrefix}-sorting-direction" id="${modalPrefix}-sorting-desc" value="desc">
+							<label class="btn btn-outline-primary" for="${modalPrefix}-sorting-desc">
+								Descending
+							</label>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-danger" id="${modalName}-submit-button">${submitButtonCaption}</button>
+						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">${dismissButtonCaption}</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		`
+	},
 	checkShiftTodoButtons: function(id, phase) {
 		$("#shift-todo-left-" + id).prop("disabled", !((phase > 0) && (phase < App.PHASE_CNT)));
 		$("#shift-todo-right-" + id).prop("disabled", !((phase >= 0) && (phase < App.PHASE_CNT-1)));
@@ -222,7 +262,7 @@ let App = {
 
 		$('#add-task-title').html(addTaskModalTitlePrefix + name);
 	},
-	fetchTodos: function (disableRemoveAllButtons) {
+	fetchTodos: function (disableRemoveAllButtons, successCallback) {
 		var url2=App.baseurl + "/todo";
 
 		if ((App.fetchTodoSortingDirection !== undefined) && (App.fetchTodoSortingProperty !== undefined))
@@ -231,6 +271,9 @@ let App = {
 		$.ajax({
 			url: url2,
 			success: function(result){
+				if (successCallback !== undefined)
+					successCallback();
+
 				var todo_count=result.length;
 
 				for (var i = 0; i < App.PHASE_CNT; i++) {
@@ -282,7 +325,7 @@ let App = {
 				$('#add-todo-name').val('');
 				$('#add-todo-description').val('');
 				$('#add-todo-phase0').prop("checked", true);
-				App.fetchTodos(App.checkIfRemoveAllButtonsCanBeDisabled);
+				App.fetchTodos(App.checkIfRemoveAllButtonsCanBeDisabled, undefined);
 			},
 			error: function() {
 				$.growl.error({message: 'Failed to add Todo (' + todo_name + ')!'});
@@ -296,7 +339,7 @@ let App = {
 			success: function(){
 				successCallback();
 				$.growl.notice({message: 'Todo (' + name + ') removed successfully!'});
-				App.fetchTodos(App.checkIfRemoveAllButtonsCanBeDisabled);
+				App.fetchTodos(App.checkIfRemoveAllButtonsCanBeDisabled, undefined);
 			},
 			error: function() {
 				$.growl.error({message: 'Failed to remove Todo (' + name + ')!'});
@@ -313,7 +356,7 @@ let App = {
 					$.growl.notice({message: 'All Todos were removed successfully!'});
 				else
 					$.growl.warning({message: 'No Todos were removed.'});
-				App.fetchTodos(App.checkIfRemoveAllButtonsCanBeDisabled);
+				App.fetchTodos(App.checkIfRemoveAllButtonsCanBeDisabled, undefined);
 			},
 			error: function(result) {
 				$.growl.error({message: 'Failed to remove all Todos!'});
@@ -333,7 +376,7 @@ let App = {
 			contentType: "application/json; charset=utf-8",
 			success: function(){
 				$.growl.notice({message: 'Todo (' + name + ') ' + successMessageVerb + ' successfully!'});
-				App.fetchTodos(App.checkIfRemoveAllButtonsCanBeDisabled);
+				App.fetchTodos(App.checkIfRemoveAllButtonsCanBeDisabled, undefined);
 			},
 			error: function() {
 				$.growl.error({message: 'Failed to ' + errorMessageVerb + ' Todo (' + name + ')!'});
@@ -373,7 +416,7 @@ let App = {
 			success: function(){
 				$.growl.notice({message: 'Task (' + task_name + ') added successfully for Todo (' + todo_name + ')!'});
 				$('#add-task-name').val('');
-				App.fetchTodos(App.checkIfRemoveAllButtonsCanBeDisabled);
+				App.fetchTodos(App.checkIfRemoveAllButtonsCanBeDisabled, undefined);
 			},
 			error: function() {
 				$.growl.error({message: 'Failed to add Task (' + task_name + ')!'});
@@ -386,7 +429,7 @@ let App = {
 			method: 'DELETE',
 			success: function(){
 				$.growl.notice({message: 'Task (' + name + ') removed successfully from Todo (' + todo_name + ')!'});
-				App.fetchTodos(App.checkIfRemoveAllButtonsCanBeDisabled);
+				App.fetchTodos(App.checkIfRemoveAllButtonsCanBeDisabled, undefined);
 			},
 			error: function() {
 				$.growl.error({message: 'Failed to remove Task (' + name + ') from Todo (' + todo_name + ')!'});
@@ -405,7 +448,7 @@ let App = {
 			contentType: "application/json; charset=utf-8",
 			success: function(){
 				$.growl.notice({message: 'Task (' + id + ',' + name + ') checked successfully!'});
-				App.fetchTodos(App.checkIfRemoveAllButtonsCanBeDisabled);
+				App.fetchTodos(App.checkIfRemoveAllButtonsCanBeDisabled, undefined);
 			},
 			error: function() {
 				$.growl.error({message: 'Failed to check Task (' + id + ',' + name + ')!'});
@@ -422,7 +465,7 @@ let App = {
 					$.growl.notice({message: 'All Tasks were removed successfully from Todo (' + name + ')!'});
 				else
 					$.growl.warning({message: 'No Tasks were removed from Todo (' + name + ').'});
-				App.fetchTodos(App.checkIfRemoveAllButtonsCanBeDisabled);
+				App.fetchTodos(App.checkIfRemoveAllButtonsCanBeDisabled, undefined);
 			},
 			error: function(result) {
 				$.growl.error({message: 'Failed to remove any Task from Todo (' + name + ')!'});
@@ -492,6 +535,23 @@ let App = {
 		);
 
 		$('#remove-all-tasks-confirm-modal-submit-button').click(function(e) { App.submitRemoveAllTasksConfirmModal(); });
+
+		$('#modal-container').append(
+			[{modalPrefix: 'todo', modalTitle: 'Sorting Todos',
+				submitButtonCaption: 'Sort', dismissButtonCaption: 'Cancel'}].map(App.tplSortingModal)
+		);
+
+		var TodoSortingFields=new Map([['name','Todo name'],['description','Todo description']]).forEach(function(value, key, map) {
+			var result=`
+				<input type="radio" class="btn-check" name="todo-sorting-fields" id="todo-sorting-field-${key}" value="${key}">
+				<label class="btn btn-outline-primary" for="todo-sorting-field-${key}"
+						data-toggle="tooltip" data-placement="bottom" title="Sort by '${value}'">
+					${value}
+				</label>
+			`
+			$('#todo-sorting-field-group').append(result);
+		});
+		$('#todo-sorting-modal-submit-button').click(function(e) { App.submitTodoSorting(); });
 	},
 	dismissModal: function(modalPrefix)
 	{
@@ -518,6 +578,26 @@ let App = {
 			App.dismissModal('remove-all-tasks-confirm');
 		})
 	},
+	submitTodoSorting: function()
+	{
+		App.fetchTodoSortingDirection = $('input[name=todo-sorting-direction]:checked').val();
+		App.fetchTodoSortingProperty = $('input[name=todo-sorting-fields]:checked').val();
+
+		App.fetchTodos(App.checkIfRemoveAllButtonsCanBeDisabled, function() {
+			App.dismissModal('todo-sorting');
+		});
+
+		$.growl.notice({message: 'Todo sorting set up successfully!'});
+	},
+	deleteTodoSorting: function()
+	{
+		App.fetchTodoSortingDirection = undefined;
+		App.fetchTodoSortingProperty = undefined;
+
+		App.fetchTodos(App.checkIfRemoveAllButtonsCanBeDisabled, undefined);
+
+		$.growl.warning({message: 'Todo sorting set back to default!'});
+	},
 	prepareRemoveTodoConfirmModal: function(id, name)
 	{
 		App.currentlyPickedTodoId = id;
@@ -531,10 +611,29 @@ let App = {
 		App.currentlyPickedTodoName = name;
 
 		$('#remove-all-tasks-confirm-modal-message').html('Are you sure to remove all Tasks from this Todo (' + name + ')?');
+	},
+	prepareTodoSortingModal: function()
+	{
+		if (App.fetchTodoSortingProperty !== undefined)
+		{
+			$('#todo-sorting-field-' + App.fetchTodoSortingProperty).prop("checked", true);
+		}
+		else
+		{
+			$('#todo-sorting-field-name').prop("checked", true);
+		}
+		if (App.fetchTodoSortingDirection !== undefined)
+		{
+			$('#todo-sorting-direction-' + App.fetchTodoSortingDirection).prop("checked", true);
+		}
+		else
+		{
+			$('#todo-sorting-asc').prop("checked", true);
+		}
 	}
 }
 
 $(document).ready(function () {
 	App.prepareModals();
-	App.fetchTodos(App.checkIfRemoveAllButtonsCanBeDisabled);
+	App.fetchTodos(App.checkIfRemoveAllButtonsCanBeDisabled, undefined);
 });
