@@ -13,6 +13,7 @@ let App = {
 	checkIfRemoveAllButtonsCanBeDisabled: true, // debug purpose only
 
 	todoSortingFields: new Map([['name','Todo name'],['description','Todo description'],
+			['descriptionLength','Todo description length'],
 			['dateCreated','Date of Todo created'],['dateModified','Date of Todo updated']]),
 
 	tplTask: function({task, todo}) {
@@ -30,8 +31,9 @@ let App = {
 				onclick="App.checkTask(${task.id}, '${task.name}', ${task.done})">
 		</li>`
 	},
-	tplCard: function({id, name, description, phase, dateModified, dateCreated}) {
+	tplCard: function({id, name, description, phase, dateModified, dateCreated, descriptionLength}) {
 		var cardFooter="";
+		var cardDescription="";
 
 		if (dateCreated !== undefined)
 		{
@@ -51,11 +53,29 @@ let App = {
 			`
 		}
 
+		if (descriptionLength !== undefined)
+		{
+			cardDescription = `
+				<div class="border border-secondary">
+					<p class="card-text">${description}</p>
+				</div>
+				<p>Description length: ${descriptionLength}</p>
+			`
+		}
+		else
+		{
+			cardDescription = `
+				<div class="border border-secondary">
+					<p class="card-text">${description}</p>
+				</div>
+			`
+		}
+
 		return `
 		<div class="card mb-2">
 			<div class="card-body">
 				<h5 class="card-title">${name}</h5>
-				<p class="card-text">${description}</p>
+				${cardDescription}
 				<ul id="task-list-container-${id}" class="list-group p-2">
 				</ul>
 				<div class="d-flex justify-content-between">
@@ -298,6 +318,17 @@ let App = {
 				if (successCallback !== undefined)
 					successCallback();
 
+				if (doSorting)
+				{
+					$('#display-sorting-active').html(
+						App.fetchTodoSortingProperty + '-' + App.fetchTodoSortingDirection
+					);
+				}
+				else
+				{
+					$('#display-sorting-active').html("");
+				}
+
 				var todo_count=result.length;
 
 				for (var i = 0; i < App.PHASE_CNT; i++) {
@@ -313,13 +344,18 @@ let App = {
 					var temp_tasks = result[i].tasks;
 					var task_count = temp_tasks.length;
 					var temp_date_created;
+					var temp_description_length;
 
 					if (doSorting && (App.fetchTodoSortingProperty.substring(0,4) == "date"))
 						temp_date_created = result[i].dateCreated;
 
+					if (doSorting && (App.fetchTodoSortingProperty == "descriptionLength"))
+						temp_description_length = result[i].descriptionLength;
+
 					$('#todo-container-phase' + result[i].phase).append(
 						[{id: temp_id, name: result[i].name, description: result[i].description, phase: temp_phase,
-							dateModified: result[i].dateModified, dateCreated: temp_date_created}].map(App.tplCard)
+							dateModified: result[i].dateModified, dateCreated: temp_date_created,
+							descriptionLength: temp_description_length}].map(App.tplCard)
 					);
 
 					if (disableRemoveAllButtons)

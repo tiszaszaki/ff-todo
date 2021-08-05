@@ -20,6 +20,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Formula;
 
 @Data
 @Builder
@@ -37,6 +38,8 @@ public class Todo {
 	@Size(max = 1024)
 	@Column(length = 1024)
 	private String description;
+	@Formula("LENGTH(description)")
+	private Long descriptionLength;
 	@NotNull
 	@Min(0)
 	@Max(2)

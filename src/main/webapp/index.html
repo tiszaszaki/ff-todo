@@ -15,11 +15,13 @@
 <body>
 <div class="container">
 	<h1 class="display-3 my-5">Test Todo application</h1>
-	<div class>
+	<div>
+		Sorting:
 		<button class="btn btn-primary" onclick="App.prepareTodoSortingModal()" data-bs-toggle="modal" data-bs-target="#todo-sorting-modal"
 				data-toggle="tooltip" data-placement="bottom" title="Sort Todos">Sort</button>
 		<button class="btn btn-secondary" onclick="App.deleteTodoSorting()"
 				data-toggle="tooltip" data-placement="bottom" title="Reset sorting Todos">Reset</button>
+		<div id="display-sorting-active"></div>
 	</div>
 	<div class="row">
 		<div class="col">
