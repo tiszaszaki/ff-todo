@@ -13,7 +13,7 @@ let App = {
 	checkIfRemoveAllButtonsCanBeDisabled: true, // debug purpose only
 
 	todoSortingFields: new Map([['name','Todo name'],['description','Todo description'],
-			['descriptionLength','Todo description length'],
+			['descriptionLength','Todo description length'],['taskCount','Task count in Todo'],
 			['dateCreated','Date of Todo created'],['dateModified','Date of Todo updated']]),
 
 	tplTask: function({task, todo}) {
@@ -40,8 +40,10 @@ let App = {
 			cardFooter = `
 				<div class="card-footer text-muted">
 					<p>Updated ${moment(dateModified).fromNow()}</p>
-					<p>Created ${moment(dateCreated).fromNow()}</p>
-				</p>
+					<div data-toggle="tooltip" data-placement="bottom" title="This field is displayed only when involved by active sorting.">
+						<p>Created ${moment(dateCreated).fromNow()}</p>
+					</div>
+				</div>
 			`
 		}
 		else
@@ -49,7 +51,7 @@ let App = {
 			cardFooter = `
 				<div class="card-footer text-muted">
 					<p>Updated ${moment(dateModified).fromNow()}</p>
-				</p>
+				</div>
 			`
 		}
 
@@ -59,7 +61,9 @@ let App = {
 				<div class="border border-secondary">
 					<p class="card-text">${description}</p>
 				</div>
-				<p>Description length: ${descriptionLength}</p>
+				<div data-toggle="tooltip" data-placement="bottom" title="This field is displayed only when involved by active sorting.">
+					<p>Description length: ${descriptionLength}</p>
+				</div>
 			`
 		}
 		else
@@ -78,6 +82,9 @@ let App = {
 				${cardDescription}
 				<ul id="task-list-container-${id}" class="list-group p-2">
 				</ul>
+				<div data-toggle="tooltip" data-placement="bottom" title="This field is displayed only when involved by active sorting.">
+					<p id="task-list-counter-${id}"></p>
+				</div>
 				<div class="d-flex justify-content-between">
 					<div class="btn-group" role="group">
 						<button type="button" class="btn btn-primary btn-sm text-end" onclick="App.prepareAddTaskModal(${id}, '${name}')"
@@ -360,6 +367,9 @@ let App = {
 
 					if (disableRemoveAllButtons)
 						App.checkRemoveButton('all-tasks-for-todo-' + temp_id, task_count);
+
+					if (doSorting && (App.fetchTodoSortingProperty == "taskCount"))
+						$('#task-list-counter-' + temp_id).html("Task count: " + task_count);
 
 					for (var j = 0; j < task_count; j++) {
 						$('#task-list-container-' + temp_id).append(
