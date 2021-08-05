@@ -249,7 +249,7 @@ let App = {
 						<div>
 							<label class="col-form-label">Field:</label>
 						</div>
-						<div class="btn-group" role="group" id="${modalPrefix}-sorting-field-group"></div>
+						<div class="btn-group-vertical" role="group" id="${modalPrefix}-sorting-field-group"></div>
 						<div>
 							<label class="col-form-label">Direction:</label>
 						</div>
@@ -327,13 +327,13 @@ let App = {
 
 				if (doSorting)
 				{
-					$('#display-sorting-active').html(
-						App.fetchTodoSortingProperty + '-' + App.fetchTodoSortingDirection
-					);
+					$('#display-active-sorting-prop').html("'" + App.todoSortingFields.get(App.fetchTodoSortingProperty) + "'");
+					$('#display-active-sorting-dir').html(App.fetchTodoSortingDirection + 'ending');
 				}
 				else
 				{
-					$('#display-sorting-active').html("");
+					$('#display-active-sorting-prop').html("");
+					$('#display-active-sorting-dir').html("");
 				}
 
 				var todo_count=result.length;
@@ -618,11 +618,13 @@ let App = {
 
 		App.todoSortingFields.forEach(function(value, key, map) {
 			var result=`
-				<input type="radio" class="btn-check" name="todo-sorting-fields" id="todo-sorting-field-${key}" value="${key}">
-				<label class="btn btn-outline-primary" for="todo-sorting-field-${key}"
-						data-toggle="tooltip" data-placement="bottom" title="Sort by '${value}'">
-					${value}
-				</label>
+				<div class="form-check">
+					<input class="form-check-input" type="radio" name="todo-sorting-fields" id="todo-sorting-field-${key}" value="${key}">
+					<label class="form-check-label" for="todo-sorting-field-${key}"
+							data-toggle="tooltip" data-placement="bottom" title="Sort by '${value}'">
+						${value}
+					</label>
+				</div>
 			`
 			$('#todo-sorting-field-group').append(result);
 		});
