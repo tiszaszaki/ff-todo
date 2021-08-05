@@ -12,6 +12,9 @@ let App = {
 	todoModalCharCountRemainingDisplayed: true,
 	checkIfRemoveAllButtonsCanBeDisabled: true, // debug purpose only
 
+	todoSortingFields: new Map([['name','Todo name'],['description','Todo description'],
+			['dateCreated','Date of Todo created'],['dateModified','Date of Todo updated']]),
+
 	tplTask: function({task, todo}) {
 		return `
 		<li class="list-group-item d-flex justify-content-between">
@@ -27,7 +30,27 @@ let App = {
 				onclick="App.checkTask(${task.id}, '${task.name}', ${task.done})">
 		</li>`
 	},
-	tplCard: function({id, name, description, phase, dateModified}) {
+	tplCard: function({id, name, description, phase, dateModified, dateCreated}) {
+		var cardFooter="";
+
+		if (dateCreated !== undefined)
+		{
+			cardFooter = `
+				<div class="card-footer text-muted">
+					<p>Updated ${moment(dateModified).fromNow()}</p>
+					<p>Created ${moment(dateCreated).fromNow()}</p>
+				</p>
+			`
+		}
+		else
+		{
+			cardFooter = `
+				<div class="card-footer text-muted">
+					<p>Updated ${moment(dateModified).fromNow()}</p>
+				</p>
+			`
+		}
+
 		return `
 		<div class="card mb-2">
 			<div class="card-body">
@@ -69,7 +92,7 @@ let App = {
 					</div>
 				</div>
 			</div>
-			<div class="card-footer text-muted">Updated ${moment(dateModified).fromNow()}</p>
+			${cardFooter}
 		</div>
 		`
 	},
@@ -264,8 +287,9 @@ let App = {
 	},
 	fetchTodos: function (disableRemoveAllButtons, successCallback) {
 		var url2=App.baseurl + "/todo";
+		var doSorting=((App.fetchTodoSortingDirection !== undefined) && (App.fetchTodoSortingProperty !== undefined));
 
-		if ((App.fetchTodoSortingDirection !== undefined) && (App.fetchTodoSortingProperty !== undefined))
+		if (doSorting)
 			url2 += "/sorted/" + App.fetchTodoSortingDirection + "/" + App.fetchTodoSortingProperty;
 
 		$.ajax({
@@ -288,9 +312,14 @@ let App = {
 					var temp_phase = result[i].phase;
 					var temp_tasks = result[i].tasks;
 					var task_count = temp_tasks.length;
+					var temp_date_created;
+
+					if (doSorting && (App.fetchTodoSortingProperty.substring(0,4) == "date"))
+						temp_date_created = result[i].dateCreated;
 
 					$('#todo-container-phase' + result[i].phase).append(
-						[{id: temp_id, name: result[i].name, description: result[i].description, phase: temp_phase, dateModified: result[i].dateModified}].map(App.tplCard)
+						[{id: temp_id, name: result[i].name, description: result[i].description, phase: temp_phase,
+							dateModified: result[i].dateModified, dateCreated: temp_date_created}].map(App.tplCard)
 					);
 
 					if (disableRemoveAllButtons)
@@ -541,7 +570,7 @@ let App = {
 				submitButtonCaption: 'Sort', dismissButtonCaption: 'Cancel'}].map(App.tplSortingModal)
 		);
 
-		var TodoSortingFields=new Map([['name','Todo name'],['description','Todo description']]).forEach(function(value, key, map) {
+		App.todoSortingFields.forEach(function(value, key, map) {
 			var result=`
 				<input type="radio" class="btn-check" name="todo-sorting-fields" id="todo-sorting-field-${key}" value="${key}">
 				<label class="btn btn-outline-primary" for="todo-sorting-field-${key}"
@@ -587,7 +616,10 @@ let App = {
 			App.dismissModal('todo-sorting');
 		});
 
-		$.growl.notice({message: 'Todo sorting set up successfully!'});
+		if ((App.fetchTodoSortingDirection !== undefined) && (App.fetchTodoSortingProperty !== undefined))
+			$.growl.notice({message: 'Todo sorting set up successfully.'});
+		else
+			$.growl.error({message: 'Failed to set up sorting for Todos!'});
 	},
 	deleteTodoSorting: function()
 	{
@@ -596,7 +628,7 @@ let App = {
 
 		App.fetchTodos(App.checkIfRemoveAllButtonsCanBeDisabled, undefined);
 
-		$.growl.warning({message: 'Todo sorting set back to default!'});
+		$.growl.notice({message: 'Todo sorting set back to default.'});
 	},
 	prepareRemoveTodoConfirmModal: function(id, name)
 	{
