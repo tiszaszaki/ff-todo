@@ -19,9 +19,13 @@
 		<div>Sorting Todos:</div>
 		<button class="btn btn-primary mx-3" id="todo-sorting-toolbar-1" onclick="App.prepareTodoSortingModal()"
 				data-bs-toggle="modal" data-bs-target="#todo-sorting-modal"
-				data-toggle="tooltip" data-placement="bottom" title="Sort Todos">Sort</button>
+				data-toggle="tooltip" data-placement="bottom" title="Sort Todos">
+			<i class="fas fa-sort-amount-up-alt"></i>
+		</button>
 		<button class="btn btn-secondary mx-1" id="todo-sorting-toolbar-2" onclick="App.deleteTodoSorting(false)"
-				data-toggle="tooltip" data-placement="bottom" title="Reset sorting Todos">Reset</button>
+				data-toggle="tooltip" data-placement="bottom" title="Reset sorting Todos">
+			<i class="fas fa-trash-restore"></i>
+		</button>
 		<div class="mx-1" id="display-active-todo-sorting-prop"></div>
 		<div class="mx-1" id="display-active-todo-sorting-dir"></div>
 	</div>
@@ -29,9 +33,13 @@
 		<div>Sorting Tasks:</div>
 		<button class="btn btn-primary mx-3" id="task-sorting-toolbar-1" onclick="App.prepareTaskSortingModal()"
 				data-bs-toggle="modal" data-bs-target="#task-sorting-modal"
-				data-toggle="tooltip" data-placement="bottom" title="Sort Tasks">Sort</button>
+				data-toggle="tooltip" data-placement="bottom" title="Sort Tasks">
+			<i class="fas fa-sort-amount-up-alt"></i>
+		</button>
 		<button class="btn btn-secondary mx-1" id="task-sorting-toolbar-2" onclick="App.deleteTaskSorting(false)"
-				data-toggle="tooltip" data-placement="bottom" title="Reset sorting Tasks">Reset</button>
+				data-toggle="tooltip" data-placement="bottom" title="Reset sorting Tasks">
+			<i class="fas fa-trash-restore"></i>
+		</button>
 		<div class="mx-1" id="display-active-task-sorting-prop"></div>
 		<div class="mx-1" id="display-active-task-sorting-dir"></div>
 	</div>

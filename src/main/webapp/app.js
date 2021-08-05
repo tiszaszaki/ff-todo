@@ -261,15 +261,17 @@ let App = {
 						<div>
 							<label class="col-form-label">Direction:</label>
 						</div>
-						<div class="btn-group" role="group">
+						<div class="btn-group" role="group" id="${modalPrefix}-sorting-direction-group">
 							<input type="radio" class="btn-check" name="${modalPrefix}-sorting-direction" id="${modalPrefix}-sorting-asc" value="asc">
-							<label class="btn btn-outline-primary" for="${modalPrefix}-sorting-asc">
-								Ascending
+							<label class="btn btn-outline-primary" for="${modalPrefix}-sorting-asc"
+									data-toggle="tooltip" data-placement="bottom" title="Ascending">
+								<i class="fas fa-sort-amount-up-alt"></i>
 							</label>
 
 							<input type="radio" class="btn-check" name="${modalPrefix}-sorting-direction" id="${modalPrefix}-sorting-desc" value="desc">
-							<label class="btn btn-outline-primary" for="${modalPrefix}-sorting-desc">
-								Descending
+							<label class="btn btn-outline-primary" for="${modalPrefix}-sorting-desc"
+									data-toggle="tooltip" data-placement="bottom" title="Descending">
+								<i class="fas fa-sort-amount-down-alt"></i>
 							</label>
 						</div>
 					</div>
@@ -369,14 +371,40 @@ let App = {
 					App.checkRemoveButton('all-todos', todo_count);
 
 				for (var i = 0; i < todo_count; i++) {
+					var temp_tasks = result[i].tasks;
+					var task_count = temp_tasks.length;
+
+					tasks_overall_count += task_count;
+				}
+
+				no_tasks = (tasks_overall_count == 0);
+
+				if (no_tasks)
+				{
+					App.deleteTaskSorting(true);
+				}
+
+				$("#task-sorting-toolbar-1").prop("disabled", no_tasks);
+				$("#task-sorting-toolbar-2").prop("disabled", no_tasks);
+
+				if (doTaskSorting)
+				{
+					$('#display-active-task-sorting-prop').html("'" + App.taskSortingFields.get(App.fetchTaskSortingProperty) + "'");
+					$('#display-active-task-sorting-dir').html(App.fetchTaskSortingDirection + 'ending');
+				}
+				else
+				{
+					$('#display-active-task-sorting-prop').html("");
+					$('#display-active-task-sorting-dir').html("");
+				}
+
+				for (var i = 0; i < todo_count; i++) {
 					var temp_id = result[i].id;
 					var temp_phase = result[i].phase;
 					var temp_tasks = result[i].tasks;
 					var task_count = temp_tasks.length;
 					var temp_date_created;
 					var temp_description_length;
-
-					tasks_overall_count += task_count;
 
 					if (doTodoSorting)
 					{
@@ -431,27 +459,6 @@ let App = {
 					}
 
 					App.checkShiftTodoButtons(temp_id, temp_phase);
-				}
-
-				no_tasks = (tasks_overall_count == 0);
-
-				if (no_tasks)
-				{
-					App.deleteTaskSorting(true);
-				}
-
-				$("#task-sorting-toolbar-1").prop("disabled", no_tasks);
-				$("#task-sorting-toolbar-2").prop("disabled", no_tasks);
-
-				if (doTaskSorting)
-				{
-					$('#display-active-task-sorting-prop').html("'" + App.taskSortingFields.get(App.fetchTaskSortingProperty) + "'");
-					$('#display-active-task-sorting-dir').html(App.fetchTaskSortingDirection + 'ending');
-				}
-				else
-				{
-					$('#display-active-task-sorting-prop').html("");
-					$('#display-active-task-sorting-dir').html("");
 				}
 			}
 		});
@@ -702,6 +709,8 @@ let App = {
 			$('#todo-sorting-field-group').append(result);
 		});
 		$('#todo-sorting-modal-submit-button').click(function(e) { App.submitTodoSorting(); });
+		$('#todo-sorting-field-group').keypress(function(e) { App.submitTodoSorting(); });
+		$('#todo-sorting-direction-group').keypress(function(e) { App.submitTodoSorting(); });
 
 		$('#modal-container').append(
 			[{modalPrefix: 'task', modalTitle: 'Sorting Tasks',
@@ -721,6 +730,8 @@ let App = {
 			$('#task-sorting-field-group').append(result);
 		});
 		$('#task-sorting-modal-submit-button').click(function(e) { App.submitTaskSorting(); });
+		$('#task-sorting-field-group').keypress(function(e) { App.submitTaskSorting(); });
+		$('#task-sorting-direction-group').keypress(function(e) { App.submitTaskSorting(); });
 	},
 	dismissModal: function(modalPrefix)
 	{
