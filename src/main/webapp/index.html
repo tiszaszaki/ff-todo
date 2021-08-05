@@ -17,18 +17,20 @@
 	<h1 class="display-3 my-5">Test Todo application</h1>
 	<div class="d-flex flex-row my-3">
 		<div>Sorting Todos:</div>
-		<button class="btn btn-primary mx-3" onclick="App.prepareTodoSortingModal()" data-bs-toggle="modal" data-bs-target="#todo-sorting-modal"
+		<button class="btn btn-primary mx-3" id="todo-sorting-toolbar-1" onclick="App.prepareTodoSortingModal()"
+				data-bs-toggle="modal" data-bs-target="#todo-sorting-modal"
 				data-toggle="tooltip" data-placement="bottom" title="Sort Todos">Sort</button>
-		<button class="btn btn-secondary mx-1" onclick="App.deleteTodoSorting()"
+		<button class="btn btn-secondary mx-1" id="todo-sorting-toolbar-2" onclick="App.deleteTodoSorting(false)"
 				data-toggle="tooltip" data-placement="bottom" title="Reset sorting Todos">Reset</button>
 		<div class="mx-1" id="display-active-todo-sorting-prop"></div>
 		<div class="mx-1" id="display-active-todo-sorting-dir"></div>
 	</div>
-	<div class="d-flex flex-row">
+	<div class="d-flex flex-row" id="task-sorting-toolbar">
 		<div>Sorting Tasks:</div>
-		<button class="btn btn-primary mx-3" onclick="App.prepareTaskSortingModal()" data-bs-toggle="modal" data-bs-target="#task-sorting-modal"
+		<button class="btn btn-primary mx-3" id="task-sorting-toolbar-1" onclick="App.prepareTaskSortingModal()"
+				data-bs-toggle="modal" data-bs-target="#task-sorting-modal"
 				data-toggle="tooltip" data-placement="bottom" title="Sort Tasks">Sort</button>
-		<button class="btn btn-secondary mx-1" onclick="App.deleteTaskSorting()"
+		<button class="btn btn-secondary mx-1" id="task-sorting-toolbar-2" onclick="App.deleteTaskSorting(false)"
 				data-toggle="tooltip" data-placement="bottom" title="Reset sorting Tasks">Reset</button>
 		<div class="mx-1" id="display-active-task-sorting-prop"></div>
 		<div class="mx-1" id="display-active-task-sorting-dir"></div>

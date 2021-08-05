@@ -332,8 +332,23 @@ let App = {
 		$.ajax({
 			url: url2,
 			success: function(result){
+				var todo_count=result.length;
+				var no_todos=(result.length == 0);
+				var tasks_overall_count=0;
+				var no_tasks;
+
 				if (successCallback !== undefined)
 					successCallback();
+
+				if (no_todos)
+				{
+					App.deleteTodoSorting(true);
+				}
+
+				$("#todo-sorting-toolbar-1").prop("disabled", no_todos);
+				$("#todo-sorting-toolbar-2").prop("disabled", no_todos);
+
+				doTodoSorting &= !no_todos;
 
 				if (doTodoSorting)
 				{
@@ -345,19 +360,6 @@ let App = {
 					$('#display-active-todo-sorting-prop').html("");
 					$('#display-active-todo-sorting-dir').html("");
 				}
-
-				if (doTaskSorting)
-				{
-					$('#display-active-task-sorting-prop').html("'" + App.taskSortingFields.get(App.fetchTaskSortingProperty) + "'");
-					$('#display-active-task-sorting-dir').html(App.fetchTaskSortingDirection + 'ending');
-				}
-				else
-				{
-					$('#display-active-task-sorting-prop').html("");
-					$('#display-active-task-sorting-dir').html("");
-				}
-
-				var todo_count=result.length;
 
 				for (var i = 0; i < App.PHASE_CNT; i++) {
 					$('#todo-container-phase' + i).empty();
@@ -373,6 +375,8 @@ let App = {
 					var task_count = temp_tasks.length;
 					var temp_date_created;
 					var temp_description_length;
+
+					tasks_overall_count += task_count;
 
 					if (doTodoSorting)
 					{
@@ -427,6 +431,27 @@ let App = {
 					}
 
 					App.checkShiftTodoButtons(temp_id, temp_phase);
+				}
+
+				no_tasks = (tasks_overall_count == 0);
+
+				if (no_tasks)
+				{
+					App.deleteTaskSorting(true);
+				}
+
+				$("#task-sorting-toolbar-1").prop("disabled", no_tasks);
+				$("#task-sorting-toolbar-2").prop("disabled", no_tasks);
+
+				if (doTaskSorting)
+				{
+					$('#display-active-task-sorting-prop').html("'" + App.taskSortingFields.get(App.fetchTaskSortingProperty) + "'");
+					$('#display-active-task-sorting-dir').html(App.fetchTaskSortingDirection + 'ending');
+				}
+				else
+				{
+					$('#display-active-task-sorting-prop').html("");
+					$('#display-active-task-sorting-dir').html("");
 				}
 			}
 		});
@@ -750,23 +775,29 @@ let App = {
 		else
 			$.growl.error({message: 'Failed to set up sorting for Tasks!'});
 	},
-	deleteTodoSorting: function()
+	deleteTodoSorting: function(noFeedback)
 	{
 		App.fetchTodoSortingDirection = undefined;
 		App.fetchTodoSortingProperty = undefined;
 
-		App.fetchTodos(App.checkIfRemoveAllButtonsCanBeDisabled, undefined);
+		if (!noFeedback)
+		{
+			App.fetchTodos(App.checkIfRemoveAllButtonsCanBeDisabled, undefined);
 
-		$.growl.notice({message: 'Todo sorting set back to default.'});
+			$.growl.notice({message: 'Todo sorting set back to default.'});
+		}
 	},
-	deleteTaskSorting: function()
+	deleteTaskSorting: function(noFeedback)
 	{
 		App.fetchTaskSortingDirection = undefined;
 		App.fetchTaskSortingProperty = undefined;
 
-		App.fetchTodos(App.checkIfRemoveAllButtonsCanBeDisabled, undefined);
+		if (!noFeedback)
+		{
+			App.fetchTodos(App.checkIfRemoveAllButtonsCanBeDisabled, undefined);
 
-		$.growl.notice({message: 'Task sorting set back to default.'});
+			$.growl.notice({message: 'Task sorting set back to default.'});
+		}
 	},
 	prepareRemoveTodoConfirmModal: function(id, name)
 	{
