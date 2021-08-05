@@ -6,8 +6,11 @@ let App = {
 	currentlyPickedTodoName: undefined,
 	addTaskModalTitlePrefix: undefined,
 	editTodoModalTitlePrefix: undefined,
+
 	fetchTodoSortingDirection: undefined,
 	fetchTodoSortingProperty: undefined,
+	fetchTaskSortingDirection: undefined,
+	fetchTaskSortingProperty: undefined,
 
 	todoModalCharCountRemainingDisplayed: true,
 	checkIfRemoveAllButtonsCanBeDisabled: true, // debug purpose only
@@ -15,6 +18,8 @@ let App = {
 	todoSortingFields: new Map([['name','Todo name'],['description','Todo description'],
 			['descriptionLength','Todo description length'],['taskCount','Task count in Todo'],
 			['dateCreated','Date of Todo created'],['dateModified','Date of Todo updated']]),
+
+	taskSortingFields: new Map([['name','Task name']]),
 
 	tplTask: function({task, todo}) {
 		return `
@@ -82,6 +87,9 @@ let App = {
 				${cardDescription}
 				<ul id="task-list-container-${id}" class="list-group p-2">
 				</ul>
+				<div data-toggle="tooltip" data-placement="bottom" title="This field is displayed only when involved by active sorting.">
+					<p id="task-list-sort-notification-${id}"></p>
+				</div>
 				<div data-toggle="tooltip" data-placement="bottom" title="This field is displayed only when involved by active sorting.">
 					<p id="task-list-counter-${id}"></p>
 				</div>
@@ -314,9 +322,11 @@ let App = {
 	},
 	fetchTodos: function (disableRemoveAllButtons, successCallback) {
 		var url2=App.baseurl + "/todo";
-		var doSorting=((App.fetchTodoSortingDirection !== undefined) && (App.fetchTodoSortingProperty !== undefined));
 
-		if (doSorting)
+		var doTodoSorting=((App.fetchTodoSortingDirection !== undefined) && (App.fetchTodoSortingProperty !== undefined));
+		var doTaskSorting=((App.fetchTaskSortingDirection !== undefined) && (App.fetchTaskSortingProperty !== undefined));
+
+		if (doTodoSorting)
 			url2 += "/sorted/" + App.fetchTodoSortingDirection + "/" + App.fetchTodoSortingProperty;
 
 		$.ajax({
@@ -325,15 +335,26 @@ let App = {
 				if (successCallback !== undefined)
 					successCallback();
 
-				if (doSorting)
+				if (doTodoSorting)
 				{
-					$('#display-active-sorting-prop').html("'" + App.todoSortingFields.get(App.fetchTodoSortingProperty) + "'");
-					$('#display-active-sorting-dir').html(App.fetchTodoSortingDirection + 'ending');
+					$('#display-active-todo-sorting-prop').html("'" + App.todoSortingFields.get(App.fetchTodoSortingProperty) + "'");
+					$('#display-active-todo-sorting-dir').html(App.fetchTodoSortingDirection + 'ending');
 				}
 				else
 				{
-					$('#display-active-sorting-prop').html("");
-					$('#display-active-sorting-dir').html("");
+					$('#display-active-todo-sorting-prop').html("");
+					$('#display-active-todo-sorting-dir').html("");
+				}
+
+				if (doTaskSorting)
+				{
+					$('#display-active-task-sorting-prop').html("'" + App.taskSortingFields.get(App.fetchTaskSortingProperty) + "'");
+					$('#display-active-task-sorting-dir').html(App.fetchTaskSortingDirection + 'ending');
+				}
+				else
+				{
+					$('#display-active-task-sorting-prop').html("");
+					$('#display-active-task-sorting-dir').html("");
 				}
 
 				var todo_count=result.length;
@@ -353,11 +374,14 @@ let App = {
 					var temp_date_created;
 					var temp_description_length;
 
-					if (doSorting && (App.fetchTodoSortingProperty.substring(0,4) == "date"))
-						temp_date_created = result[i].dateCreated;
+					if (doTodoSorting)
+					{
+						if (App.fetchTodoSortingProperty.substring(0,4) == "date")
+							temp_date_created = result[i].dateCreated;
 
-					if (doSorting && (App.fetchTodoSortingProperty == "descriptionLength"))
-						temp_description_length = result[i].descriptionLength;
+						if (App.fetchTodoSortingProperty == "descriptionLength")
+							temp_description_length = result[i].descriptionLength;
+					}
 
 					$('#todo-container-phase' + result[i].phase).append(
 						[{id: temp_id, name: result[i].name, description: result[i].description, phase: temp_phase,
@@ -368,8 +392,32 @@ let App = {
 					if (disableRemoveAllButtons)
 						App.checkRemoveButton('all-tasks-for-todo-' + temp_id, task_count);
 
-					if (doSorting && (App.fetchTodoSortingProperty == "taskCount"))
+					if (doTodoSorting && (App.fetchTodoSortingProperty == "taskCount"))
 						$('#task-list-counter-' + temp_id).html("Task count: " + task_count);
+
+					if (doTaskSorting
+							&& ((App.fetchTaskSortingDirection.toLowerCase() == "asc") || (App.fetchTaskSortingDirection.toLowerCase() == "desc")))
+					{
+						var sortingSuccess=false;
+						var sortingAscending=(App.fetchTaskSortingDirection.toLowerCase() == "asc");
+
+						if (App.fetchTaskSortingProperty == "name")
+						{
+							if (sortingAscending)
+								temp_tasks.sort(function(a,b) { return a.name.toLowerCase() > b.name.toLowerCase(); });
+							else
+								temp_tasks.sort(function(a,b) { return a.name.toLowerCase() < b.name.toLowerCase(); });
+
+							sortingSuccess = true;
+						}
+
+						if (sortingSuccess)
+						{
+							$('#task-list-sort-notification-' + temp_id).html(
+								"Tasks sorted by '" + App.taskSortingFields.get(App.fetchTaskSortingProperty) + "'"
+							);
+						}
+					}
 
 					for (var j = 0; j < task_count; j++) {
 						$('#task-list-container-' + temp_id).append(
@@ -621,7 +669,7 @@ let App = {
 				<div class="form-check">
 					<input class="form-check-input" type="radio" name="todo-sorting-fields" id="todo-sorting-field-${key}" value="${key}">
 					<label class="form-check-label" for="todo-sorting-field-${key}"
-							data-toggle="tooltip" data-placement="bottom" title="Sort by '${value}'">
+							data-toggle="tooltip" data-placement="bottom" title="Sort Todos by '${value}'">
 						${value}
 					</label>
 				</div>
@@ -629,6 +677,25 @@ let App = {
 			$('#todo-sorting-field-group').append(result);
 		});
 		$('#todo-sorting-modal-submit-button').click(function(e) { App.submitTodoSorting(); });
+
+		$('#modal-container').append(
+			[{modalPrefix: 'task', modalTitle: 'Sorting Tasks',
+				submitButtonCaption: 'Sort', dismissButtonCaption: 'Cancel'}].map(App.tplSortingModal)
+		);
+
+		App.taskSortingFields.forEach(function(value, key, map) {
+			var result=`
+				<div class="form-check">
+					<input class="form-check-input" type="radio" name="task-sorting-fields" id="task-sorting-field-${key}" value="${key}">
+					<label class="form-check-label" for="task-sorting-field-${key}"
+							data-toggle="tooltip" data-placement="bottom" title="Sort Tasks by '${value}'">
+						${value}
+					</label>
+				</div>
+			`
+			$('#task-sorting-field-group').append(result);
+		});
+		$('#task-sorting-modal-submit-button').click(function(e) { App.submitTaskSorting(); });
 	},
 	dismissModal: function(modalPrefix)
 	{
@@ -669,6 +736,20 @@ let App = {
 		else
 			$.growl.error({message: 'Failed to set up sorting for Todos!'});
 	},
+	submitTaskSorting: function()
+	{
+		App.fetchTaskSortingDirection = $('input[name=task-sorting-direction]:checked').val();
+		App.fetchTaskSortingProperty = $('input[name=task-sorting-fields]:checked').val();
+
+		App.fetchTodos(App.checkIfRemoveAllButtonsCanBeDisabled, function() {
+			App.dismissModal('task-sorting');
+		});
+
+		if ((App.fetchTaskSortingDirection !== undefined) && (App.fetchTaskSortingProperty !== undefined))
+			$.growl.notice({message: 'Task sorting set up successfully.'});
+		else
+			$.growl.error({message: 'Failed to set up sorting for Tasks!'});
+	},
 	deleteTodoSorting: function()
 	{
 		App.fetchTodoSortingDirection = undefined;
@@ -677,6 +758,15 @@ let App = {
 		App.fetchTodos(App.checkIfRemoveAllButtonsCanBeDisabled, undefined);
 
 		$.growl.notice({message: 'Todo sorting set back to default.'});
+	},
+	deleteTaskSorting: function()
+	{
+		App.fetchTaskSortingDirection = undefined;
+		App.fetchTaskSortingProperty = undefined;
+
+		App.fetchTodos(App.checkIfRemoveAllButtonsCanBeDisabled, undefined);
+
+		$.growl.notice({message: 'Task sorting set back to default.'});
 	},
 	prepareRemoveTodoConfirmModal: function(id, name)
 	{
@@ -709,6 +799,25 @@ let App = {
 		else
 		{
 			$('#todo-sorting-asc').prop("checked", true);
+		}
+	},
+	prepareTaskSortingModal: function()
+	{
+		if (App.fetchTaskSortingProperty !== undefined)
+		{
+			$('#task-sorting-field-' + App.fetchTaskSortingProperty).prop("checked", true);
+		}
+		else
+		{
+			$('#task-sorting-field-name').prop("checked", true);
+		}
+		if (App.fetchTaskSortingDirection !== undefined)
+		{
+			$('#task-sorting-direction-' + App.fetchTaskSortingDirection).prop("checked", true);
+		}
+		else
+		{
+			$('#task-sorting-asc').prop("checked", true);
 		}
 	}
 }
