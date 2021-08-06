@@ -29,12 +29,17 @@ public class TodoService {
 	}
 
 	public List<Todo> getTodos() {
-		return todoRepository.findAll();
+		List<Todo> result = todoRepository.findAll();
+		log.info("Queried " + result.size() + " Todos");
+		return result;
+
 	}
 
 	public List<Todo> getTodosSorted(Sort.Direction dir, String propName)
 	{
-		return todoRepository.findAll(Sort.by(dir, propName));
+		List<Todo> result = todoRepository.findAll(Sort.by(dir, propName));
+		log.info("Queried " + result.size() + " sorted Todos");
+		return result;
 	}
 
 	public Todo addTodo(@Valid Todo todo) {

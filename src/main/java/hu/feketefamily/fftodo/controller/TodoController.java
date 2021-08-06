@@ -35,7 +35,21 @@ public class TodoController {
 
 	@GetMapping("/sorted/{dir}/{propName}")
 	public ResponseEntity<List<Todo>> getTodosSorted(@PathVariable("dir") String dirStr, @PathVariable String propName) {
-		return ResponseEntity.ok(todoService.getTodosSorted(Sort.Direction.valueOf(dirStr.toUpperCase()), propName));
+		Sort.Direction dir=Sort.Direction.valueOf(dirStr.toUpperCase());
+		return ResponseEntity.ok(todoService.getTodosSorted(dir, propName));
+	}
+
+	@GetMapping("/{id}/tasks")
+	public ResponseEntity<List<Task>> getTasksFromTodo(@PathVariable Long id)
+	{
+		return ResponseEntity.ok(taskService.getTasksFromTodo(id));
+	}
+
+	@GetMapping("/{id}/tasks/sorted/{dir}/{propName}")
+	public ResponseEntity<List<Task>> getTasksFromTodo(@PathVariable Long id, @PathVariable("dir") String dirStr, @PathVariable String propName)
+	{
+		Sort.Direction dir=Sort.Direction.valueOf(dirStr.toUpperCase());
+		return ResponseEntity.ok(taskService.getTasksSortedFromTodo(id, dir, propName));
 	}
 
 	@PutMapping

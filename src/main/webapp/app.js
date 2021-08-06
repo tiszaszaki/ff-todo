@@ -12,6 +12,11 @@ let App = {
 	fetchTaskSortingDirection: undefined,
 	fetchTaskSortingProperty: undefined,
 
+	task_overall_count: undefined,
+
+	doTodoSorting: false,
+	doTaskSorting: false,
+
 	todoModalCharCountRemainingDisplayed: true,
 	checkIfRemoveAllButtonsCanBeDisabled: true, // debug purpose only
 
@@ -322,62 +327,27 @@ let App = {
 
 		$('#add-task-title').html(addTaskModalTitlePrefix + name);
 	},
-	fetchTodos: function (disableRemoveAllButtons, successCallback) {
-		var url2=App.baseurl + "/todo";
+	fetchTasks: function (todo2, disableRemoveAllButtons, successCallback)
+	{
+		var temp_id = todo2.id;
+		var url2 = App.baseurl + "/todo/" + temp_id + "/tasks";
 
-		var doTodoSorting=((App.fetchTodoSortingDirection !== undefined) && (App.fetchTodoSortingProperty !== undefined));
-		var doTaskSorting=((App.fetchTaskSortingDirection !== undefined) && (App.fetchTaskSortingProperty !== undefined));
-
-		if (doTodoSorting)
-			url2 += "/sorted/" + App.fetchTodoSortingDirection + "/" + App.fetchTodoSortingProperty;
+		if (App.doTaskSorting)
+			url2 += "/sorted/" + App.fetchTaskSortingDirection + "/" + App.fetchTaskSortingProperty;
 
 		$.ajax({
 			url: url2,
 			success: function(result){
-				var todo_count=result.length;
-				var no_todos=(result.length == 0);
-				var tasks_overall_count=0;
+				var task_count = result.length;
 				var no_tasks;
 
 				if (successCallback !== undefined)
+				{
 					successCallback();
-
-				if (no_todos)
-				{
-					App.deleteTodoSorting(true);
 				}
 
-				$("#todo-sorting-toolbar-1").prop("disabled", no_todos);
-				$("#todo-sorting-toolbar-2").prop("disabled", no_todos);
-
-				doTodoSorting &= !no_todos;
-
-				if (doTodoSorting)
-				{
-					$('#display-active-todo-sorting-prop').html("'" + App.todoSortingFields.get(App.fetchTodoSortingProperty) + "'");
-					$('#display-active-todo-sorting-dir').html(App.fetchTodoSortingDirection + 'ending');
-				}
-				else
-				{
-					$('#display-active-todo-sorting-prop').html("");
-					$('#display-active-todo-sorting-dir').html("");
-				}
-
-				for (var i = 0; i < App.PHASE_CNT; i++) {
-					$('#todo-container-phase' + i).empty();
-				}
-
-				if (disableRemoveAllButtons)
-					App.checkRemoveButton('all-todos', todo_count);
-
-				for (var i = 0; i < todo_count; i++) {
-					var temp_tasks = result[i].tasks;
-					var task_count = temp_tasks.length;
-
-					tasks_overall_count += task_count;
-				}
-
-				no_tasks = (tasks_overall_count == 0);
+				App.task_overall_count += task_count;
+				no_tasks = (App.task_overall_count == 0);
 
 				if (no_tasks)
 				{
@@ -387,26 +357,61 @@ let App = {
 				$("#task-sorting-toolbar-1").prop("disabled", no_tasks);
 				$("#task-sorting-toolbar-2").prop("disabled", no_tasks);
 
-				if (doTaskSorting)
-				{
-					$('#display-active-task-sorting-prop').html("'" + App.taskSortingFields.get(App.fetchTaskSortingProperty) + "'");
-					$('#display-active-task-sorting-dir').html(App.fetchTaskSortingDirection + 'ending');
+				for (var j = 0; j < task_count; j++) {
+					$('#task-list-container-' + temp_id).append(
+						[{task: result[j], todo: todo2}].map(App.tplTask)
+					);
+					$('#task-done-checkbox-' + result[j].id).prop('checked', result[j].done);
 				}
-				else
+			},
+		});
+
+	},
+	fetchTodos: function (disableRemoveAllButtons, successCallback) {
+		var url2=App.baseurl + "/todo";
+
+		if (App.doTodoSorting)
+			url2 += "/sorted/" + App.fetchTodoSortingDirection + "/" + App.fetchTodoSortingProperty;
+
+		$.ajax({
+			url: url2,
+			success: function(result){
+				var todo_count=result.length;
+				var no_todos=(result.length == 0);
+
+				if (successCallback !== undefined)
 				{
-					$('#display-active-task-sorting-prop').html("");
-					$('#display-active-task-sorting-dir').html("");
+					successCallback();
 				}
+
+				if (no_todos)
+				{
+					App.deleteTodoSorting(true);
+				}
+
+				$("#todo-sorting-toolbar-1").prop("disabled", no_todos);
+				$("#todo-sorting-toolbar-2").prop("disabled", no_todos);
+
+				for (var i = 0; i < App.PHASE_CNT; i++) {
+					$('#todo-container-phase' + i).empty();
+				}
+
+				if (disableRemoveAllButtons)
+					App.checkRemoveButton('all-todos', todo_count);
+
+				App.task_overall_count = 0;
 
 				for (var i = 0; i < todo_count; i++) {
 					var temp_id = result[i].id;
 					var temp_phase = result[i].phase;
+
 					var temp_tasks = result[i].tasks;
 					var task_count = temp_tasks.length;
+
 					var temp_date_created;
 					var temp_description_length;
 
-					if (doTodoSorting)
+					if (App.doTodoSorting)
 					{
 						if (App.fetchTodoSortingProperty.substring(0,4) == "date")
 							temp_date_created = result[i].dateCreated;
@@ -424,39 +429,10 @@ let App = {
 					if (disableRemoveAllButtons)
 						App.checkRemoveButton('all-tasks-for-todo-' + temp_id, task_count);
 
-					if (doTodoSorting && (App.fetchTodoSortingProperty == "taskCount"))
+					if (App.doTodoSorting && (App.fetchTodoSortingProperty == "taskCount"))
 						$('#task-list-counter-' + temp_id).html("Task count: " + task_count);
 
-					if (doTaskSorting
-							&& ((App.fetchTaskSortingDirection.toLowerCase() == "asc") || (App.fetchTaskSortingDirection.toLowerCase() == "desc")))
-					{
-						var sortingSuccess=false;
-						var sortingAscending=(App.fetchTaskSortingDirection.toLowerCase() == "asc");
-
-						if (App.fetchTaskSortingProperty == "name")
-						{
-							if (sortingAscending)
-								temp_tasks.sort(function(a,b) { return a.name.toLowerCase() > b.name.toLowerCase(); });
-							else
-								temp_tasks.sort(function(a,b) { return a.name.toLowerCase() < b.name.toLowerCase(); });
-
-							sortingSuccess = true;
-						}
-
-						if (sortingSuccess)
-						{
-							$('#task-list-sort-notification-' + temp_id).html(
-								"Tasks sorted by '" + App.taskSortingFields.get(App.fetchTaskSortingProperty) + "'"
-							);
-						}
-					}
-
-					for (var j = 0; j < task_count; j++) {
-						$('#task-list-container-' + temp_id).append(
-							[{task: temp_tasks[j], todo: result[i]}].map(App.tplTask)
-						);
-						$('#task-done-checkbox-' + temp_tasks[j].id).prop('checked', temp_tasks[j].done);
-					}
+					App.fetchTasks(result[i], disableRemoveAllButtons, function() {});
 
 					App.checkShiftTodoButtons(temp_id, temp_phase);
 				}
@@ -758,10 +734,40 @@ let App = {
 			App.dismissModal('remove-all-tasks-confirm');
 		})
 	},
+	displayTodoSorting: function()
+	{
+			if (App.doTodoSorting)
+			{
+				$('#display-active-todo-sorting-prop').html("'" + App.todoSortingFields.get(App.fetchTodoSortingProperty) + "'");
+				$('#display-active-todo-sorting-dir').html(App.fetchTodoSortingDirection + 'ending');
+			}
+			else
+			{
+				$('#display-active-todo-sorting-prop').html("");
+				$('#display-active-todo-sorting-dir').html("");
+			}
+	},
+	displayTaskSorting: function()
+	{
+			if (App.doTaskSorting)
+			{
+				$('#display-active-task-sorting-prop').html("'" + App.taskSortingFields.get(App.fetchTaskSortingProperty) + "'");
+				$('#display-active-task-sorting-dir').html(App.fetchTaskSortingDirection + 'ending');
+			}
+			else
+			{
+				$('#display-active-task-sorting-prop').html("");
+				$('#display-active-task-sorting-dir').html("");
+			}
+	},
 	submitTodoSorting: function()
 	{
 		App.fetchTodoSortingDirection = $('input[name=todo-sorting-direction]:checked').val();
 		App.fetchTodoSortingProperty = $('input[name=todo-sorting-fields]:checked').val();
+
+		App.doTodoSorting = ((App.fetchTodoSortingDirection !== undefined) && (App.fetchTodoSortingProperty !== undefined));
+
+		App.displayTodoSorting();
 
 		App.fetchTodos(App.checkIfRemoveAllButtonsCanBeDisabled, function() {
 			App.dismissModal('todo-sorting');
@@ -777,6 +783,10 @@ let App = {
 		App.fetchTaskSortingDirection = $('input[name=task-sorting-direction]:checked').val();
 		App.fetchTaskSortingProperty = $('input[name=task-sorting-fields]:checked').val();
 
+		App.doTaskSorting = ((App.fetchTaskSortingDirection !== undefined) && (App.fetchTaskSortingProperty !== undefined));
+
+		App.displayTaskSorting();
+
 		App.fetchTodos(App.checkIfRemoveAllButtonsCanBeDisabled, function() {
 			App.dismissModal('task-sorting');
 		});
@@ -791,17 +801,23 @@ let App = {
 		App.fetchTodoSortingDirection = undefined;
 		App.fetchTodoSortingProperty = undefined;
 
+		App.doTodoSorting = false;
+
 		if (!noFeedback)
 		{
 			App.fetchTodos(App.checkIfRemoveAllButtonsCanBeDisabled, undefined);
 
 			$.growl.notice({message: 'Todo sorting set back to default.'});
 		}
+
+		App.displayTodoSorting();
 	},
 	deleteTaskSorting: function(noFeedback)
 	{
 		App.fetchTaskSortingDirection = undefined;
 		App.fetchTaskSortingProperty = undefined;
+
+		App.doTaskSorting = false;
 
 		if (!noFeedback)
 		{
@@ -809,6 +825,8 @@ let App = {
 
 			$.growl.notice({message: 'Task sorting set back to default.'});
 		}
+
+		App.displayTaskSorting();
 	},
 	prepareRemoveTodoConfirmModal: function(id, name)
 	{
