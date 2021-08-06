@@ -38,7 +38,7 @@ public class TodoService {
 	public List<Todo> getTodosSorted(Sort.Direction dir, String propName)
 	{
 		List<Todo> result = todoRepository.findAll(Sort.by(dir, propName));
-		log.info("Queried " + result.size() + " sorted Todos");
+		log.info("Queried " + result.size() + " sorted ({},'{}') Todos", dir, propName);
 		return result;
 	}
 
@@ -74,7 +74,12 @@ public class TodoService {
 
 	@Transactional
 	public void updateTodo(Long id, @Valid Todo patchedTodo) {
-		if (todoRepository.updateById(id, patchedTodo.getName(), patchedTodo.getDescription(), patchedTodo.getPhase(), new Date()) < 1) {
+		if (todoRepository.updateById(id, patchedTodo.getName(), patchedTodo.getDescription(), patchedTodo.getPhase(), new Date()) >= 1)
+		{
+			log.info("Successfully updated Todo with id {{}}: {}", id, patchedTodo);
+		}
+		else
+		{
 			log.warn("No Todos were updated with id {{}}", id);
 		}
 	}

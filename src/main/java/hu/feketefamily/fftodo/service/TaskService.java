@@ -34,7 +34,7 @@ public class TaskService {
 	public List<Task> getTasksSortedFromTodo(Long id, Sort.Direction dir, String propName)
 	{
 		List<Task> result = taskRepository.findByTodoId(id, Sort.by(dir, propName));
-		log.info("Queried " + result.size() + " sorted Tasks from Todo with id {{}}", id);
+		log.info("Queried " + result.size() + " sorted ({},'{}') Tasks from Todo with id {{}}", dir, propName, id);
 		return result;
 	}
 
@@ -55,7 +55,12 @@ public class TaskService {
 
 	@Transactional
 	public void updateTask(Long id, @Valid Task patchedTask) {
-		if (taskRepository.updateById(id, patchedTask.getName(), patchedTask.getDone()) < 1) {
+		if (taskRepository.updateById(id, patchedTask.getName(), patchedTask.getDone()) >= 1)
+		{
+			log.info("Successfully updated Task with id {{}}: {}", id, patchedTask.toString());
+		}
+		else
+		{
 			log.warn("No Tasks were updated with id {{}}", id);
 		}
 	}

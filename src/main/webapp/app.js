@@ -24,7 +24,7 @@ let App = {
 			['descriptionLength','Todo description length'],['taskCount','Task count in Todo'],
 			['dateCreated','Date of Todo created'],['dateModified','Date of Todo updated']]),
 
-	taskSortingFields: new Map([['name','Task name']]),
+	taskSortingFields: new Map([['name','Task name'],['done','Task checked']]),
 
 	tplTask: function({task, todo}) {
 		return `
@@ -100,11 +100,11 @@ let App = {
 				</div>
 				<div class="d-flex justify-content-between">
 					<div class="btn-group" role="group">
-						<button type="button" class="btn btn-primary btn-sm text-end" onclick="App.prepareAddTaskModal(${id}, '${name}')"
+						<button type="button" class="btn btn-primary btn-sm text-end" onclick="App.prepareAddTaskModal(${id}, '${name}', true)"
 									data-bs-toggle="modal" data-bs-target="#addTaskModal" data-toggle="tooltip" data-placement="bottom" title="Add new Task">
 							<i class="fas fa-plus"></i>
 						</button>
-						<button type="button" class="btn btn-primary btn-sm text-end" onclick="App.prepareEditTodoModal(${id}, '${name}', '${description}', '${phase}')"
+						<button type="button" class="btn btn-primary btn-sm text-end" onclick="App.prepareEditTodoModal(${id}, '${name}', '${description}', '${phase}', true)"
 									data-bs-toggle="modal" data-bs-target="#editTodoModal" data-toggle="tooltip" data-placement="bottom" title="Edit Todo">
 							<i class="fas fa-pencil-alt"></i>
 						</button>
@@ -308,10 +308,15 @@ let App = {
 
 		$('#' + modalPrefix + '-todo-description-char-count').html(charCountStr);
 	},
-	prepareAddTodoModal: function() {
+	prepareAddTodoModal: function(doAutofocus) {
 		App.setTodoModalCharCount('add', App.todoModalCharCountRemainingDisplayed);
+
+		if (doAutofocus)
+		{
+			$('#addTodoModal').on('shown.bs.modal', function () { $('#add-todo-name').trigger('focus'); });
+		}
 	},
-	prepareEditTodoModal: function(id, name, description, phase) {
+	prepareEditTodoModal: function(id, name, description, phase, doAutofocus) {
 		App.currentlyPickedTodoId = id;
 
 		$('#edit-todo-title').html(editTodoModalTitlePrefix + name);
@@ -320,12 +325,22 @@ let App = {
 		$('#edit-todo-phase' + phase).prop("checked", true);
 
 		App.setTodoModalCharCount('edit', App.todoModalCharCountRemainingDisplayed);
+
+		if (doAutofocus)
+		{
+			$('#editTodoModal').on('shown.bs.modal', function () { $('#edit-todo-name').trigger('focus'); });
+		}
 	},
-	prepareAddTaskModal: function(id, name) {
+	prepareAddTaskModal: function(id, name, doAutofocus) {
 		App.currentlyPickedTodoId = id;
 		App.currentlyPickedTodoName = name;
 
 		$('#add-task-title').html(addTaskModalTitlePrefix + name);
+
+		if (doAutofocus)
+		{
+			$('#addTaskModal').on('shown.bs.modal', function () { $('#add-task-name').trigger('focus'); });
+		}
 	},
 	fetchTasks: function (todo2, disableRemoveAllButtons, successCallback)
 	{
@@ -346,7 +361,6 @@ let App = {
 					successCallback();
 				}
 
-				App.task_overall_count += task_count;
 				no_tasks = (App.task_overall_count == 0);
 
 				if (no_tasks)
@@ -410,6 +424,8 @@ let App = {
 
 					var temp_date_created;
 					var temp_description_length;
+
+					App.task_overall_count += task_count;
 
 					if (App.doTodoSorting)
 					{
