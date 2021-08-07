@@ -43,47 +43,43 @@ let App = {
 	},
 	tplCard: function({id, name, description, phase, dateModified, dateCreated, descriptionLength}) {
 		var cardFooter="";
+		var cardFooterAddition="";
 		var cardDescription="";
+		var cardDescriptionAddition="";
 
 		if (dateCreated !== undefined)
 		{
-			cardFooter = `
-				<div class="card-footer text-muted">
-					<p>Updated ${moment(dateModified).fromNow()}</p>
-					<div data-toggle="tooltip" data-placement="bottom" title="This field is displayed only when involved by active sorting.">
-						<p>Created ${moment(dateCreated).fromNow()}</p>
-					</div>
-				</div>
-			`
-		}
-		else
-		{
-			cardFooter = `
-				<div class="card-footer text-muted">
-					<p>Updated ${moment(dateModified).fromNow()}</p>
+			cardFooterAddition = `
+				<div data-toggle="tooltip" data-placement="bottom" title="This field is displayed only when involved by active sorting.">
+					<p>Created ${moment(dateCreated).fromNow()}</p>
 				</div>
 			`
 		}
 
+		cardFooter = `
+			<div class="card-footer text-muted">
+				<p>Updated ${moment(dateModified).fromNow()}</p>
+				${cardFooterAddition}
+			</div>
+		`
+
 		if (descriptionLength !== undefined)
 		{
-			cardDescription = `
-				<div class="border border-secondary">
-					<p class="card-text">${description}</p>
-				</div>
+			cardDescriptionAddition = `
 				<div data-toggle="tooltip" data-placement="bottom" title="This field is displayed only when involved by active sorting.">
 					<p>Description length: ${descriptionLength}</p>
 				</div>
 			`
 		}
-		else
-		{
-			cardDescription = `
+
+		cardDescription = `
+			<div>
 				<div class="border border-secondary">
 					<p class="card-text">${description}</p>
 				</div>
-			`
-		}
+				${cardDescriptionAddition}
+			</div>
+		`
 
 		return `
 		<div class="card mb-2">
@@ -401,10 +397,13 @@ let App = {
 				if (no_todos)
 				{
 					App.deleteTodoSorting(true);
+					App.deleteTaskSorting(true);
 				}
 
 				$("#todo-sorting-toolbar-1").prop("disabled", no_todos);
 				$("#todo-sorting-toolbar-2").prop("disabled", no_todos);
+				$("#task-sorting-toolbar-1").prop("disabled", no_todos);
+				$("#task-sorting-toolbar-2").prop("disabled", no_todos);
 
 				for (var i = 0; i < App.PHASE_CNT; i++) {
 					$('#todo-container-phase' + i).empty();
