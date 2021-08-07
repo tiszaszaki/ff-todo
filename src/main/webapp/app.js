@@ -44,6 +44,8 @@ let App = {
 	tplCard: function({id, name, description, phase, dateModified, dateCreated, descriptionLength}) {
 		var cardFooter="";
 		var cardFooterAddition="";
+		var cardToolbar="";
+		var cardTasks="";
 		var cardDescription="";
 		var cardDescriptionAddition="";
 
@@ -57,78 +59,90 @@ let App = {
 		}
 
 		cardFooter = `
-			<div class="card-footer text-muted">
-				<p>Updated ${moment(dateModified).fromNow()}</p>
-				${cardFooterAddition}
+			<p>Updated ${moment(dateModified).fromNow()}</p>
+			${cardFooterAddition}
+		`
+
+		cardToolbar = `
+			<div class="d-flex justify-content-between">
+				<div class="btn-group" role="group">
+					<button type="button" class="btn btn-primary btn-sm text-end" onclick="App.prepareAddTaskModal(${id}, '${name}', true)"
+								data-bs-toggle="modal" data-bs-target="#addTaskModal" data-toggle="tooltip" data-placement="bottom" title="Add new Task">
+						<i class="fas fa-plus"></i>
+					</button>
+					<button type="button" class="btn btn-primary btn-sm text-end" onclick="App.prepareEditTodoModal(${id}, '${name}', '${description}', '${phase}', true)"
+								data-bs-toggle="modal" data-bs-target="#editTodoModal" data-toggle="tooltip" data-placement="bottom" title="Edit Todo">
+						<i class="fas fa-pencil-alt"></i>
+					</button>
+				</div>
+				<div class="btn-group" role="group">
+					<button type="button" class="btn btn-danger btn-sm text-end" onclick="App.prepareRemoveTodoConfirmModal(${id}, '${name}')"
+								data-bs-toggle="modal" data-bs-target="#remove-todo-confirm-modal" data-toggle="tooltip" data-placement="bottom" title="Remove Todo">
+						<i class="fas fa-trash-alt"></i>
+					</button>
+					<button type="button" class="btn btn-danger btn-sm text-end" id="remove-all-tasks-for-todo-${id}-button"
+								onclick="App.prepareRemoveAllTasksConfirmModal(${id}, '${name}')"
+								data-bs-toggle="modal" data-bs-target="#remove-all-tasks-confirm-modal" data-toggle="tooltip" data-placement="bottom" title="Remove All Tasks">
+						<i class="fas fa-broom"></i>
+					</button>
+				</div>
+				<div class="btn-group" role="group">
+					<button type="button" class="btn btn-primary btn-sm text-end" id = "shift-todo-left-${id}"
+						onclick="App.shiftTodo(${id}, '${name}', '${description}', ${phase}, -1)"
+						data-toggle="tooltip" data-placement="bottom" title="Shift Todo to the left">
+							<i class="fas fa-arrow-left"></i></i>
+					</button>
+					<button type="button" class="btn btn-primary btn-sm text-end" id = "shift-todo-right-${id}"
+						onclick="App.shiftTodo(${id}, '${name}', '${description}', ${phase}, 1)"
+						data-toggle="tooltip" data-placement="bottom" title="Shift Todo to the right">
+							<i class="fas fa-arrow-right"></i></i>
+					</button>
+				</div>
 			</div>
+		`
+
+		cardTasks = `
+			<ul id="task-list-container-${id}" class="list-group p-2 border border-primary"></ul>
+			<div id="task-list-counter-${id}"
+				data-toggle="tooltip" data-placement="bottom" title="This field is displayed only when involved by active sorting."></div>
 		`
 
 		if (descriptionLength !== undefined)
 		{
 			cardDescriptionAddition = `
 				<div data-toggle="tooltip" data-placement="bottom" title="This field is displayed only when involved by active sorting.">
-					<p>Description length: ${descriptionLength}</p>
+					Description length: ${descriptionLength}
 				</div>
 			`
 		}
 
 		cardDescription = `
 			<div>
-				<div class="border border-secondary">
-					<p class="card-text">${description}</p>
-				</div>
-				${cardDescriptionAddition}
+				<ul class="list-group list-group-flush">
+					<li class="list-group-item border border-secondary"><p class="card-text">${description}</p></li>
+					<li class="list-group-item">${cardDescriptionAddition}</li>
+				</ul>
 			</div>
 		`
 
 		return `
 		<div class="card mb-2">
-			<div class="card-body">
-				<h5 class="card-title">${name}</h5>
-				${cardDescription}
-				<ul id="task-list-container-${id}" class="list-group p-2">
-				</ul>
-				<div data-toggle="tooltip" data-placement="bottom" title="This field is displayed only when involved by active sorting.">
-					<p id="task-list-sort-notification-${id}"></p>
-				</div>
-				<div data-toggle="tooltip" data-placement="bottom" title="This field is displayed only when involved by active sorting.">
-					<p id="task-list-counter-${id}"></p>
-				</div>
-				<div class="d-flex justify-content-between">
-					<div class="btn-group" role="group">
-						<button type="button" class="btn btn-primary btn-sm text-end" onclick="App.prepareAddTaskModal(${id}, '${name}', true)"
-									data-bs-toggle="modal" data-bs-target="#addTaskModal" data-toggle="tooltip" data-placement="bottom" title="Add new Task">
-							<i class="fas fa-plus"></i>
-						</button>
-						<button type="button" class="btn btn-primary btn-sm text-end" onclick="App.prepareEditTodoModal(${id}, '${name}', '${description}', '${phase}', true)"
-									data-bs-toggle="modal" data-bs-target="#editTodoModal" data-toggle="tooltip" data-placement="bottom" title="Edit Todo">
-							<i class="fas fa-pencil-alt"></i>
-						</button>
-						<button type="button" class="btn btn-danger btn-sm text-end" onclick="App.prepareRemoveTodoConfirmModal(${id}, '${name}')"
-									data-bs-toggle="modal" data-bs-target="#remove-todo-confirm-modal" data-toggle="tooltip" data-placement="bottom" title="Remove Todo">
-							<i class="fas fa-trash-alt"></i>
-						</button>
-						<button type="button" class="btn btn-danger btn-sm text-end" id="remove-all-tasks-for-todo-${id}-button"
-									onclick="App.prepareRemoveAllTasksConfirmModal(${id}, '${name}')"
-									data-bs-toggle="modal" data-bs-target="#remove-all-tasks-confirm-modal" data-toggle="tooltip" data-placement="bottom" title="Remove All Tasks">
-							<i class="fas fa-broom"></i>
-						</button>
-					</div>
-					<div class="btn-group" role="group">
-						<button type="button" class="btn btn-primary btn-sm text-end" id = "shift-todo-left-${id}"
-							onclick="App.shiftTodo(${id}, '${name}', '${description}', ${phase}, -1)"
-							data-toggle="tooltip" data-placement="bottom" title="Shift Todo">
-								<i class="fas fa-arrow-left"></i></i>
-						</button>
-						<button type="button" class="btn btn-primary btn-sm text-end" id = "shift-todo-right-${id}"
-							onclick="App.shiftTodo(${id}, '${name}', '${description}', ${phase}, 1)"
-							data-toggle="tooltip" data-placement="bottom" title="Shift Todo">
-								<i class="fas fa-arrow-right"></i></i>
-						</button>
-					</div>
-				</div>
+			<div class="card-header">
+				<h5 class="card-title">
+					<span class="text-muted">#${id}</span>
+					${name}
+				</h5>
 			</div>
-			${cardFooter}
+			<div class="card-body">
+				${cardDescription}
+			</div>
+				<ul class="list-group list-group-flush">
+					<li class="list-group-item">${cardTasks}</li>
+					<li class="list-group-item">${cardToolbar}</li>
+				</ul>
+			<div class="card-footer text-muted">
+				${cardFooter}
+			</div>
 		</div>
 		`
 	},
