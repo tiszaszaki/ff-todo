@@ -26,6 +26,9 @@ let App = {
 
 	taskSortingFields: new Map([['name','Task name'],['done','Task checked']]),
 
+	taskListCollapseIcon: `<i class="fas fa-folder-minus"></i>`,
+	taskListExpandIcon: `<i class="fas fa-folder-plus"></i>`,
+
 	tplTask: function({task, todo}) {
 		return `
 		<li class="list-group-item d-flex justify-content-between">
@@ -102,13 +105,14 @@ let App = {
 		`
 
 		cardTasks = `
-			<button class="btn btn-secondary" type="button"
-					data-toggle="collapse" data-target="#task-list-container-${id}-collapse"
-					data-toggle="tooltip" data-placement="bottom" title="Toggle Todo list">
-				<i class="fas fa-folder-plus"></i>
+			<button class="btn btn-secondary my-3" type="button" id="task-list-container-${id}-collapse-button"
+					data-bs-toggle="collapse" data-bs-target="#task-list-container-${id}-collapse"
+					data-toggle="tooltip" data-placement="bottom" title="Toggle Task list">
+				${App.taskListExpandIcon}
 			</button>
-			<div id="task-list-container-${id}-collapse" class="collapse show">
-				<ul id="task-list-container-${id}" class="list-group border border-primary"></ul>
+			<div id="task-list-container-${id}-collapse" class="collapse">
+				<ul id="task-list-container-${id}" class="list-group border border-primary"
+						data-toggle="tooltip" data-placement="bottom" title="Task list"></ul>
 			</div>
 			<div id="task-list-counter-${id}"
 				data-toggle="tooltip" data-placement="bottom" title="This field is displayed only when involved by active sorting."></div>
@@ -126,7 +130,8 @@ let App = {
 		cardDescription = `
 			<div>
 				<ul class="list-group list-group-flush">
-					<li class="list-group-item rounded border border-secondary"><p class="card-text">${description}</p></li>
+					<li class="list-group-item rounded border border-secondary"
+						data-toggle="tooltip" data-placement="bottom" title="Todo description"><p class="card-text">${description}</p></li>
 					<li class="list-group-item">${cardDescriptionAddition}</li>
 				</ul>
 			</div>
@@ -136,8 +141,8 @@ let App = {
 		<div class="card mb-2">
 			<div class="card-header">
 				<h5 class="card-title">
-					<span class="text-muted">#${id}</span>
-					${name}
+					<span class="text-muted" data-toggle="tooltip" data-placement="bottom" title="Todo ID">#${id}</span>
+					<span data-toggle="tooltip" data-placement="bottom" title="Todo name">${name}</span>
 				</h5>
 			</div>
 			<div class="card-body">
@@ -394,6 +399,13 @@ let App = {
 					);
 					$('#task-done-checkbox-' + result[j].id).prop('checked', result[j].done);
 				}
+
+				$("#task-list-container-" + temp_id + "-collapse").on("show.bs.collapse", function() {
+					$("#task-list-container-" + temp_id + "-collapse-button").html(App.taskListCollapseIcon);
+				});
+				$("#task-list-container-" + temp_id + "-collapse").on("hide.bs.collapse", function() {
+					$("#task-list-container-" + temp_id + "-collapse-button").html(App.taskListExpandIcon);
+				});
 			},
 		});
 
