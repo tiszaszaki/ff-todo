@@ -102,7 +102,14 @@ let App = {
 		`
 
 		cardTasks = `
-			<ul id="task-list-container-${id}" class="list-group p-2 border border-primary"></ul>
+			<button class="btn btn-secondary" type="button"
+					data-toggle="collapse" data-target="#task-list-container-${id}-collapse"
+					data-toggle="tooltip" data-placement="bottom" title="Toggle Todo list">
+				<i class="fas fa-folder-plus"></i>
+			</button>
+			<div id="task-list-container-${id}-collapse" class="collapse show">
+				<ul id="task-list-container-${id}" class="list-group border border-primary"></ul>
+			</div>
 			<div id="task-list-counter-${id}"
 				data-toggle="tooltip" data-placement="bottom" title="This field is displayed only when involved by active sorting."></div>
 		`
@@ -119,7 +126,7 @@ let App = {
 		cardDescription = `
 			<div>
 				<ul class="list-group list-group-flush">
-					<li class="list-group-item border border-secondary"><p class="card-text">${description}</p></li>
+					<li class="list-group-item rounded border border-secondary"><p class="card-text">${description}</p></li>
 					<li class="list-group-item">${cardDescriptionAddition}</li>
 				</ul>
 			</div>

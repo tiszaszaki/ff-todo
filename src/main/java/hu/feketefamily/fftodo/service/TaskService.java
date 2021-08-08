@@ -1,5 +1,7 @@
 package hu.feketefamily.fftodo.service;
 
+import hu.feketefamily.fftodo.exception.NotExistException;
+import hu.feketefamily.fftodo.model.entity.Todo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -11,7 +13,11 @@ import hu.feketefamily.fftodo.model.repository.TaskRepository;
 import lombok.extern.log4j.Log4j2;
 
 import javax.validation.Valid;
+import java.util.Date;
 import java.util.List;
+
+import static hu.feketefamily.fftodo.constants.ErrorMessages.TASK_NOT_EXIST_MESSAGE;
+import static hu.feketefamily.fftodo.constants.ErrorMessages.TODO_NOT_EXIST_MESSAGE;
 
 @Log4j2
 @Service
@@ -23,6 +29,10 @@ public class TaskService {
 
 	@Autowired
 	private TaskRepository taskRepository;
+
+	public Task getTask(Long id) {
+		return taskRepository.findById(id).orElseThrow(() -> new NotExistException(TASK_NOT_EXIST_MESSAGE) );
+	}
 
 	public List<Task> getTasksFromTodo(Long id)
 	{
@@ -39,9 +49,11 @@ public class TaskService {
 	}
 
 	public void addTask(Long todoId, Task task) {
-		task.setTodo(todoService.getTodo(todoId));
+		Todo tempTodo=todoService.getTodo(todoId);
+		task.setTodo(tempTodo);
 		log.info("Saving Task: {{}}", task.toString());
 		taskRepository.save(task);
+		tempTodo.setDateModified(new Date());
 	}
 
 	public void removeTask(Long id) {
