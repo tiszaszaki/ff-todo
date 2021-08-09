@@ -105,7 +105,7 @@ let App = {
 		`
 
 		cardTasks = `
-			<button class="btn btn-secondary my-3" type="button" id="task-list-container-${id}-collapse-button"
+			<button class="btn btn-secondary mb-3" type="button" id="task-list-container-${id}-collapse-button"
 					data-bs-toggle="collapse" data-bs-target="#task-list-container-${id}-collapse"
 					data-toggle="tooltip" data-placement="bottom" title="Toggle Task list">
 				${App.taskListExpandIcon}
@@ -218,7 +218,7 @@ let App = {
 										  placeholder="${placeholderDescription}"
 										  maxlength="${App.modalDescriptionMaxCharCount}"></textarea>
 								<div class="d-flex justify-content-end">
-									<span class="border border-secondary label" id="${modalPrefix}-todo-description-char-count"></span>
+									<span class="badge badge-pill bg-secondary mt-3" id="${modalPrefix}-todo-description-char-count"></span>
 								</div>
 							</div>
 							<div>
