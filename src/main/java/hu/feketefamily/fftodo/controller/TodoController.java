@@ -46,7 +46,7 @@ public class TodoController {
 	}
 
 	@GetMapping("/{id}/tasks/sorted/{dir}/{propName}")
-	public ResponseEntity<List<Task>> getTasksFromTodo(@PathVariable Long id, @PathVariable("dir") String dirStr, @PathVariable String propName)
+	public ResponseEntity<List<Task>> getTasksSortedFromTodo(@PathVariable Long id, @PathVariable("dir") String dirStr, @PathVariable String propName)
 	{
 		Sort.Direction dir=Sort.Direction.valueOf(dirStr.toUpperCase());
 		return ResponseEntity.ok(taskService.getTasksSortedFromTodo(id, dir, propName));

@@ -30,7 +30,7 @@ public class Task {
 	@Column(nullable = false)
 	private Boolean done;
 	@ManyToOne
-	@JoinColumn(name = "todo_id")
+	@JoinColumn(name = "todo_id", nullable = false)
 	@JsonIgnore
 	@ToString.Exclude
 	private Todo todo;
