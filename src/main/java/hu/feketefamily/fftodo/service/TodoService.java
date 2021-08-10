@@ -73,6 +73,15 @@ public class TodoService {
 	}
 
 	@Transactional
+	public void updateTodoDate(Long id)
+	{
+		Todo tempTodo=getTodo(id);
+		tempTodo.setDateModified(new Date());
+		log.info("Refreshing date modified for Todo with id {{}}", id);
+		updateTodo(id, tempTodo);
+	}
+
+	@Transactional
 	public void updateTodo(Long id, @Valid Todo patchedTodo) {
 		if (todoRepository.updateById(id, patchedTodo.getName(), patchedTodo.getDescription(), patchedTodo.getPhase(), new Date()) >= 1)
 		{

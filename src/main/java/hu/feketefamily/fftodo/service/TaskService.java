@@ -49,23 +49,19 @@ public class TaskService {
 	}
 
 	public void addTask(Long todoId, Task task) {
-		Todo tempTodo=todoService.getTodo(todoId);
-		task.setTodo(tempTodo);
+		task.setTodo(todoService.getTodo(todoId));
 		log.info("Saving Task: {{}}", task.toString());
 		taskRepository.save(task);
-		tempTodo.setDateModified(new Date());
-		todoService.updateTodo(todoId, tempTodo);
+		todoService.updateTodoDate(todoId);
 	}
 
 	public void removeTask(Long id) {
 		if (taskRepository.existsById(id)) {
 			Task tempTask=getTask(id);
 			Long todoId=tempTask.getTodo().getId();
-			Todo tempTodo=todoService.getTodo(todoId);
 			log.info("Deleting Task with id: {{}}", id);
 			taskRepository.deleteById(id);
-			tempTodo.setDateModified(new Date());
-			todoService.updateTodo(todoId, tempTodo);
+			todoService.updateTodoDate(todoId);
 		} else {
 			log.warn("Deleting non-existing Task with id {{}}", id);
 		}
@@ -77,10 +73,8 @@ public class TaskService {
 		{
 			Task tempTask=getTask(id);
 			Long todoId=tempTask.getTodo().getId();
-			Todo tempTodo=todoService.getTodo(todoId);
 			log.info("Successfully updated Task with id {{}}: {}", id, patchedTask.toString());
-			tempTodo.setDateModified(new Date());
-			todoService.updateTodo(todoId, tempTodo);
+			todoService.updateTodoDate(todoId);
 		}
 		else
 		{
@@ -91,15 +85,13 @@ public class TaskService {
 	@Transactional
 	public int removeAllTasksFromTodo(Long id) {
 		int temp_count=taskRepository.deleteByTodoId(id);
-		Todo tempTodo=todoService.getTodo(id);
 
 		if (temp_count > 0)
 			log.info("Successfully deleted {} Task(s) from Todo with id {{}}", temp_count, id);
 		else
 			log.warn("No Tasks were deleted from Todo with id {{}}", id);
 
-		tempTodo.setDateModified(new Date());
-		todoService.updateTodo(id, tempTodo);
+		todoService.updateTodoDate(id);
 
 		return temp_count;
 	}
