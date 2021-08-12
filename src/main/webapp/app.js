@@ -20,6 +20,20 @@ let App = {
 	todoModalCharCountRemainingDisplayed: true,
 	checkIfRemoveAllButtonsCanBeDisabled: true, // debug purpose only
 
+	tplTodoListEmptiness: `
+		<div class="border rounded text-muted text-center">
+			<p class="mt-3">Todo container is empty.</p>
+			<p class="display-1"><i class="far fa-folder-open"></i></p>
+		</div>
+	`,
+
+	tplTaskListEmptiness: `
+		<div class="text-muted text-center">
+			<p class="mt-3">Task list is empty.</p>
+			<p class="display-1"><i class="far fa-folder-open"></i></p>
+		</div>
+	`,
+
 	todoSortingFields: new Map([['name','Todo name'],['description','Todo description'],
 			['descriptionLength','Todo description length'],['taskCount','Task count in Todo'],
 			['dateCreated','Date of Todo created'],['dateModified','Date of Todo updated']]),
@@ -138,7 +152,7 @@ let App = {
 		`
 
 		return `
-		<div class="card mb-2">
+		<div class="card mb-2 border-primary">
 			<div class="card-header">
 				<h5 class="card-title">
 					<span class="text-muted" data-toggle="tooltip" data-placement="bottom" title="Todo ID">#${id}</span>
@@ -400,6 +414,11 @@ let App = {
 					$('#task-done-checkbox-' + result[j].id).prop('checked', result[j].done);
 				}
 
+				if (task_count == 0)
+				{
+					$('#task-list-container-' + temp_id).html(App.tplTaskListEmptiness);
+				}
+
 				$("#task-list-container-" + temp_id + "-collapse").on("show.bs.collapse", function() {
 					$("#task-list-container-" + temp_id + "-collapse-button").html(App.taskListCollapseIcon);
 				});
@@ -420,6 +439,8 @@ let App = {
 			url: url2,
 			success: function(result){
 				var todo_count=result.length;
+				var todo_count_per_phase=[];
+
 				var no_todos=(result.length == 0);
 
 				if (successCallback !== undefined)
@@ -440,6 +461,8 @@ let App = {
 
 				for (var i = 0; i < App.PHASE_CNT; i++) {
 					$('#todo-container-phase' + i).empty();
+
+					todo_count_per_phase.push(0);
 				}
 
 				if (disableRemoveAllButtons)
@@ -458,6 +481,8 @@ let App = {
 					var temp_description_length;
 
 					App.task_overall_count += task_count;
+
+					todo_count_per_phase[temp_phase]++;
 
 					if (App.doTodoSorting)
 					{
@@ -483,6 +508,13 @@ let App = {
 					App.fetchTasks(result[i], disableRemoveAllButtons, function() {});
 
 					App.checkShiftTodoButtons(temp_id, temp_phase);
+				}
+
+				for (var i = 0; i < App.PHASE_CNT; i++) {
+					if (todo_count_per_phase[i] == 0)
+					{
+						$('#todo-container-phase' + i).html(App.tplTodoListEmptiness);
+					}
 				}
 			}
 		});
