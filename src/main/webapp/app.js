@@ -475,7 +475,7 @@ let App = {
 					var temp_phase = result[i].phase;
 
 					var temp_tasks = result[i].tasks;
-					var task_count = temp_tasks.length;
+					var task_count = result[i].taskCount;
 
 					var temp_date_created;
 					var temp_description_length;
