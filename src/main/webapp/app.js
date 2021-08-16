@@ -43,6 +43,22 @@ let App = {
 	taskListCollapseIcon: `<i class="fas fa-folder-minus"></i>`,
 	taskListExpandIcon: `<i class="fas fa-folder-plus"></i>`,
 
+	modalMessageIconInfo: `
+		<span class="badge bg-info">
+			<i class="fas fa-info-circle"></i>
+		</span>
+	`,
+	modalMessageIconWarning: `
+		<span class="badge bg-warning">
+			<i class="fas fa-exclamation-circle"></i>
+		</span>
+	`,
+	modalMessageIconDanger: `
+		<span class="badge bg-danger">
+			<i class="fas fa-times-circle"></i>
+		</span>
+	`,
+
 	tplTask: function({task, todo}) {
 		return `
 		<li class="list-group-item d-flex justify-content-between">
@@ -172,13 +188,14 @@ let App = {
 		</div>
 		`
 	},
-	tplTaskModal: function({modalPrefix, modalTitle, placeholderName, submitButtonCaption, dismissButtonCaption})
+	tplTaskModal: function({modalPrefix, modalTitle, placeholderName, submitButtonCaption, dismissButtonCaption, iconTemplate})
 	{
 		return `
 		<div class="modal fade" id="${modalPrefix}TaskModal" tabindex="-1">
 			<div class="modal-dialog">
 				<div class="modal-content">
 					<div class="modal-header">
+						<h5>${iconTemplate}</h5>
 						<h5 class="modal-title" id="${modalPrefix}-task-title">${modalTitle}</h5>
 						<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
 					</div>
@@ -205,13 +222,14 @@ let App = {
 		</div>
 		`
 	},
-	tplTodoModal: function({modalPrefix, modalTitle, placeholderName, placeholderDescription, submitButtonCaption, dismissButtonCaption})
+	tplTodoModal: function({modalPrefix, modalTitle, placeholderName, placeholderDescription, submitButtonCaption, dismissButtonCaption, iconTemplate})
 	{
 		return `
 		<div class="modal fade" id="${modalPrefix}TodoModal" tabindex="-1">
 			<div class="modal-dialog">
 				<div class="modal-content">
 					<div class="modal-header">
+						<h5>${iconTemplate}</h5>
 						<h5 class="modal-title" id="${modalPrefix}-todo-title">${modalTitle}</h5>
 						<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
 					</div>
@@ -260,7 +278,7 @@ let App = {
 		</div>
 		`
 	},
-	tplConfirmModal: function({modalPrefix, modalTitle, modalMessage, submitButtonCaption, dismissButtonCaption})
+	tplConfirmModal: function({modalPrefix, modalTitle, modalMessage, submitButtonCaption, dismissButtonCaption, iconTemplate})
 	{
 		var modalName = modalPrefix + '-confirm-modal';
 		return `
@@ -272,7 +290,8 @@ let App = {
 						<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
 					</div>
 					<div class="modal-body">
-						<p><div id="${modalName}-message">${modalMessage}</div></p>
+						<h2>${iconTemplate}</h2>
+						<div id="${modalName}-message">${modalMessage}</div>
 					</div>
 					<div class="modal-footer">
 						<button type="button" class="btn btn-danger" id="${modalName}-submit-button">${submitButtonCaption}</button>
@@ -283,7 +302,7 @@ let App = {
 		</div>
 		`
 	},
-	tplSortingModal: function({modalPrefix, modalTitle, submitButtonCaption, dismissButtonCaption})
+	tplSortingModal: function({modalPrefix, modalTitle, submitButtonCaption, dismissButtonCaption, iconTemplate})
 	{
 		var modalName = modalPrefix + '-sorting-modal';
 		return `
@@ -291,6 +310,7 @@ let App = {
 			<div class="modal-dialog">
 				<div class="modal-content">
 					<div class="modal-header">
+						<h5>${iconTemplate}</h5>
 						<h5 class="modal-title">${modalTitle}</h5>
 						<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
 					</div>
@@ -700,7 +720,8 @@ let App = {
 		$('#modal-container').append(
 			[{modalPrefix: 'add', modalTitle: 'Add Todo',
 				placeholderName: 'Enter name for new Todo...', placeholderDescription: 'Enter description for new Todo (optional)...',
-				submitButtonCaption: 'Add', dismissButtonCaption: 'Close'}].map(App.tplTodoModal)
+				submitButtonCaption: 'Add', dismissButtonCaption: 'Close',
+				iconTemplate: App.modalMessageIconInfo}].map(App.tplTodoModal)
 		);
 
 		$('#add-todo-name').keypress(function(e) { App.submitModal(e, 'add-todo'); });
@@ -710,7 +731,8 @@ let App = {
 		$('#modal-container').append(
 			[{modalPrefix: 'edit', modalTitle: '',
 				placeholderName: 'Change name for this Todo...', placeholderDescription: 'Change description for this Todo...',
-				submitButtonCaption: 'Save', dismissButtonCaption: 'Cancel'}].map(App.tplTodoModal)
+				submitButtonCaption: 'Save', dismissButtonCaption: 'Cancel',
+				iconTemplate: App.modalMessageIconInfo}].map(App.tplTodoModal)
 		);
 
 		$('#edit-todo-name').keypress(function(e) { App.submitModal(e, 'edit-todo'); });
@@ -720,14 +742,16 @@ let App = {
 		$('#modal-container').append(
 			[{modalPrefix: 'add', modalTitle: '',
 				placeholderName: 'Enter name for new Task...',
-				submitButtonCaption: 'Add', dismissButtonCaption: 'Close'}].map(App.tplTaskModal)
+				submitButtonCaption: 'Add', dismissButtonCaption: 'Close',
+				iconTemplate: App.modalMessageIconInfo}].map(App.tplTaskModal)
 		);
 
 		$('#add-task-name').keypress(function(e) { App.submitModal(e, 'add-task'); });
 
 		$('#modal-container').append(
 			[{modalPrefix: 'remove-todo', modalTitle: 'Confirm removing a Todo', modalMessage: '',
-				submitButtonCaption: 'Remove', dismissButtonCaption: 'Cancel'}].map(App.tplConfirmModal)
+				submitButtonCaption: 'Remove', dismissButtonCaption: 'Cancel',
+				iconTemplate: App.modalMessageIconWarning}].map(App.tplConfirmModal)
 		);
 
 		$('#remove-todo-confirm-modal-submit-button').click(function(e) { App.submitRemoveTodoConfirmModal(); });
@@ -735,21 +759,24 @@ let App = {
 		$('#modal-container').append(
 			[{modalPrefix: 'remove-all-todos', modalTitle: 'Confirm removing all Todos',
 				modalMessage: 'Are you sure to remove all Todos?',
-				submitButtonCaption: 'Remove All', dismissButtonCaption: 'Cancel'}].map(App.tplConfirmModal)
+				submitButtonCaption: 'Remove All', dismissButtonCaption: 'Cancel',
+				iconTemplate: App.modalMessageIconDanger}].map(App.tplConfirmModal)
 		);
 
 		$('#remove-all-todos-confirm-modal-submit-button').click(function(e) { App.submitRemoveAllTodosConfirmModal(); });
 
 		$('#modal-container').append(
 			[{modalPrefix: 'remove-all-tasks', modalTitle: 'Confirm removing all Tasks', modalMessage: '',
-				submitButtonCaption: 'Remove All', dismissButtonCaption: 'Cancel'}].map(App.tplConfirmModal)
+				submitButtonCaption: 'Remove All', dismissButtonCaption: 'Cancel',
+				iconTemplate: App.modalMessageIconDanger}].map(App.tplConfirmModal)
 		);
 
 		$('#remove-all-tasks-confirm-modal-submit-button').click(function(e) { App.submitRemoveAllTasksConfirmModal(); });
 
 		$('#modal-container').append(
 			[{modalPrefix: 'todo', modalTitle: 'Sorting Todos',
-				submitButtonCaption: 'Sort', dismissButtonCaption: 'Cancel'}].map(App.tplSortingModal)
+				submitButtonCaption: 'Sort', dismissButtonCaption: 'Cancel',
+				iconTemplate: App.modalMessageIconInfo}].map(App.tplSortingModal)
 		);
 
 		App.todoSortingFields.forEach(function(value, key, map) {
@@ -770,7 +797,8 @@ let App = {
 
 		$('#modal-container').append(
 			[{modalPrefix: 'task', modalTitle: 'Sorting Tasks',
-				submitButtonCaption: 'Sort', dismissButtonCaption: 'Cancel'}].map(App.tplSortingModal)
+				submitButtonCaption: 'Sort', dismissButtonCaption: 'Cancel',
+				iconTemplate: App.modalMessageIconInfo}].map(App.tplSortingModal)
 		);
 
 		App.taskSortingFields.forEach(function(value, key, map) {
