@@ -74,6 +74,13 @@ public class TodoController {
 		return ResponseEntity.ok().build();
 	}
 
+	@PatchMapping("/{id}/shift/{dir}")
+	public ResponseEntity<Void> updateTodo(@PathVariable Long id, @PathVariable("dir") String dirStr) {
+		TodoService.ShiftDirection dir=TodoService.ShiftDirection.valueOf(dirStr.toUpperCase());
+		todoService.shiftTodo(id, dir);
+		return ResponseEntity.ok().build();
+	}
+
 	@PutMapping("/{id}/task")
 	public ResponseEntity<Void> addTask(@PathVariable Long id, @RequestBody Task task) {
 		taskService.addTask(id, task);

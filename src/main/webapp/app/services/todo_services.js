@@ -44,17 +44,11 @@ app.factory('TodoCardService', function($http) {
 
         shiftTodoToTheLeft: function(id, name, phase)
         {
-            var phase_new = phase-1;
-            console.log(
-                `Trying to shift Todo to with name "${name}" and ID ${id} to the left (from phase ${phase} to phase ${phase_new})...`
-            );
+        	return $http.patch("/todo/" + id + "/shift/left");
         },
         shiftTodoToTheRight: function(id, name, phase)
         {
-            var phase_new = phase+1;
-            console.log(
-                `Trying to shift Todo to with name "${name}" and ID ${id} to the right (from phase ${phase} to phase ${phase_new})...`
-            );
+        	return $http.patch("/todo/" + id + "/shift/right");
         }
     };
 });

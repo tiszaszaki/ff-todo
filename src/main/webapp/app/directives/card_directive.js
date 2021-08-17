@@ -26,6 +26,8 @@ app.directive("tszCard", function()
             $scope.isCardValid = (true
                 && ($scope.name != ""));
 
+			$scope._id = Number.parseInt($scope.id) + 1;
+
             if ($scope.tasks !== undefined)
             {
                 $scope._tasks = JSON.parse($scope.tasks);
@@ -55,7 +57,7 @@ app.directive("tszCard", function()
     };
 });
 
-app.directive("tszCardToolbar", function(TodoCardService)
+app.directive("tszCardToolbar", function(TodoGlobalService, TodoCardService)
 {
     return {
         restrict: 'E',
@@ -103,12 +105,20 @@ app.directive("tszCardToolbar", function(TodoCardService)
 
             $scope.shiftTodoLeft = function()
             {
-                TodoCardService.shiftTodoToTheLeft($scope.id, $scope.name, _phase);
+                TodoCardService.shiftTodoToTheLeft($scope.id, $scope.name, _phase)
+                	.then(function (response) {
+                		$.growl.notice({message: 'Todo (' + $scope.name + ') shifted to the left successfully!'});
+                		TodoGlobalService.fetchTodos();
+                	});
             }
 
             $scope.shiftTodoRight = function()
             {
-                TodoCardService.shiftTodoToTheRight($scope.id, $scope.name, _phase);
+                TodoCardService.shiftTodoToTheRight($scope.id, $scope.name, _phase)
+                	.then(function (response) {
+                		$.growl.notice({message: 'Todo (' + $scope.name + ') shifted to the right successfully!'});
+                		TodoGlobalService.fetchTodos();
+                	});
             }
         },
         templateUrl: "app/directives/card_toolbar_tpl.html"

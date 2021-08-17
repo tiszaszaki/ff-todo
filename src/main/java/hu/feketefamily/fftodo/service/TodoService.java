@@ -24,6 +24,14 @@ public class TodoService {
 	@Autowired
 	private TodoRepository todoRepository;
 
+	public final Integer phase_N=3;
+
+	public enum ShiftDirection
+	{
+		LEFT,
+		RIGHT
+	};
+
 	public Todo getTodo(Long id) {
 		return todoRepository.findById(id).orElseThrow(() -> new NotExistException(TODO_NOT_EXIST_MESSAGE) );
 	}
@@ -79,6 +87,45 @@ public class TodoService {
 		tempTodo.setDateModified(new Date());
 		log.info("Refreshing date modified for Todo with id {{}}", id);
 		updateTodo(id, tempTodo);
+	}
+
+	@Transactional
+	public void shiftTodo(Long id, ShiftDirection dir)
+	{
+		Todo tempTodo=getTodo(id);
+		Integer oldPhase=tempTodo.getPhase(), newPhase=-1;
+		Boolean isValidDir, isValidPhase=false;
+
+		isValidDir = ((dir == ShiftDirection.LEFT) || (dir == ShiftDirection.RIGHT));
+
+		switch (dir)
+		{
+			case LEFT: {
+				newPhase = oldPhase - 1;
+			} break;
+			case RIGHT: {
+				newPhase = oldPhase + 1;
+			} break;
+			default: break;
+		};
+
+		if (isValidDir)
+		{
+			isValidPhase = true;
+			isValidPhase &= ((oldPhase >= 0) && (oldPhase < phase_N));
+			isValidPhase &= ((newPhase >= 0) && (newPhase < phase_N));
+		}
+
+		if (isValidDir && isValidPhase) {
+			String dirStr=String.valueOf(dir);
+			tempTodo.setPhase(newPhase);
+			log.info("Shifting Todo with id {{}} to the {}", id, dirStr.toLowerCase());
+			updateTodo(id, tempTodo);
+		}
+		else
+		{
+			log.warn("Failed to shift Todo with id {{}}");
+		}
 	}
 
 	@Transactional
