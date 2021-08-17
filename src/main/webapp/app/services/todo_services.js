@@ -1,5 +1,9 @@
-app.factory('TodoGlobalService', function() {
+app.factory('TodoGlobalService', function($http) {
     return {
+    	fetchTodos: function()
+    	{
+    		return $http.get("/todo");
+    	},
         addTodo: function()
         {
             console.log("Trying to add a Todo...");
@@ -10,7 +14,7 @@ app.factory('TodoGlobalService', function() {
         }
     };
 });
-app.factory('TodoCardService', function() {
+app.factory('TodoCardService', function($http) {
     return {
         addTaskForTodo: function(id, name)
         {

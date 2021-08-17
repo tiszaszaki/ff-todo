@@ -31,23 +31,21 @@ app.directive("tszCard", function()
                 $scope._tasks = JSON.parse($scope.tasks);
             }
 
-            if ($scope.options !== undefined)
+            if (options)
             {
-                $scope._options = JSON.parse($scope.options);
-
-                if ($scope._options.showDateCreated !== undefined)
+                if (options.showDateCreated !== undefined)
                 {
-                    $scope._dateCreated = ($scope._options.showDateCreated && ($scope.datecreated !== undefined));
+                    $scope._dateCreated = (options.showDateCreated && ($scope.datecreated !== undefined));
                 }
 
-                if ($scope._options.showDescriptionLength !== undefined)
+                if (options.showDescriptionLength !== undefined)
                 {
                     $scope.descriptionLength = $scope.description.length;
-                    $scope._descriptionLength = $scope._options.showDescriptionLength;
+                    $scope._descriptionLength = options.showDescriptionLength;
                 }
 
-                if ($scope._options.showTaskCount !== undefined)
-                if ($scope._options.showTaskCount)
+                if (options.showTaskCount !== undefined)
+                if (options.showTaskCount)
                 {
                     $scope.taskCount = $scope._tasks.length;
                 }

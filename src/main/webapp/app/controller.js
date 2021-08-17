@@ -16,26 +16,26 @@ app.controller('todoCtrl', function($scope, $rootScope, $http, TodoGlobalService
 			{count: 0, exist: false}
 	];
 
-	$http.get("assets/ff-todo_db.json")
-		.then(function (response) {
-			response.data.records.forEach(function(value)
+	TodoGlobalService.fetchTodos().then(function (response)
+	{
+		response.data.forEach(function(value)
+		{
+			var temp_value=value;
+			var phase=value.phase;
+
+			temp_value.dateModified = moment(temp_value.dateModified).fromNow();
+			temp_value.dateCreated = moment(temp_value.dateCreated).fromNow();
+
+			$scope.todo_list[phase].push(temp_value);
+
+			if ((phase >= 0) && (phase < $scope.phaseNum))
 			{
-				var temp_value=value;
-				var phase=value.phase;
-
-				temp_value.dateModified = moment(temp_value.dateModified).fromNow();
-				temp_value.dateCreated = moment(temp_value.dateCreated).fromNow();
-
-				$scope.todo_list[phase].push(temp_value);
-
-				if ((phase >= 0) && (phase < $scope.phaseNum))
-				{
-					$scope.todo_list_count_per_phase[phase].count++;
-					$scope.todo_list_count_per_phase[phase].exist =
-						($scope.todo_list_count_per_phase[phase].count > 0);
-				}
-			});
+				$scope.todo_list_count_per_phase[phase].count++;
+				$scope.todo_list_count_per_phase[phase].exist =
+					($scope.todo_list_count_per_phase[phase].count > 0);
+			}
 		});
+	});
 
 	$scope.todo_list_count = 0;
 	$scope.todo_list.forEach(function(value) { $scope.todo_list_count += value.length });
