@@ -1,0 +1,54 @@
+<div class="modal fade" id="{{ modalprefix }}TodoModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5>{{ icontemplate }}</h5>
+                <h5 class="modal-title" id="{{ modalprefix }}-todo-title">{{ modaltitle }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form novalidate>
+                    <div id="{{ modalprefix }}-todo-name-form-group" class="mb-3">
+                        <label for="{{ modalprefix }}-todo-name" class="col-form-label">Name:</label>
+                        <input type="text" class="form-control" id="{{ modalprefix }}-todo-name"
+                               placeholder="{{ placeholdername }}">
+                        <div id="{{ modalprefix }}-todo-name-validator" class="invalid-feedback">
+                            Please provide a name.
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="{{ modalprefix }}-todo-description" class="col-form-label">Description:</label>
+                        <textarea class="form-control" id="{ {modalprefix }}-todo-description"
+                                  placeholder="{{ placeholderdescription }}"
+                                  maxlength="{{ modaldescriptionmaxcharcount }}"></textarea>
+                        <div class="d-flex justify-content-end">
+                            <span class="badge badge-pill bg-secondary mt-3"
+                                    id="{{ modalprefix }}-todo-description-char-count"></span>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="col-form-label">Phase:</label>
+                    </div>
+                    <div class="btn-group" role="group">
+                        <input type="radio" class="btn-check" name="{{ modalprefix }}-todo-phase"
+                                id="{{ modalprefix }}-todo-phase0" value="0" checked>
+                        <label class="btn btn-outline-primary" for="{{ modalprefix }}-todo-phase0">Todo</label>
+
+                        <input type="radio" class="btn-check" name="{{ modalprefix }}-todo-phase"
+                                id="{{ modalprefix }}-todo-phase1" value="1">
+                        <label class="btn btn-outline-primary" for="{{ modalprefix }}-todo-phase1">In progress</label>
+
+                        <input type="radio" class="btn-check" name="{{ modalprefix }}-todo-phase"
+                                id="{{ modalprefix }}-todo-phase2" value="2">
+                        <label class="btn btn-outline-primary" for="{{ modalprefix }}-todo-phase2">Done</label>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="{{ modalprefix }}-todo-submit-button"
+                    data-bs-dismiss="modal">{{ submitbuttoncaption }}</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ dismissbuttoncaption }}</button>
+            </div>
+        </div>
+    </div>
+</div>

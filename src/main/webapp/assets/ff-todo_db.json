@@ -1,0 +1,22 @@
+{
+    "records": [
+        {"id":25,"name":"Sonic fejlesztése","description":"fdgdfgfg","descriptionLength":8,
+            "phase":0,"dateCreated":"2021-08-07T00:47:24.067+00:00","dateModified":"2021-08-10T15:59:44.768+00:00",
+            "tasks":[
+                {"id":43,"name":"S","done":false},{"id":44,"name":"o","done":false},
+                {"id":45,"name":"n","done":false},{"id":58,"name":"i","done":false},
+                {"id":59,"name":"c","done":false}]},
+        {"id":26,"name":"Nevem","description":"","descriptionLength":0,
+            "phase":1,"dateCreated":"2021-08-10T16:16:05.103+00:00","dateModified":"2021-08-10T16:16:41.666+00:00",
+            "tasks":[
+                {"id":60,"name":"J","done":false},{"id":61,"name":"a","done":false},
+                {"id":62,"name":"n","done":false},{"id":63,"name":"c","done":false},
+                {"id":64,"name":"s","done":false},{"id":65,"name":"i","done":false}]},
+        {"id":27,"name":"Munkám","description":"","descriptionLength":0,
+            "phase":2,"dateCreated":"2021-08-10T16:16:50.240+00:00","dateModified":"2021-08-10T16:17:04.422+00:00",
+            "tasks":[{"id":66,"name":"MÁV","done":false}]},
+        {"id":28,"name":"Munkám 2","description":"","descriptionLength":0,
+            "phase":2,"dateCreated":"2021-08-10T16:16:50.240+00:00","dateModified":"2021-08-10T16:17:04.422+00:00",
+            "tasks":[]}
+        ]
+}

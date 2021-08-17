@@ -1,76 +1,70 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-	<meta charset="UTF-8">
-	<title>FF Todo</title>
-	<script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
-	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
-	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
-	<script src="https://cdn.jsdelivr.net/npm/jquery.growl@1.3.5/javascripts/jquery.growl.min.js"></script>
-	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jquery.growl@1.3.5/stylesheets/jquery.growl.css">
-	<link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js" integrity="sha512-qTXRIMyZIFb8iQcfjXWCO8+M5Tbc38Qi5WzdPOYZHIlZpzBHG3L3by84BBBOiRGiEb7KKtAOAs5qYdUiZiQNNQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-	<script src="app.js"></script>
+    <meta charset="UTF-8">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css"
+            rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js" 
+            integrity="sha512-qTXRIMyZIFb8iQcfjXWCO8+M5Tbc38Qi5WzdPOYZHIlZpzBHG3L3by84BBBOiRGiEb7KKtAOAs5qYdUiZiQNNQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"
+            integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
+
+    <script src="app/app.js"></script>
+    <script src="app/directives/card_directive.js"></script>
+    <script src="app/directives/card_emptiness_directives.js"></script>
+    <script src="app/directives/todo_phase_directive.js"></script>
+    <script src="app/directives/modal_directives.js"></script>
+    <script src="app/services/todo_services.js"></script>
+    <script src="app/controller.js"></script>
 </head>
 <body>
-<div class="container">
-	<h1 class="display-3 my-5">Test Todo application</h1>
-	<div class="d-flex flex-row my-3">
-		<div>Sorting Todos:</div>
-		<button class="btn btn-primary mx-3" id="todo-sorting-toolbar-1" onclick="App.prepareTodoSortingModal()"
-				data-bs-toggle="modal" data-bs-target="#todo-sorting-modal"
-				data-toggle="tooltip" data-placement="bottom" title="Sort Todos">
-			<i class="fas fa-sort-amount-up-alt"></i>
-		</button>
-		<button class="btn btn-secondary mx-1" id="todo-sorting-toolbar-2" onclick="App.deleteTodoSorting(false)"
-				data-toggle="tooltip" data-placement="bottom" title="Reset sorting Todos">
-			<i class="fas fa-trash-restore"></i>
-		</button>
-		<div class="mx-1" id="display-active-todo-sorting-prop"></div>
-		<div class="mx-1" id="display-active-todo-sorting-dir"></div>
-	</div>
-	<div class="d-flex flex-row" id="task-sorting-toolbar">
-		<div>Sorting Tasks:</div>
-		<button class="btn btn-primary mx-3" id="task-sorting-toolbar-1" onclick="App.prepareTaskSortingModal()"
-				data-bs-toggle="modal" data-bs-target="#task-sorting-modal"
-				data-toggle="tooltip" data-placement="bottom" title="Sort Tasks">
-			<i class="fas fa-sort-amount-up-alt"></i>
-		</button>
-		<button class="btn btn-secondary mx-1" id="task-sorting-toolbar-2" onclick="App.deleteTaskSorting(false)"
-				data-toggle="tooltip" data-placement="bottom" title="Reset sorting Tasks">
-			<i class="fas fa-trash-restore"></i>
-		</button>
-		<div class="mx-1" id="display-active-task-sorting-prop"></div>
-		<div class="mx-1" id="display-active-task-sorting-dir"></div>
-	</div>
-	<div class="row">
-		<div class="col">
-			<div>
-				<h1 class="display-5 my-5">Todo</h1>
-				<div id="todo-container-phase0"></div>
-				<div class="d-grid gap-2">
-					<button class="btn btn-primary" onclick="App.prepareAddTodoModal(true)" data-bs-toggle="modal" data-bs-target="#addTodoModal"
-							data-toggle="tooltip" data-placement="bottom" title="Add new Todo"><i class="fas fa-plus"></i></button>
-					<button type="button" class="btn btn-danger btn-sm" id="remove-all-todos-button"
-							data-bs-toggle="modal" data-bs-target="#remove-all-todos-confirm-modal"
-							data-toggle="tooltip" data-placement="bottom" title="Remove all Todos"><i class="fas fa-broom"></i></button>
-				</div>
-			</div>
-		</div>
-		<div class="col">
-			<div>
-				<h1 class="display-5 my-5">In progress</h1>
-				<div id="todo-container-phase1"></div>
-			</div>
-		</div>
-		<div class="col">
-			<div>
-				<h1 class="display-5 my-5">Done</h1>
-				<div id="todo-container-phase2"></div>
-			</div>
-		</div>
-	</div>
-	<div id="modal-container"></div>
-</div>
+    <div class="container" ng-app="todoApp" ng-controller="todoCtrl">
+        <h1 class="display-3 my-5">Test Todo application</h1>
+        <div class="table">
+            <div class="row border border-secondary rounded">
+                <div class="col">
+                    <tsz-todo-list-per-phase ng-if="todo_list[0].length"
+                            content="{{ todo_list[0] }}" phasename="{{ todo_phases[0] }}"
+                            phasenum="{{ phaseNum }}"></tsz-todo-list-per-phase>
+                </div>
+                <div class="col">
+                    <tsz-todo-list-per-phase ng-if="todo_list[1].length"
+                            content="{{ todo_list[1] }}" phasename="{{ todo_phases[1] }}"
+                            phasenum="{{ phaseNum }}"></tsz-todo-list-per-phase>
+                </div>
+                <div class="col">
+                    <tsz-todo-list-per-phase ng-if="todo_list[2].length"
+                            content="{{ todo_list[2] }}" phasename="{{ todo_phases[2] }}"
+                            phasenum="{{ phaseNum }}"></tsz-todo-list-per-phase>
+                </div>
+            </div>
+        </div>
+        <div class="d-grid gap-2 w-25 my-2">
+            <button type="button" class="btn btn-primary" ng-click="addTodo()"
+                    data-toggle="tooltip" data-placement="bottom" title="Add new Todo">
+                <i class="fas fa-plus"></i>
+            </button>
+            <button type="button" class="btn btn-danger btn-sm" ng-click="removeAllTodos()"
+                    data-toggle="tooltip" data-placement="bottom" title="Remove all Todos">
+                <i class="fas fa-broom"></i>
+            </button>
+        </div>
+        <p>Todo count:
+            <span class="badge badge-pill bg-secondary">
+                {{ todo_list_count }}
+            </span>
+        </p>
+    </div>
+    <div>
+        <tsz-todo-modal modalprefix="add" modaltitle="Add Todo"
+                placeholdername='Enter name for new Todo...'
+                placeholderDescription='Enter description for new Todo (optional)...'
+                submitButtonCaption='Add' dismissButtonCaption='Close'
+                modaldescriptionmaxcharcount=1024></tsz-todo-modal>
+    </div>
 </body>
 </html>
