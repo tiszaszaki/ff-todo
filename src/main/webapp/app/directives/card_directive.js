@@ -11,37 +11,36 @@ app.directive("tszCard", function()
     return {
         restrict: 'E',
         scope: {
-        	id: '@',
-        	name: '@',
-        	description: '@',
-        	phase: '@',
-        	datemodified: '@',
-        	datecreated: '@',
-        	tasks: '@',
-            phasenum: '@',
+        	content: '@',
         },
         controller: function ($scope, $rootScope)
         {
             var options = $rootScope.todo_common_options;
+            var todo = JSON.parse($scope.content);
+
+            $scope.phasenum = $rootScope.phaseNum;
+
+			$scope.id = todo.id;
+			$scope.name = todo.name;
+			$scope.description = todo.description;
+			$scope.phase = todo.phase;
+			$scope.datemodified = moment(todo.dateModified).fromNow();
+			$scope.datecreated = moment(todo.dateCreated).fromNow();
+			$scope.tasks = todo.tasks;
 
 			$scope.id2 = Number.parseInt($scope.id) + 1;
-			$scope.tasks2 = JSON.parse($scope.tasks);
 
             $scope.isCardValid = (true
                 && ($scope.name != ""));
 
-			$scope.taskCount = $scope.tasks2.length;
+			$scope.descriptionLength = $scope.description.length;
+			$scope.taskCount = $scope.tasks.length;
 
             if (options)
             {
 				$scope.showDateCreated = (options.showDateCreated && $scope.datecreated);
-
-                if (options.showDescriptionLength && $scope.description)
-                {
-                    $scope.descriptionLength = $scope.description.length;
-                }
-
-				$scope.showTaskCount = true || (options.showTaskCount && $scope.taskCount);
+				$scope.showDescriptionLength = (options.showDescriptionLength && ($scope.descriptionLength > 0));
+				$scope.showTaskCount = (options.showTaskCount && ($scope.taskCount > 0));
             }
         },
         templateUrl: "app/directives/card_tpl.html"

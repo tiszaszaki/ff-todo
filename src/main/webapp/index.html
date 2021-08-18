@@ -33,19 +33,16 @@
         <div class="table">
             <div class="row border border-secondary rounded">
                 <div class="col">
-                    <tsz-todo-list-per-phase ng-if="todo_list[0].length"
-                            content="{{ todo_list[0] }}" phasename="{{ todo_phases[0] }}"
-                            phasenum="{{ phaseNum }}"></tsz-todo-list-per-phase>
+					<h1 class="display-5 mt-1 mb-3">Todo</h1>
+                    <tsz-todo-list-per-phase ng-if="todo_list[0].length" content="{{ todo_list[0] }}"></tsz-todo-list-per-phase>
                 </div>
                 <div class="col">
-                    <tsz-todo-list-per-phase ng-if="todo_list[1].length"
-                            content="{{ todo_list[1] }}" phasename="{{ todo_phases[1] }}"
-                            phasenum="{{ phaseNum }}"></tsz-todo-list-per-phase>
+					<h1 class="display-5 mt-1 mb-3">In progress</h1>
+                    <tsz-todo-list-per-phase ng-if="todo_list[1].length" content="{{ todo_list[1] }}"></tsz-todo-list-per-phase>
                 </div>
                 <div class="col">
-                    <tsz-todo-list-per-phase ng-if="todo_list[2].length"
-                            content="{{ todo_list[2] }}" phasename="{{ todo_phases[2] }}"
-                            phasenum="{{ phaseNum }}"></tsz-todo-list-per-phase>
+					<h1 class="display-5 mt-1 mb-3">Done</h1>
+                    <tsz-todo-list-per-phase ng-if="todo_list[2].length" content="{{ todo_list[2] }}"></tsz-todo-list-per-phase>
                 </div>
             </div>
         </div>

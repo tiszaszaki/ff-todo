@@ -5,8 +5,6 @@ app.directive("tszTodoListPerPhase", function()
         scope:
         {
             content: '@',
-            phasename: '@',
-            phasenum: '@'
         },
         controller: function($scope)
         {

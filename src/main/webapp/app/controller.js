@@ -1,7 +1,6 @@
 app.controller('todoCtrl', function($scope, $rootScope, $http, TodoGlobalService)
 {
-	$scope.phaseNum = 3;
-	$scope.todo_phases = ["Todo", "In progress", "Done"];
+	$rootScope.phaseNum = $scope.phaseNum = 3;
 
     $rootScope.todo_common_options = {
         showDescriptionLength: true,
@@ -17,13 +16,7 @@ app.controller('todoCtrl', function($scope, $rootScope, $http, TodoGlobalService
 		{
 			response.data.forEach(function(value)
 			{
-				var temp_value=value;
-				var phase=value.phase;
-
-				temp_value.dateModified = moment(temp_value.dateModified).fromNow();
-				temp_value.dateCreated = moment(temp_value.dateCreated).fromNow();
-
-				$scope.todo_list[phase].push(temp_value);
+				$scope.todo_list[value.phase].push(value);
 			});
 		});
 	}
