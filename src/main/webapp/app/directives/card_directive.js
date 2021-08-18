@@ -11,53 +11,44 @@ app.directive("tszCard", function()
     return {
         restrict: 'E',
         scope: {
-            id: '@',
-            name: '@',
-            description: '@',
-            phase: '@',
+        	id: '@',
+        	name: '@',
+        	description: '@',
+        	phase: '@',
+        	datemodified: '@',
+        	datecreated: '@',
+        	tasks: '@',
             phasenum: '@',
-            datemodified: '@',
-            datecreated: '@?',
-            tasks: '@?'
         },
         controller: function ($scope, $rootScope)
         {
             var options = $rootScope.todo_common_options;
+
+			$scope.id2 = Number.parseInt($scope.id) + 1;
+			$scope.tasks2 = JSON.parse($scope.tasks);
+
             $scope.isCardValid = (true
                 && ($scope.name != ""));
 
-			$scope._id = Number.parseInt($scope.id) + 1;
-
-            if ($scope.tasks !== undefined)
-            {
-                $scope._tasks = JSON.parse($scope.tasks);
-            }
+			$scope.taskCount = $scope.tasks2.length;
 
             if (options)
             {
-                if (options.showDateCreated !== undefined)
-                {
-                    $scope._dateCreated = (options.showDateCreated && ($scope.datecreated !== undefined));
-                }
+				$scope.showDateCreated = (options.showDateCreated && $scope.datecreated);
 
-                if (options.showDescriptionLength !== undefined)
+                if (options.showDescriptionLength && $scope.description)
                 {
                     $scope.descriptionLength = $scope.description.length;
-                    $scope._descriptionLength = options.showDescriptionLength;
                 }
 
-                if (options.showTaskCount !== undefined)
-                if (options.showTaskCount)
-                {
-                    $scope.taskCount = $scope._tasks.length;
-                }
+				$scope.showTaskCount = true || (options.showTaskCount && $scope.taskCount);
             }
         },
         templateUrl: "app/directives/card_tpl.html"
     };
 });
 
-app.directive("tszCardToolbar", function(TodoGlobalService, TodoCardService)
+app.directive("tszCardToolbar", function($rootScope, TodoCardService)
 {
     return {
         restrict: 'E',
@@ -68,7 +59,7 @@ app.directive("tszCardToolbar", function(TodoGlobalService, TodoCardService)
             phase: '@',
             phasenum: '@'
         },
-        controller: function($scope)
+        controller: function($scope, $rootScope)
         {
             var _phase = Number.parseInt($scope.phase);
             var _phasenum = Number.parseInt($scope.phasenum);
@@ -108,7 +99,7 @@ app.directive("tszCardToolbar", function(TodoGlobalService, TodoCardService)
                 TodoCardService.shiftTodoToTheLeft($scope.id, $scope.name, _phase)
                 	.then(function (response) {
                 		$.growl.notice({message: 'Todo (' + $scope.name + ') shifted to the left successfully!'});
-                		TodoGlobalService.fetchTodos();
+                		$rootScope.todoRefresh();
                 	});
             }
 
@@ -117,7 +108,7 @@ app.directive("tszCardToolbar", function(TodoGlobalService, TodoCardService)
                 TodoCardService.shiftTodoToTheRight($scope.id, $scope.name, _phase)
                 	.then(function (response) {
                 		$.growl.notice({message: 'Todo (' + $scope.name + ') shifted to the right successfully!'});
-                		TodoGlobalService.fetchTodos();
+                		$rootScope.todoRefresh();
                 	});
             }
         },

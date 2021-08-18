@@ -1,7 +1,7 @@
 <div class="card border border-primary mb-3" ng-if="isCardValid">
     <div class="card-header">
         <h5 class="card-title">
-            <span class="text-muted" data-toggle="tooltip" data-placement="bottom" title="Todo ID">#{{ _id }}</span>
+            <span class="text-muted" data-toggle="tooltip" data-placement="bottom" title="Todo ID">#{{ id2 }}</span>
             <span data-toggle="tooltip" data-placement="bottom" title="Todo name">{{ name }}</span>
         </h5>
     </div>
@@ -11,20 +11,20 @@
                     data-toggle="tooltip" data-placement="bottom" title="Todo description">
                 <p class="card-text">{{ description }}</p>
             </li>
-            <li class="list-group-item" ng-if="_descriptionLength">
+            <li class="list-group-item" ng-if="showDescriptionLength">
                 <p class="card-text">Description length: {{ descriptionLength }}</p>
             </li>
             <li class="list-group-item">
                 <ul class="list-group border border-primary"
                         data-toggle="tooltip" data-placement="bottom" title="Task list">
-                    <li class="list-group-item" ng-repeat="task in _tasks" ng-if="taskCount">
+                    <li class="list-group-item" ng-repeat="task in tasks2" ng-if="taskCount">
                         {{ task.name }}
                     </li>
                     <li class="list-group-item" ng-if="!taskCount">
                         <tsz-task-emptiness-indicator></tsz-task-emptiness-indicator>
                     </li>
                 </ul>
-                <p class="card-text" ng-if="taskCount">Task count: {{ taskCount }}</p>
+                <p class="card-text" ng-if="showTaskCount">Task count: {{ taskCount }}</p>
             </li>
             <li class="list-group-item">
                 <tsz-card-toolbar id="{{ id }}" name="{{ name }}"
@@ -34,7 +34,7 @@
     </div>
     <div class="card-footer text-muted">
         <p>Updated {{ datemodified }}</p>
-        <p ng-if="_dateCreated">Created {{ datecreated }}</p>
+        <p ng-if="showDateCreated">Created {{ datecreated }}</p>
     </div>
 </div>
 <tsz-card-invalid ng-if="!isCardValid"></tsz-card-invalid>
