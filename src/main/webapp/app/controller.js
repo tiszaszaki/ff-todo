@@ -1,6 +1,7 @@
 app.controller('todoCtrl', function($scope, $rootScope, $http, TodoGlobalService)
 {
-	$rootScope.phaseNum = $scope.phaseNum = 3;
+	$scope.phase_labels = ['Todo', 'In progress', 'Done'];
+	$rootScope.phaseNum = $scope.phaseNum = $scope.phase_labels.length;
 
     $rootScope.todo_common_options = {
         showDescriptionLength: true,

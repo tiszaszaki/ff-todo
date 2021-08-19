@@ -32,18 +32,15 @@
         <h1 class="display-3 my-5">Test Todo application</h1>
         <div class="table">
             <div class="row border border-secondary rounded">
-                <div class="col">
-					<h1 class="display-5 mt-1 mb-3">Todo</h1>
-                    <tsz-todo-list-per-phase ng-if="todo_list[0].length" content="{{ todo_list[0] }}"></tsz-todo-list-per-phase>
-                </div>
-                <div class="col">
-					<h1 class="display-5 mt-1 mb-3">In progress</h1>
-                    <tsz-todo-list-per-phase ng-if="todo_list[1].length" content="{{ todo_list[1] }}"></tsz-todo-list-per-phase>
-                </div>
-                <div class="col">
-					<h1 class="display-5 mt-1 mb-3">Done</h1>
-                    <tsz-todo-list-per-phase ng-if="todo_list[2].length" content="{{ todo_list[2] }}"></tsz-todo-list-per-phase>
-                </div>
+				<div class="col" ng-repeat="phase in phase_labels">
+					<h1 class="display-5 mt-1 mb-3">{{phase}}</h1>
+					<div ng-if="todo_list[$index].length">
+						<div ng-repeat="todo in todo_list[$index]">
+							<tsz-card content="{{todo}}"></tsz-card>
+						</div>
+					</div>
+					<tsz-todo-emptiness-indicator ng-if="!todo_list[$index].length"></tsz-todo-emptiness-indicator>
+				</div>
             </div>
         </div>
         <div class="d-grid gap-2 w-25 my-2">
