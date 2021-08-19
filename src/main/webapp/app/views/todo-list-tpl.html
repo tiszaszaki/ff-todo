@@ -1,0 +1,23 @@
+<div class="table">
+	<div class="row border border-secondary rounded">
+		<div class="col" ng-repeat="phase in phase_labels">
+			<h1 class="display-5 mt-1 mb-3">{{phase}}</h1>
+			<div ng-if="todo_list[$index].length">
+				<div ng-repeat="todo in todo_list[$index]">
+					<tsz-card content="{{todo}}"></tsz-card>
+				</div>
+			</div>
+			<tsz-todo-emptiness-indicator ng-if="!todo_list[$index].length"></tsz-todo-emptiness-indicator>
+		</div>
+	</div>
+</div>
+<div class="d-grid gap-2 w-25 my-2">
+	<button type="button" class="btn btn-primary" ng-click="addTodo()"
+			data-toggle="tooltip" data-placement="bottom" title="Add new Todo">
+		<i class="fas fa-plus"></i>
+	</button>
+	<button type="button" class="btn btn-danger btn-sm" ng-click="removeAllTodos()"
+			data-toggle="tooltip" data-placement="bottom" title="Remove all Todos">
+		<i class="fas fa-broom"></i>
+	</button>
+</div>
