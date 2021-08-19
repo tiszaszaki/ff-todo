@@ -9,20 +9,18 @@ app.config(function($routeProvider) {
 				templateUrl: '/app/views/todo-add-tpl.html',
 				controller: 'TodoAddController'
 			})
-			/*
 			.when('/todo', {
-				templateUrl: '/todo-details-tpl.html',
-				controller: ''
+				templateUrl: '/app/views/todo-details-tpl.html',
+				controller: 'TodoDetailController'
 			})
 			.when('/task/add', {
-				templateUrl: '/task-add-tpl.html',
-				controller: ''
+				templateUrl: '/app/views/task-add-tpl.html',
+				controller: 'TaskAddController'
 			})
 			.when('/task', {
-				templateUrl: '/task-details-tpl.html',
-				controller: ''
+				templateUrl: '/app/views/task-details-tpl.html',
+				controller: 'TaskDetailController'
 			})
-			*/
 			.otherwise({
 				redirectTo: '/'
 			});

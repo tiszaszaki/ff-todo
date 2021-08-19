@@ -24,25 +24,21 @@
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jquery.growl@1.3.5/stylesheets/jquery.growl.css">
 
     <script src="app/app.js"></script>
+	<script src="app/services/todo_services.js"></script>
+	<script src="app/services/modal_services.js"></script>
 	<script src="app/controllers/todo-list-controller.js"></script>
 	<script src="app/controllers/todo-add-controller.js"></script>
+	<script src="app/controllers/todo-details-controller.js"></script>
+	<script src="app/controllers/task-add-controller.js"></script>
+	<script src="app/controllers/task-details-controller.js"></script>
     <script src="app/directives/card_directive.js"></script>
     <script src="app/directives/card_emptiness_directives.js"></script>
     <script src="app/directives/modal_directives.js"></script>
-    <script src="app/services/todo_services.js"></script>
-	<script src="app/services/modal_services.js"></script>
 </head>
 <body>
     <div class="container" ng-app="TodoMainApp">
         <h1 class="display-3 my-5">Test Todo application</h1>
 		<ng-view/>
-    </div>
-    <div>
-        <tsz-todo-modal modalprefix="add" modaltitle="Add Todo"
-                placeholdername='Enter name for new Todo...'
-                placeholderDescription='Enter description for new Todo (optional)...'
-                submitButtonCaption='Add' dismissButtonCaption='Close'
-                modaldescriptionmaxcharcount=1024></tsz-todo-modal>
     </div>
 </body>
 </html>

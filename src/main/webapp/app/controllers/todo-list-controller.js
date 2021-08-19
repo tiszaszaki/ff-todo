@@ -1,4 +1,4 @@
-app.controller('TodoListController', function($scope, $rootScope, $http, $location)
+app.controller('TodoListController', function($scope, $rootScope, $http, $location, TodoGlobalService)
 {
 	$scope.phase_labels = ['Todo', 'In progress', 'Done'];
 	$rootScope.phaseNum = $scope.phaseNum = $scope.phase_labels.length;
@@ -29,6 +29,5 @@ app.controller('TodoListController', function($scope, $rootScope, $http, $locati
 	};
 
 	$scope.removeAllTodos = function() {
-		TodoGlobalService.removeAllTodos();
 	};
 });
