@@ -10,7 +10,14 @@ app.directive("tszTodoModal", function()
             submitbuttoncaption: '@?',
             dismissbuttoncaption: '@?',
             modaldescriptionmaxcharcount: '@?',
-            icontemplate: '@?'
+            icontemplate: '@?',
+            submittrigger: '&',
+            dismisstrigger: '&'
+        },
+        controller: function($scope, $element) {
+        	$element.on('shown.bs.modal', function(e) {
+				$('#' + modalprefix + "-todo-name").trigger('focus');
+        	});
         },
         templateUrl: "app/directives/todo_modal_tpl.html"
     };

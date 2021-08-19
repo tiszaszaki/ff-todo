@@ -18,7 +18,7 @@
                     </div>
                     <div class="mb-3">
                         <label for="{{ modalprefix }}-todo-description" class="col-form-label">Description:</label>
-                        <textarea class="form-control" id="{ {modalprefix }}-todo-description"
+                        <textarea class="form-control" id="{{ modalprefix }}-todo-description"
                                   placeholder="{{ placeholderdescription }}"
                                   maxlength="{{ modaldescriptionmaxcharcount }}"></textarea>
                         <div class="d-flex justify-content-end">
@@ -46,8 +46,9 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-primary" id="{{ modalprefix }}-todo-submit-button"
-                    data-bs-dismiss="modal">{{ submitbuttoncaption }}</button>
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ dismissbuttoncaption }}</button>
+                    	data-bs-dismiss="modal" ng-click="submittrigger()">{{ submitbuttoncaption }}</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+						ng-click="dismisstrigger()">{{ dismissbuttoncaption }}</button>
             </div>
         </div>
     </div>

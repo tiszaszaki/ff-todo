@@ -24,8 +24,21 @@ app.controller('todoCtrl', function($scope, $rootScope, $http, TodoGlobalService
 
 	$rootScope.todoRefresh();
 
+	$scope.showModal = function(modalprefix) {
+		var options = {
+			closeButtonText: 'Cancel',
+			actionButtonText: 'Yes',
+			headerText: 'Modal Header ?',
+			bodyText: 'Are you sure you want to delete?'
+		};
+
+		return TodoModalService.showModal({}, options);
+	};
+
 	$scope.addTodo = function() {
-		TodoGlobalService.addTodo();
+		$scope.showModal("addTodo").then(function () {
+			TodoGlobalService.addTodo();
+		});
 	};
 
 	$scope.removeAllTodos = function() {

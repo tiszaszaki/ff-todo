@@ -7,7 +7,7 @@
     </div>
     <div class="card-body">
         <ul class="list-group list-group-flush">
-            <li class="list-group-item rounded border border-secondary"
+            <li class="list-group-item rounded border border-secondary" ng-if="descriptionLength"
                     data-toggle="tooltip" data-placement="bottom" title="Todo description">
                 <p class="card-text">{{ description }}</p>
             </li>
@@ -23,8 +23,10 @@
                     <li class="list-group-item" ng-if="!taskCount">
                         <tsz-task-emptiness-indicator></tsz-task-emptiness-indicator>
                     </li>
+					<li class="list-group-item border border-primary" ng-if="showTaskCount">
+						<p class="card-text">Task count: {{ taskCount }}</p>
+					</li>
                 </ul>
-                <p class="card-text" ng-if="showTaskCount">Task count: {{ taskCount }}</p>
             </li>
             <li class="list-group-item">
                 <tsz-card-toolbar id="{{ id }}" name="{{ name }}"
