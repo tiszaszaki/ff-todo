@@ -25,4 +25,10 @@ public class TaskController {
 		taskService.updateTask(id, patchedTask);
 		return ResponseEntity.ok().build();
 	}
+
+	@PatchMapping("/{id}/check")
+	public ResponseEntity<Void> checkTask(@PathVariable Long id) {
+		taskService.checkTask(id);
+		return ResponseEntity.ok().build();
+	}
 }

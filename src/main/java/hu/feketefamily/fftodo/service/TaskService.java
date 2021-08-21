@@ -68,6 +68,14 @@ public class TaskService {
 	}
 
 	@Transactional
+	public void checkTask(Long id) {
+		Task tempTask=getTask(id);
+		tempTask.setDone(!tempTask.getDone());
+		log.info("Updating done status of Task with id {{}}", id);
+		updateTask(id, tempTask);
+	}
+
+	@Transactional
 	public void updateTask(Long id, @Valid Task patchedTask) {
 		if (taskRepository.updateById(id, patchedTask.getName(), patchedTask.getDone()) >= 1)
 		{
