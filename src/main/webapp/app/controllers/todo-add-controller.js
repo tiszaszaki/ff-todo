@@ -1,7 +1,14 @@
-app.controller('TodoAddController', function($scope, $routeParams, $http, GlobalService, TodoGlobalService)
+app.controller('TodoAddController', function($scope, $http, $location, GlobalService, TodoGlobalService)
 {
-	$("#add-todo-name").val($routeParams.name);
-	$("#add-todo-description").val($routeParams.description);
 	$scope.phase_labels = GlobalService.phase_labels;
-	console.log($scope.phase_labels);
+	$scope.descriptionMaxLength = GlobalService.descriptionMaxLength;
+	$scope.submitAction = function() {
+		TodoGlobalService.addTodo($scope.name, $scope.description, $('input[name=add-todo-phase]:checked').val())
+				.then(function(response) {
+					$location.path("/");
+				});
+	}
+	$scope.dismissAction = function() {
+		$location.path("/");
+	}
 });

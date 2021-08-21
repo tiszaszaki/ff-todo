@@ -1,4 +1,4 @@
-app.factory('GlobalService', function($http) {
+app.factory('GlobalService', function() {
 	var _phase_labels = ['Todo', 'In progress', 'Done'];
 	var _phaseNum = _phase_labels.length;
 
@@ -9,6 +9,7 @@ app.factory('GlobalService', function($http) {
 			showDescriptionLength: true,
 			showDateCreated: true,
 			showTaskCount: true
-		}
+		},
+		descriptionMaxLength: 1024
     }
 });

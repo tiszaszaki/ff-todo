@@ -1,1 +1,39 @@
-View Todo details
+<form novalidate>
+	<div id="add-todo-name-form-group" class="mb-3">
+		<label for="edit-todo-name" class="col-form-label">Name:</label>
+		<input type="text" class="form-control" id="edit-todo-name" ng-model="name"
+			   placeholder="Change name for this Todo...">
+		<div id="edit-todo-name-validator" class="invalid-feedback">
+			Please provide a name.
+		</div>
+	</div>
+	<div class="mb-3">
+		<label for="edit-todo-description" class="col-form-label">Description:</label>
+		<textarea class="form-control" id="edit-todo-description" ng-model="description"
+				  placeholder="Change description for this Todo..."
+				  maxlength="{{ descriptionMaxLength }}"></textarea>
+		<div class="d-flex justify-content-end">
+			<span class="badge badge-pill bg-secondary mt-3"
+				  id="add-todo-description-char-count"></span>
+		</div>
+	</div>
+	<div class="mb-3">
+		<div>
+			<label class="col-form-label">Phase:</label>
+		</div>
+		<div class="btn-group" role="group">
+			<div ng-repeat="phase in phase_labels">
+				<input type="radio" class="btn-check" name="add-todo-phase"
+					   id="add-todo-phase{{ $index }}" value="{{ $index }}" checked>
+				<label class="btn btn-outline-primary" for="add-todo-phase{{ $index }}">{{ phase }}</label>
+			</div>
+		</div>
+	</div>
+	<div>
+		<label class="col-form-label">Actions:</label>
+	</div>
+	<div>
+		<button type="button" class="btn btn-primary" ng-click="submitAction()">Add</button>
+		<button type="button" class="btn btn-secondary" ng-click="dismissAction()">Cancel</button>
+	</div>
+</form>

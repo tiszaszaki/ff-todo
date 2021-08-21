@@ -18,8 +18,6 @@ app.directive("tszCard", function(GlobalService)
             var options = GlobalService.todo_common_options;
             var todo = JSON.parse($scope.content);
 
-            $scope.phasenum = GlobalService.phaseNum;
-
 			$scope.id = todo.id;
 			$scope.name = todo.name;
 			$scope.description = todo.description;
@@ -47,40 +45,43 @@ app.directive("tszCard", function(GlobalService)
     };
 });
 
-app.directive("tszCardToolbar", function($rootScope, TodoCardService)
+app.directive("tszCardToolbar", function($location, GlobalService, TodoCardService)
 {
     return {
         restrict: 'E',
         scope:
         {
-            id: '@',
-            name: '@',
-            phase: '@',
-            phasenum: '@'
+        	content: '@'
         },
-        controller: function($scope, $rootScope)
+        controller: function($scope)
         {
-            var _phase = Number.parseInt($scope.phase);
-            var _phasenum = Number.parseInt($scope.phasenum);
+        	/*
+            var todo = JSON.parse($scope.content);
+            var phase = todo.phase;
+            var phasenum = GlobalService.phaseNum;
 
-            var phase_left=_phase-1;
-            var phase_right=_phase+1;
+            var phase_left=phase-1;
+            var phase_right=phase+1;
 
             $scope.phaseLeftExists = (phase_left >= 0);
-            $scope.phaseRightExists = (phase_right < _phasenum);
+            $scope.phaseRightExists = (phase_right < phasenum);
+            */
+
+            $scope.phaseLeftExists = true;
+            $scope.phaseRightExists = true;
         },
         link: function($scope)
         {
-            var _phase = Number.parseInt($scope.phase);
+            var todo = JSON.parse($scope.content);
 
             $scope.prepareAddTaskModal = function()
             {
-                TodoCardService.addTaskForTodo($scope.id, $scope.name);
+                TodoCardService.addTaskForTodo(todo.id, todo.name);
             }
 
             $scope.prepareEditTodoModal = function()
             {
-                TodoCardService.editTodo($scope.id, $scope.name);
+                TodoCardService.editTodo(todo.id, todo.name, todo.description, todo.phase);
             }
 
             $scope.prepareRemoveTodoConfirmModal = function()
@@ -95,19 +96,19 @@ app.directive("tszCardToolbar", function($rootScope, TodoCardService)
 
             $scope.shiftTodoLeft = function()
             {
-                TodoCardService.shiftTodoToTheLeft($scope.id, $scope.name, _phase)
+                TodoCardService.shiftTodoToTheLeft($scope.id, $scope.name, phase)
                 	.then(function (response) {
                 		$.growl.notice({message: 'Todo (' + $scope.name + ') shifted to the left successfully!'});
-                		$rootScope.todoRefresh();
+                		$location.path('/');
                 	});
             }
 
             $scope.shiftTodoRight = function()
             {
-                TodoCardService.shiftTodoToTheRight($scope.id, $scope.name, _phase)
+                TodoCardService.shiftTodoToTheRight($scope.id, $scope.name, phase)
                 	.then(function (response) {
                 		$.growl.notice({message: 'Todo (' + $scope.name + ') shifted to the right successfully!'});
-                		$rootScope.todoRefresh();
+                		$location.path('/');
                 	});
             }
         },

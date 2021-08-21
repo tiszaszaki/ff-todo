@@ -4,9 +4,16 @@ app.factory('TodoGlobalService', function($http) {
     	{
     		return $http.get("/todo");
     	},
-        addTodo: function()
+        addTodo: function(name, description, phase)
         {
-            console.log("Trying to add a Todo...");
+            return $http.put("/todo", JSON.stringify( {
+				name: name,
+				description: description,
+				phase: phase
+            }), {
+				contentType: "application/json; charset=utf-8",
+				dataType: "json",
+            });
         },
         removeAllTodos: function()
         {
@@ -22,11 +29,9 @@ app.factory('TodoCardService', function($http) {
                 `Trying to add Task for Todo with name "${name}" and ID ${id}...`
             );
         },
-        editTodo: function(id, name)
+        editTodo: function(id, name, description, phase)
         {
-            console.log(
-                `Trying to edit Todo with name "${name}" and ID ${id}...`
-            );
+
         },
 
         removeTodo: function(id, name)
