@@ -31,12 +31,17 @@ app.factory('TodoCardService', function($http) {
         },
         editTodo: function(id, name, description, phase)
         {
-        	console.log(phase);
-            return $http.patch("/todo/" + id, JSON.stringify( {
-				name: name,
-				description: description,
-				phase: phase
-            }), {
+        	var patchBody = {
+        		name: name,
+        		description: description,
+        		phase: 0
+        	};
+        	if (phase !== undefined)
+        	{
+	        	patchBody.phase = phase;
+        	}
+        	console.log(patchBody);
+            return $http.patch("/todo/" + id, JSON.stringify(patchBody), {
 				contentType: "application/json; charset=utf-8",
 				dataType: "json",
             });

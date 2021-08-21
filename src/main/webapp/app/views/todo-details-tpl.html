@@ -1,9 +1,10 @@
-<form novalidate>
+<form name="editTodoForm" novalidate>
 	<div id="edit-todo-name-form-group" class="mb-3">
 		<label for="edit-todo-name" class="col-form-label">Name:</label>
-		<input type="text" class="form-control" id="edit-todo-name" ng-model="name" ng-value="name"
-			   placeholder="Change name for this Todo...">
-		<div id="edit-todo-name-validator" class="invalid-feedback">
+		<input type="text" class="form-control" id="edit-todo-name" name="name" ng-model="name" ng-value="name"
+			   placeholder="Change name for this Todo..." ng-input="validateFormGroup('add-todo-name-form-group')"
+				required>
+		<div ng-show="editTodoForm.name.$touched && editTodoForm.name.$invalid">
 			Please provide a name.
 		</div>
 	</div>
@@ -24,8 +25,7 @@
 		<div class="btn-group" role="group">
 			<div ng-repeat="phase in phase_labels">
 				<input type="radio" class="btn-check" name="edit-todo-phase"
-					   id="edit-todo-phase{{ $index }}" value="{{ $index }}"
-					   ng-model="phase" ng-value="$index">
+					   id="edit-todo-phase{{ $index }}" ng-model="phaseSelected" value="{{ $index }}" ng-checked="$index == phasePrepared">
 				<label class="btn btn-outline-primary" for="edit-todo-phase{{ $index }}">{{ phase }}</label>
 			</div>
 		</div>
@@ -37,6 +37,7 @@
 		<div>
 			<button type="button" class="btn btn-primary" ng-click="submitAction()">Save</button>
 			<button type="button" class="btn btn-secondary" ng-click="dismissAction()">Cancel</button>
+			<button type="button" class="btn btn-warning" ng-click="revertAction(true)">Revert</button>
 		</div>
 	</div>
 </form>

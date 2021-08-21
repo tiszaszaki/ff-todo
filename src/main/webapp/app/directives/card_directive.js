@@ -35,7 +35,11 @@ app.directive("tszCard", function($location, GlobalService, TodoCardService)
             $scope.isCardValid = (true
                 && ($scope.name != ""));
 
-			$scope.descriptionLength = $scope.description.length;
+			if ($scope.description)
+				$scope.descriptionLength = $scope.description.length;
+			else
+				$scope.descriptionLength = 0;
+
 			$scope.taskCount = $scope.tasks.length;
 
             if (options)

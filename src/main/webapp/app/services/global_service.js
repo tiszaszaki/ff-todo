@@ -2,6 +2,14 @@ app.factory('GlobalService', function() {
 	var _phase_labels = ['Todo', 'In progress', 'Done'];
 	var _phaseNum = _phase_labels.length;
 
+	var _validateFormGroup = function(formGroupId) {
+		var fromGroup = $('#' + formGroupId);
+		console.log("Validating form group with ID " + formGroupId + "...");
+		if(!fromGroup.hasClass("was-validated")){
+			fromGroup.addClass("was-validated");
+		}
+	};
+
 	return {
 		phase_labels: _phase_labels,
 		phaseNum: _phaseNum,
@@ -10,6 +18,8 @@ app.factory('GlobalService', function() {
 			showDateCreated: true,
 			showTaskCount: true
 		},
-		descriptionMaxLength: 1024
+		descriptionMaxLength: 1024,
+
+		validateFormGroup: _validateFormGroup
     }
 });

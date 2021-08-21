@@ -1,9 +1,10 @@
-<form novalidate>
+<form name="addTodoForm" novalidate>
 	<div id="add-todo-name-form-group" class="mb-3">
 		<label for="add-todo-name" class="col-form-label">Name:</label>
-		<input type="text" class="form-control" id="add-todo-name" ng-model="name"
-			   placeholder="Enter name for new Todo...">
-		<div id="add-todo-name-validator" class="invalid-feedback">
+		<input type="text" class="form-control" id="add-todo-name" name="name" ng-model="name"
+			   placeholder="Enter name for new Todo..." ng-input="validateFormGroup('add-todo-name-form-group')"
+				required>
+		<div ng-show="addTodoForm.name.$touched && addTodoForm.name.$invalid">
 			Please provide a name.
 		</div>
 	</div>
@@ -24,7 +25,7 @@
 		<div class="btn-group" role="group">
 			<div ng-repeat="phase in phase_labels">
 				<input type="radio" class="btn-check" name="add-todo-phase"
-					   id="add-todo-phase{{ $index }}" value="{{ $index }}" checked>
+					   id="add-todo-phase{{ $index }}" value="{{ $index }}" ng-checked="$index == 0">
 				<label class="btn btn-outline-primary" for="add-todo-phase{{ $index }}">{{ phase }}</label>
 			</div>
 		</div>
