@@ -6,19 +6,19 @@ app.directive("tszCardInvalid", function()
     };
 });
 
-app.directive("tszCard", function()
+app.directive("tszCard", function(GlobalService)
 {
     return {
         restrict: 'E',
         scope: {
         	content: '@',
         },
-        controller: function ($scope, $rootScope)
+        controller: function ($scope)
         {
-            var options = $rootScope.todo_common_options;
+            var options = GlobalService.todo_common_options;
             var todo = JSON.parse($scope.content);
 
-            $scope.phasenum = $rootScope.phaseNum;
+            $scope.phasenum = GlobalService.phaseNum;
 
 			$scope.id = todo.id;
 			$scope.name = todo.name;

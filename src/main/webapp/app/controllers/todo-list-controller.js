@@ -1,13 +1,6 @@
-app.controller('TodoListController', function($scope, $rootScope, $http, $location, TodoGlobalService)
+app.controller('TodoListController', function($scope, $rootScope, $http, $location, GlobalService, TodoGlobalService)
 {
-	$scope.phase_labels = ['Todo', 'In progress', 'Done'];
-	$rootScope.phaseNum = $scope.phaseNum = $scope.phase_labels.length;
-
-    $rootScope.todo_common_options = {
-        showDescriptionLength: true,
-        showDateCreated: true,
-        showTaskCount: true
-    };
+	$scope.phase_labels = GlobalService.phase_labels;
 
 	$rootScope.todoRefresh = function()
 	{

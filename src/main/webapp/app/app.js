@@ -5,7 +5,7 @@ app.config(function($routeProvider) {
 				templateUrl: '/app/views/todo-list-tpl.html',
 				controller: 'TodoListController'
 			})
-			.when('/todo/add', {
+			.when('/todo/add/:name/:description', {
 				templateUrl: '/app/views/todo-add-tpl.html',
 				controller: 'TodoAddController'
 			})

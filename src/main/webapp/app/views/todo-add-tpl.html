@@ -21,16 +21,10 @@
 		<label class="col-form-label">Phase:</label>
 	</div>
 	<div class="btn-group" role="group">
-		<input type="radio" class="btn-check" name="add-todo-phase"
-			   id="add-todo-phase0" value="0" checked>
-		<label class="btn btn-outline-primary" for="add-todo-phase0">Todo</label>
-
-		<input type="radio" class="btn-check" name="add-todo-phase"
-			   id="add-todo-phase1" value="1">
-		<label class="btn btn-outline-primary" for="add-todo-phase1">In progress</label>
-
-		<input type="radio" class="btn-check" name="add-todo-phase"
-			   id="add-todo-phase2" value="2">
-		<label class="btn btn-outline-primary" for="add-todo-phase2">Done</label>
+		<div ng-repeat="phase in phase_labels">
+			<input type="radio" class="btn-check" name="add-todo-phase"
+				   id="add-todo-phase{{ $index }}" value="{{ $index }}" checked>
+			<label class="btn btn-outline-primary" for="add-todo-phase{{ $index }}">{{ phase }}</label>
+		</div>
 	</div>
 </form>
