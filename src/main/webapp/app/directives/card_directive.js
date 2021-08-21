@@ -6,7 +6,7 @@ app.directive("tszCardInvalid", function()
     };
 });
 
-app.directive("tszCard", function(GlobalService)
+app.directive("tszCard", function($location, GlobalService, TodoCardService)
 {
     return {
         restrict: 'E',
@@ -17,6 +17,7 @@ app.directive("tszCard", function(GlobalService)
         {
             var options = GlobalService.todo_common_options;
             var todo = JSON.parse($scope.content);
+            var phasenum = GlobalService.phaseNum;
 
 			$scope.id = todo.id;
 			$scope.name = todo.name;
@@ -27,6 +28,9 @@ app.directive("tszCard", function(GlobalService)
 			$scope.tasks = todo.tasks;
 
 			$scope.id2 = Number.parseInt($scope.id) + 1;
+
+            $scope.phaseLeftExists = (($scope.phase-1) >= 0);
+            $scope.phaseRightExists = (($scope.phase+1) < phasenum);
 
             $scope.isCardValid = (true
                 && ($scope.name != ""));
@@ -41,35 +45,6 @@ app.directive("tszCard", function(GlobalService)
 				$scope.showTaskCount = (options.showTaskCount && ($scope.taskCount > 0));
             }
         },
-        templateUrl: "app/directives/card_tpl.html"
-    };
-});
-
-app.directive("tszCardToolbar", function($location, GlobalService, TodoCardService)
-{
-    return {
-        restrict: 'E',
-        scope:
-        {
-        	content: '@'
-        },
-        controller: function($scope)
-        {
-        	/*
-            var todo = JSON.parse($scope.content);
-            var phase = todo.phase;
-            var phasenum = GlobalService.phaseNum;
-
-            var phase_left=phase-1;
-            var phase_right=phase+1;
-
-            $scope.phaseLeftExists = (phase_left >= 0);
-            $scope.phaseRightExists = (phase_right < phasenum);
-            */
-
-            $scope.phaseLeftExists = true;
-            $scope.phaseRightExists = true;
-        },
         link: function($scope)
         {
             var todo = JSON.parse($scope.content);
@@ -81,37 +56,37 @@ app.directive("tszCardToolbar", function($location, GlobalService, TodoCardServi
 
             $scope.prepareEditTodoModal = function()
             {
-                TodoCardService.editTodo(todo.id, todo.name, todo.description, todo.phase);
+                $location.path('/todo/edit/:' + todo.id + '/:' + todo.name + '/:' + todo.description + '/:' + todo.phase);
             }
 
             $scope.prepareRemoveTodoConfirmModal = function()
             {
-                TodoCardService.removeTodo($scope.id, $scope.name);
+                $location.path('/todo/remove/:' + todo.id + '/:' + todo.name);
             }
 
             $scope.prepareRemoveAllTasksConfirmModal = function()
             {
-                TodoCardService.removeAllTasksFromTodo($scope.id, $scope.name);
+                TodoCardService.removeAllTasksFromTodo(todo.id, todo.name);
             }
 
             $scope.shiftTodoLeft = function()
             {
-                TodoCardService.shiftTodoToTheLeft($scope.id, $scope.name, phase)
+                TodoCardService.shiftTodoToTheLeft(todo.id, todo.name, todo.phase)
                 	.then(function (response) {
-                		$.growl.notice({message: 'Todo (' + $scope.name + ') shifted to the left successfully!'});
+                		$.growl.notice({message: 'Todo (' + todo.name + ') shifted to the left successfully!'});
                 		$location.path('/');
                 	});
             }
 
             $scope.shiftTodoRight = function()
             {
-                TodoCardService.shiftTodoToTheRight($scope.id, $scope.name, phase)
+                TodoCardService.shiftTodoToTheRight(todo.id, todo.name, todo.phase)
                 	.then(function (response) {
-                		$.growl.notice({message: 'Todo (' + $scope.name + ') shifted to the right successfully!'});
+                		$.growl.notice({message: 'Todo (' + todo.name + ') shifted to the right successfully!'});
                 		$location.path('/');
                 	});
             }
         },
-        templateUrl: "app/directives/card_toolbar_tpl.html"
+        templateUrl: "app/directives/card_tpl.html"
     };
 });

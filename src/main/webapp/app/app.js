@@ -9,9 +9,13 @@ app.config(function($routeProvider) {
 				templateUrl: '/app/views/todo-add-tpl.html',
 				controller: 'TodoAddController'
 			})
-			.when('/todo', {
+			.when('/todo/edit/:id/:name/:description/:phase', {
 				templateUrl: '/app/views/todo-details-tpl.html',
 				controller: 'TodoDetailController'
+			})
+			.when('/todo/remove/:id/:name', {
+				templateUrl: '/app/views/todo-remove-tpl.html',
+				controller: 'TodoRemoveController'
 			})
 			.when('/task/add', {
 				templateUrl: '/app/views/task-add-tpl.html',

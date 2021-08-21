@@ -31,14 +31,20 @@ app.factory('TodoCardService', function($http) {
         },
         editTodo: function(id, name, description, phase)
         {
-
+        	console.log(phase);
+            return $http.patch("/todo/" + id, JSON.stringify( {
+				name: name,
+				description: description,
+				phase: phase
+            }), {
+				contentType: "application/json; charset=utf-8",
+				dataType: "json",
+            });
         },
 
-        removeTodo: function(id, name)
+        removeTodo: function(id)
         {
-            console.log(
-                `Trying to remove Todo with name "${name}" and ID ${id}...`
-            );
+        	return $http.delete("/todo/" + id);
         },
         removeAllTasksFromTodo: function(id, name)
         {
