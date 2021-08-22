@@ -15,34 +15,42 @@
                 <p class="card-text">Description length: {{ descriptionLength }}</p>
             </li>
             <li class="list-group-item">
-                <ul class="list-group border border-primary"
-                        data-toggle="tooltip" data-placement="bottom" title="Task list">
-                    <li class="list-group-item d-flex justify-content-between" ng-repeat="task in tasks" ng-if="taskCount">
-						<div>
-							<span ng-if="!readonlyTodo && !readonlyTask">
-								<button type="button" class="btn btn-primary btn-sm text-end" ng-click="prepareEditTaskModal(task)"
-										data-toggle="tooltip" data-placement="bottom" title="View Task details">
-									<i class="fas fa-pencil-alt"></i>
-								</button>
-								<button type="button" class="btn btn-danger btn-sm text-end" ng-click="removeTask(task)"
-										data-toggle="tooltip" data-placement="bottom" title="Remove Task">
-									<i class="fas fa-trash-alt"></i>
-								</button>
-							</span>
-							<span class="text-muted">#{{ task.id + 1 }}</span>
-							<span>{{ task.name }}</span>
-						</div>
-						<input class="form-check-input" type="checkbox" ng-checked="task.done"
-							   data-toggle="tooltip" data-placement="bottom" title="Check Task"
-							   ng-click="checkTask(task)" ng-if="!readonlyTodo && !readonlyTask">
-					</li>
-                    <li class="list-group-item" ng-if="!taskCount">
-                        <tsz-task-emptiness-indicator></tsz-task-emptiness-indicator>
-                    </li>
-					<li class="list-group-item border border-primary" ng-if="showTaskCount">
-						<p class="card-text">Task count: {{ taskCount }}</p>
-					</li>
-                </ul>
+				<button class="btn btn-secondary mb-3" type="button"
+						data-bs-toggle="collapse" data-bs-target="#task-list-{{id}}-collapse"
+						data-toggle="tooltip" data-placement="bottom" title="Toggle Task list">
+					<i ng-if="todo_expand_status[value.id]" class="fas fa-folder-minus"></i>
+					<i ng-if="!todo_expand_status[value.id]" class="fas fa-folder-plus"></i>
+				</button>
+				<div id="task-list-{{id}}-collapse" class="collapse">
+					<ul class="list-group border border-primary"
+							data-toggle="tooltip" data-placement="bottom" title="Task list">
+						<li class="list-group-item d-flex justify-content-between" ng-repeat="task in tasks" ng-if="taskCount">
+							<div>
+								<span ng-if="!readonlyTodo && !readonlyTask">
+									<button type="button" class="btn btn-primary btn-sm text-end" ng-click="prepareEditTaskModal(task)"
+											data-toggle="tooltip" data-placement="bottom" title="View Task details">
+										<i class="fas fa-pencil-alt"></i>
+									</button>
+									<button type="button" class="btn btn-danger btn-sm text-end" ng-click="removeTask(task)"
+											data-toggle="tooltip" data-placement="bottom" title="Remove Task">
+										<i class="fas fa-trash-alt"></i>
+									</button>
+								</span>
+								<span class="text-muted">#{{ task.id + 1 }}</span>
+								<span>{{ task.name }}</span>
+							</div>
+							<input class="form-check-input" type="checkbox" ng-checked="task.done"
+								   data-toggle="tooltip" data-placement="bottom" title="Check Task"
+								   ng-click="checkTask(task)" ng-if="!readonlyTodo && !readonlyTask">
+						</li>
+						<li class="list-group-item" ng-if="!taskCount">
+							<tsz-task-emptiness-indicator></tsz-task-emptiness-indicator>
+						</li>
+						<li class="list-group-item border border-primary" ng-if="showTaskCount">
+							<p class="card-text">Task count: {{ taskCount }}</p>
+						</li>
+					</ul>
+				</div>
             </li>
             <li class="list-group-item" ng-if="!readonlyTodo">
 				<div class="d-flex justify-content-between">
