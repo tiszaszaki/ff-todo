@@ -14,9 +14,9 @@ app.factory('GlobalService', function() {
 		phase_labels: _phase_labels,
 		phaseNum: _phaseNum,
 		todo_common_options: {
-			showDescriptionLength: true,
-			showDateCreated: true,
-			showTaskCount: true,
+			showDescriptionLength: false,
+			showDateCreated: false,
+			showTaskCount: false,
 			readonlyTodo: false,
 			readonlyTask: false
 		},

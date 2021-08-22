@@ -32,4 +32,6 @@ app.controller('TodoDetailController', function($scope, $location, $routeParams,
 	$scope.dismissAction = function() {
 		$location.path("/");
 	}
+
+	$("#edit-todo-name").focus();
 });

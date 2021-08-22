@@ -15,4 +15,6 @@ app.controller('TaskAddController', function($scope, $location, $routeParams, Gl
 	$scope.dismissAction = function() {
 		$location.path("/");
 	}
+
+	$("#add-task-name").focus();
 });

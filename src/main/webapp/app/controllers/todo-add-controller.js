@@ -15,4 +15,6 @@ app.controller('TodoAddController', function($scope, $location, GlobalService, T
 	$scope.dismissAction = function() {
 		$location.path("/");
 	}
+
+	$("#add-todo-name").focus();
 });
