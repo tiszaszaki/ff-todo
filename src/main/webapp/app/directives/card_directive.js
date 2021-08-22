@@ -58,7 +58,7 @@ app.directive("tszCard", function($location, GlobalService, TodoCardService)
 
             $scope.prepareAddTaskModal = function()
             {
-                TodoCardService.addTaskForTodo(todo.id, todo.name);
+                $location.path('/task/add/:' + todo.id);
             }
 
             $scope.prepareEditTodoModal = function()
@@ -73,7 +73,7 @@ app.directive("tszCard", function($location, GlobalService, TodoCardService)
 
             $scope.prepareRemoveAllTasksConfirmModal = function()
             {
-                TodoCardService.removeAllTasksFromTodo(todo.id, todo.name);
+                $location.path('/task/remove-all/:' + todo.id + '/:' + todo.name);
             }
 
             $scope.shiftTodoLeft = function()

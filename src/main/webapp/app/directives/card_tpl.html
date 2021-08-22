@@ -19,7 +19,7 @@
                         data-toggle="tooltip" data-placement="bottom" title="Task list">
                     <li class="list-group-item d-flex justify-content-between" ng-repeat="task in tasks" ng-if="taskCount">
 						<div>
-							<button type="button" class="btn btn-danger btn-sm text-end" onclick="removeTask({{ task }})"
+							<button type="button" class="btn btn-danger btn-sm text-end" ng-click="removeTask(task)"
 									data-toggle="tooltip" data-placement="bottom" title="Remove Task"
 									ng-if="!readonlyTodo && !readonlyTask">
 								<i class="fas fa-trash-alt"></i>
@@ -28,8 +28,7 @@
 						</div>
 						<input class="form-check-input" type="checkbox" ng-checked="task.done"
 							   data-toggle="tooltip" data-placement="bottom" title="Check Task"
-							   ng-click="checkTask({{ task }})"
-							   ng-if="!readonlyTodo && !readonlyTask">
+							   ng-click="checkTask(task)" ng-if="!readonlyTodo && !readonlyTask">
 					</li>
                     <li class="list-group-item" ng-if="!taskCount">
                         <tsz-task-emptiness-indicator></tsz-task-emptiness-indicator>

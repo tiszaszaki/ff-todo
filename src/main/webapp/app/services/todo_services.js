@@ -25,9 +25,13 @@ app.factory('TodoCardService', function($http) {
     return {
         addTaskForTodo: function(id, name)
         {
-            console.log(
-                `Trying to add Task for Todo with name "${name}" and ID ${id}...`
-            );
+            return $http.put("/todo/" + id + "/task", JSON.stringify( {
+				name: name,
+				done: false
+            }), {
+				contentType: "application/json; charset=utf-8",
+				dataType: "json",
+            });
         },
         editTodo: function(id, name, description, phase)
         {
@@ -51,11 +55,9 @@ app.factory('TodoCardService', function($http) {
         {
         	return $http.delete("/todo/" + id);
         },
-        removeAllTasksFromTodo: function(id, name)
+        removeAllTasksFromTodo: function(id)
         {
-            console.log(
-                `Trying to remove all Tasks from Todo with name "${name}" and ID ${id}...`
-            );
+        	return $http.delete("/todo/" + id + "/task/clear");
         },
 
         shiftTodoToTheLeft: function(id, name, phase)

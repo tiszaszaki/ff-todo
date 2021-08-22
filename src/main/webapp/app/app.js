@@ -17,9 +17,17 @@ app.config(function($routeProvider) {
 				templateUrl: '/app/views/todo-remove-tpl.html',
 				controller: 'TodoRemoveController'
 			})
-			.when('/task/add', {
+			.when('/todo/remove-all', {
+				templateUrl: '/app/views/todo-removeall-tpl.html',
+				controller: 'TodoRemoveAllController'
+			})
+			.when('/task/add/:id', {
 				templateUrl: '/app/views/task-add-tpl.html',
 				controller: 'TaskAddController'
+			})
+			.when('/task/remove-all/:id/:name', {
+				templateUrl: '/app/views/task-removeall-tpl.html',
+				controller: 'TaskRemoveAllController'
 			})
 			.when('/task', {
 				templateUrl: '/app/views/task-details-tpl.html',

@@ -1,3 +1,18 @@
-app.controller('TaskAddController', function($scope, $rootScope, $http, TodoGlobalService)
+app.controller('TaskAddController', function($scope, $http, $location, $routeParams, GlobalService, TodoCardService)
 {
+	var id = Number.parseInt($routeParams.id.substr(1));
+
+	$scope.validateFormGroup = GlobalService.validateFormGroup;
+	$scope.submitAction = function() {
+		TodoCardService.addTaskForTodo(id, $scope.name)
+				.then(function(response) {
+					$.growl.notice({message: 'Task (' + $scope.name + ') added successfully!'});
+					$location.path("/");
+				}, function(response) {
+					$.growl.error({message: 'Failed to add Task (' + $scope.name + ')!'});
+				});
+	}
+	$scope.dismissAction = function() {
+		$location.path("/");
+	}
 });
