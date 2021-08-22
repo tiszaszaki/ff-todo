@@ -1,4 +1,4 @@
-app.controller('TaskRemoveAllController', function($scope, $http, $location, $routeParams, GlobalService, TodoCardService)
+app.controller('TaskRemoveAllController', function($scope, $location, $routeParams, TodoCardService)
 {
 	var id = Number.parseInt($routeParams.id.substr(1));
 	$scope.name = $routeParams.name.substr(1);

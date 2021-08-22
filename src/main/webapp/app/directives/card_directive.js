@@ -61,6 +61,11 @@ app.directive("tszCard", function($location, GlobalService, TodoCardService)
                 $location.path('/task/add/:' + todo.id);
             }
 
+            $scope.prepareEditTaskModal = function(task)
+            {
+                $location.path('/task/details/:' + task.id + '/:' + task.name + '/:' + task.done);
+            }
+
             $scope.prepareEditTodoModal = function()
             {
                 $location.path('/todo/edit/:' + todo.id + '/:' + todo.name + '/:' + todo.description + '/:' + todo.phase);
@@ -105,7 +110,7 @@ app.directive("tszCard", function($location, GlobalService, TodoCardService)
 						$.growl.notice({message: 'Task (' + task.name + ') checked successfully!'});
 						$location.path('/');
                 	}, function (response) {
-                		$.growl.error({message: 'Failed to check Task (' + todo.name + ')!'});
+                		$.growl.error({message: 'Failed to check Task (' + task.name + ')!'});
                 	});
 			}
 
@@ -116,7 +121,7 @@ app.directive("tszCard", function($location, GlobalService, TodoCardService)
 						$.growl.notice({message: 'Task (' + task.name + ') removed successfully!'});
 						$location.path('/');
                 	}, function (response) {
-                		$.growl.error({message: 'Failed to remove Task (' + todo.name + ')!'});
+                		$.growl.error({message: 'Failed to remove Task (' + task.name + ')!'});
                 	});
 			}
         },

@@ -1,10 +1,10 @@
-<form name="addTodoForm" novalidate>
+<form name="addTaskForm" novalidate>
 	<div id="add-task-name-form-group" class="mb-3">
 		<label for="add-task-name" class="col-form-label">Name:</label>
 		<input type="text" class="form-control" id="add-task-name" name="name" ng-model="name"
 			   placeholder="Enter name for new Task..." ng-input="validateFormGroup('add-task-name-form-group')"
 			   required>
-		<div ng-show="addTodoForm.name.$touched && addTodoForm.name.$invalid">
+		<div ng-show="addTaskForm.name.$touched && addTaskForm.name.$invalid">
 			Please provide a name.
 		</div>
 	</div>

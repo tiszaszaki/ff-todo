@@ -1,4 +1,4 @@
-app.controller('TaskAddController', function($scope, $http, $location, $routeParams, GlobalService, TodoCardService)
+app.controller('TaskAddController', function($scope, $location, $routeParams, GlobalService, TodoCardService)
 {
 	var id = Number.parseInt($routeParams.id.substr(1));
 

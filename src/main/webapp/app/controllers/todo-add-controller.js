@@ -1,4 +1,4 @@
-app.controller('TodoAddController', function($scope, $http, $location, GlobalService, TodoGlobalService)
+app.controller('TodoAddController', function($scope, $location, GlobalService, TodoGlobalService)
 {
 	$scope.phase_labels = GlobalService.phase_labels;
 	$scope.descriptionMaxLength = GlobalService.descriptionMaxLength;

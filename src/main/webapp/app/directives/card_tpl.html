@@ -19,12 +19,17 @@
                         data-toggle="tooltip" data-placement="bottom" title="Task list">
                     <li class="list-group-item d-flex justify-content-between" ng-repeat="task in tasks" ng-if="taskCount">
 						<div>
+							<button type="button" class="btn btn-primary btn-sm text-end" ng-click="prepareEditTaskModal(task)"
+									data-toggle="tooltip" data-placement="bottom" title="View Task details">
+								<i class="fas fa-pencil-alt"></i>
+							</button>
 							<button type="button" class="btn btn-danger btn-sm text-end" ng-click="removeTask(task)"
 									data-toggle="tooltip" data-placement="bottom" title="Remove Task"
 									ng-if="!readonlyTodo && !readonlyTask">
 								<i class="fas fa-trash-alt"></i>
 							</button>
-							{{ task.name }}
+							<span class="text-muted">#{{ task.id + 1 }}</span>
+							<span>{{ task.name }}</span>
 						</div>
 						<input class="form-check-input" type="checkbox" ng-checked="task.done"
 							   data-toggle="tooltip" data-placement="bottom" title="Check Task"
@@ -56,7 +61,7 @@
 							<i class="fas fa-trash-alt"></i>
 						</button>
 						<button type="button" class="btn btn-danger btn-sm text-end" ng-click="prepareRemoveAllTasksConfirmModal()"
-								data-toggle="tooltip" data-placement="bottom" title="Remove All Tasks">
+								data-toggle="tooltip" data-placement="bottom" title="Remove All Tasks" ng-disabled="!taskCount">
 							<i class="fas fa-broom"></i>
 						</button>
 					</div>

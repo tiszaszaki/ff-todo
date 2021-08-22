@@ -17,7 +17,7 @@ app.factory('TodoGlobalService', function($http) {
         },
         removeAllTodos: function()
         {
-            console.log("Trying to remove all Todos...");
+			return $http.delete("/todo/clear");
         }
     };
 });

@@ -1,4 +1,4 @@
-app.controller('TodoListController', function($scope, $http, $location, GlobalService, TodoGlobalService)
+app.controller('TodoListController', function($scope, $location, GlobalService, TodoGlobalService)
 {
 	$scope.phase_labels = GlobalService.phase_labels;
 
@@ -17,5 +17,6 @@ app.controller('TodoListController', function($scope, $http, $location, GlobalSe
 	};
 
 	$scope.removeAllTodos = function() {
+		$location.path('/todo/remove-all');
 	};
 });

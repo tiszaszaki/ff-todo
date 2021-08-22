@@ -29,9 +29,9 @@ app.config(function($routeProvider) {
 				templateUrl: '/app/views/task-removeall-tpl.html',
 				controller: 'TaskRemoveAllController'
 			})
-			.when('/task', {
+			.when('/task/details/:id/:name/:done', {
 				templateUrl: '/app/views/task-details-tpl.html',
-				controller: 'TaskDetailController'
+				controller: 'TaskDetailsController'
 			})
 			.otherwise({
 				redirectTo: '/'

@@ -1,4 +1,4 @@
-app.controller('TodoDetailController', function($scope, $http, $location, $routeParams, GlobalService, TodoCardService)
+app.controller('TodoDetailController', function($scope, $location, $routeParams, GlobalService, TodoCardService)
 {
 	var id = Number.parseInt($routeParams.id.substr(1));
 
