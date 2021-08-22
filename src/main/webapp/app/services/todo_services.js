@@ -65,6 +65,16 @@ app.factory('TodoCardService', function($http) {
         shiftTodoToTheRight: function(id, name, phase)
         {
         	return $http.patch("/todo/" + id + "/shift/right");
+        },
+
+        checkTask: function(id)
+        {
+        	return $http.patch("/task/" + id + "/check");
+        },
+
+        removeTask: function(id)
+        {
+        	return $http.delete("/task/" + id);
         }
     };
 });

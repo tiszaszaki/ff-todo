@@ -32,6 +32,9 @@ app.directive("tszCard", function($location, GlobalService, TodoCardService)
             $scope.phaseLeftExists = (($scope.phase-1) >= 0);
             $scope.phaseRightExists = (($scope.phase+1) < phasenum);
 
+			$scope.readonlyTodo = options.readonlyTodo;
+			$scope.readonlyTask = options.readonlyTask;
+
             $scope.isCardValid = (true
                 && ($scope.name != ""));
 
@@ -79,6 +82,8 @@ app.directive("tszCard", function($location, GlobalService, TodoCardService)
                 	.then(function (response) {
                 		$.growl.notice({message: 'Todo (' + todo.name + ') shifted to the left successfully!'});
                 		$location.path('/');
+                	}, function (response) {
+                		$.growl.error({message: 'Failed to shift Todo (' + todo.name + ') to the left!'});
                 	});
             }
 
@@ -88,8 +93,32 @@ app.directive("tszCard", function($location, GlobalService, TodoCardService)
                 	.then(function (response) {
                 		$.growl.notice({message: 'Todo (' + todo.name + ') shifted to the right successfully!'});
                 		$location.path('/');
+                	}, function (response) {
+                		$.growl.error({message: 'Failed to shift Todo (' + todo.name + ') to the right!'});
                 	});
             }
+
+			$scope.checkTask = function(task)
+			{
+				TodoCardService.checkTask(task.id)
+					.then(function (response) {
+						$.growl.notice({message: 'Task (' + task.name + ') checked successfully!'});
+						$location.path('/');
+                	}, function (response) {
+                		$.growl.error({message: 'Failed to check Task (' + todo.name + ')!'});
+                	});
+			}
+
+			$scope.removeTask = function(task)
+			{
+				TodoCardService.removeTask(task.id)
+					.then(function (response) {
+						$.growl.notice({message: 'Task (' + task.name + ') removed successfully!'});
+						$location.path('/');
+                	}, function (response) {
+                		$.growl.error({message: 'Failed to remove Task (' + todo.name + ')!'});
+                	});
+			}
         },
         templateUrl: "app/directives/card_tpl.html"
     };

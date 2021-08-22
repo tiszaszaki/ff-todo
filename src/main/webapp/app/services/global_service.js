@@ -16,7 +16,9 @@ app.factory('GlobalService', function() {
 		todo_common_options: {
 			showDescriptionLength: true,
 			showDateCreated: true,
-			showTaskCount: true
+			showTaskCount: true,
+			readonlyTodo: false,
+			readonlyTask: false
 		},
 		descriptionMaxLength: 1024,
 
