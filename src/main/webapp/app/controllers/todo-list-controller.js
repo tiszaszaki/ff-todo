@@ -1,4 +1,4 @@
-app.controller('TodoListController', function($scope, $location, orderByFilter, GlobalService, TodoGlobalService)
+app.controller('TodoListController', function($scope, $location, GlobalService, TodoGlobalService)
 {
 	var todo_records = [];
 
@@ -50,5 +50,10 @@ app.controller('TodoListController', function($scope, $location, orderByFilter, 
 
 	$scope.removeAllTodos = function() {
 		$location.path('/todo/remove-all');
+	};
+
+	$scope.resetSorting = function(idx) {
+		$scope.todo_sorting_field[idx] = '';
+		$scope.todo_sorting_direction[idx] = false;
 	};
 });
