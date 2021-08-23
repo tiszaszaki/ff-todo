@@ -3,7 +3,7 @@
 		<label for="edit-todo-name" class="col-form-label">Name:</label>
 		<input type="text" class="form-control" id="edit-todo-name" name="name" ng-model="name" ng-value="name"
 			   placeholder="Change name for this Todo..." ng-input="validateFormGroup('edit-todo-name-form-group')"
-				required>
+			   ng-keypress="triggerEnterKeyPressed($event, submitAction())"	required>
 		<!-- >
 		<div ng-show="editTodoForm.name.$touched && editTodoForm.name.$invalid">
 			Please provide a name.
@@ -14,7 +14,8 @@
 		<label for="edit-todo-description" class="col-form-label">Description:</label>
 		<textarea class="form-control" id="edit-todo-description" ng-model="description" ng-value="description"
 				  placeholder="Change description for this Todo..."
-				  maxlength="{{ descriptionMaxLength }}"></textarea>
+				  maxlength="{{ descriptionMaxLength }}"
+				  ng-keypress="triggerEnterKeyPressed($event, submitAction())"></textarea>
 		<div class="d-flex justify-content-end">
 			<span class="badge badge-pill bg-secondary mt-3"
 				  id="edit-todo-description-char-count"></span>

@@ -4,7 +4,9 @@ app.controller('TodoDetailController', function($scope, $location, $routeParams,
 
 	$scope.phase_labels = GlobalService.phase_labels;
 	$scope.descriptionMaxLength = GlobalService.descriptionMaxLength;
+
 	$scope.validateFormGroup = GlobalService.validateFormGroup;
+	$scope.triggerEnterKeyPressed = GlobalService.triggerEnterKeyPressed;
 
 	$scope.revertAction = function(doNotify) {
 		$scope.name = $routeParams.name;

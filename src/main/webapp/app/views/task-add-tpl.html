@@ -3,7 +3,7 @@
 		<label for="add-task-name" class="col-form-label">Name:</label>
 		<input type="text" class="form-control" id="add-task-name" name="name" ng-model="name"
 			   placeholder="Enter name for new Task..." ng-input="validateFormGroup('add-task-name-form-group')"
-			   required>
+			   ng-keypress="triggerEnterKeyPressed($event, submitAction())" required>
 		<!-- >
 		<div ng-show="addTaskForm.name.$touched && addTaskForm.name.$invalid">
 			Please provide a name.

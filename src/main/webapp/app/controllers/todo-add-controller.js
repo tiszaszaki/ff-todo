@@ -2,7 +2,10 @@ app.controller('TodoAddController', function($scope, $location, GlobalService, T
 {
 	$scope.phase_labels = GlobalService.phase_labels;
 	$scope.descriptionMaxLength = GlobalService.descriptionMaxLength;
+
 	$scope.validateFormGroup = GlobalService.validateFormGroup;
+	$scope.triggerEnterKeyPressed = GlobalService.triggerEnterKeyPressed;
+
 	$scope.submitAction = function() {
 		TodoGlobalService.addTodo($scope.name, $scope.description, $('input[name=add-todo-phase]:checked').val())
 				.then(function(response) {

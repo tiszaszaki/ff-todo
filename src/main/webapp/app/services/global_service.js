@@ -9,6 +9,14 @@ app.factory('GlobalService', function() {
 			fromGroup.addClass("was-validated");
 		}
 	};
+	var _triggerEnterKeyPressed = function(e, action)
+	{
+		var key = e.keyCode;
+		if (key == 13) {
+			console.log();
+			action();
+		}
+	};
 
 	return {
 		phase_labels: _phase_labels,
@@ -22,6 +30,7 @@ app.factory('GlobalService', function() {
 		},
 		descriptionMaxLength: 1024,
 
-		validateFormGroup: _validateFormGroup
+		validateFormGroup: _validateFormGroup,
+		triggerEnterKeyPressed: _triggerEnterKeyPressed
     }
 });

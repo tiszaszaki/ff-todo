@@ -11,6 +11,9 @@ app.controller('TodoListController', function($scope, $location, orderByFilter, 
 	$scope.readonlyTodo = GlobalService.todo_common_options.readonlyTodo;
 	$scope.phase_labels = GlobalService.phase_labels;
 
+	$scope.todo_sorting_field = [];
+	$scope.todo_sorting_direction = [];
+
 	TodoGlobalService.fetchTodos().then(function (response)
 	{
 		todo_records = response.data;

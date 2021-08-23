@@ -1,19 +1,23 @@
 <div>
-	<div>Sorting:</div>
-	<select class="form-select" ng-model="todo_sorting_field">
-		<option ng-repeat="(fieldName,fieldDisp) in todoSortingFields" ng-value="fieldName">{{ fieldDisp }}</option>
-	</select>
-	<input class="form-check-input" type="checkbox" ng-checked="task.done" id="todo_sorting_direction"
-		   data-toggle="tooltip" data-placement="bottom" title="Toggle sorting direction"
-		   ng-disabled="!todo_count" ng-model="todo_sorting_direction">
-	<label for="todo_sorting_direction">Descending</label>
 </div>
 <div class="table mt-3">
 	<div class="row border border-secondary rounded">
 		<div class="col" ng-repeat="phase in phase_labels">
 			<h1 class="display-5 mt-1 mb-3">{{phase}}</h1>
+
+			<div class="border border-secondary rounded" ng-if="todo_list[$index].length">
+				<div>Sorting for '{{phase}}':</div>
+				<select class="form-select" ng-model="todo_sorting_field[$index]">
+					<option ng-repeat="(fieldName,fieldDisp) in todoSortingFields" ng-value="fieldName">{{ fieldDisp }}</option>
+				</select>
+				<input class="form-check-input" type="checkbox" id="todo_sorting_direction_{{ $index }}"
+					   data-toggle="tooltip" data-placement="bottom" title="Toggle sorting direction"
+					   ng-model="todo_sorting_direction[$index]">
+				<label for="todo_sorting_direction_{{ $index }}">Descending</label>
+			</div>
+
 			<div ng-if="todo_list[$index].length">
-				<div ng-repeat="todo in todo_list[$index] | orderBy:todo_sorting_field:todo_sorting_direction">
+				<div ng-repeat="todo in todo_list[$index] | orderBy:todo_sorting_field[$index]:todo_sorting_direction[$index]">
 					<tsz-card content="{{todo}}"></tsz-card>
 				</div>
 			</div>
