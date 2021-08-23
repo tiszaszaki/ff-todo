@@ -58,27 +58,27 @@ app.directive("tszCard", function($location, GlobalService, TodoCardService)
 
             $scope.prepareAddTaskModal = function()
             {
-                $location.path('/task/add/:' + todo.id);
+                $location.path('/task/add/' + todo.id);
             }
 
             $scope.prepareEditTaskModal = function(task)
             {
-                $location.path('/task/details/:' + task.id + '/:' + task.name + '/:' + task.done);
+                $location.path('/task/details/' + task.id + '/' + task.name + '/' + task.done);
             }
 
             $scope.prepareEditTodoModal = function()
             {
-                $location.path('/todo/edit/:' + todo.id + '/:' + todo.name + '/:' + todo.description + '/:' + todo.phase);
+                $location.path('/todo/edit/' + todo.id + '/' + todo.name + '/' + todo.description + '/' + todo.phase);
             }
 
             $scope.prepareRemoveTodoConfirmModal = function()
             {
-                $location.path('/todo/remove/:' + todo.id + '/:' + todo.name);
+                $location.path('/todo/remove/' + todo.id + '/' + todo.name);
             }
 
             $scope.prepareRemoveAllTasksConfirmModal = function()
             {
-                $location.path('/task/remove-all/:' + todo.id + '/:' + todo.name);
+                $location.path('/task/remove-all/' + todo.id + '/' + todo.name);
             }
 
             $scope.shiftTodoLeft = function()

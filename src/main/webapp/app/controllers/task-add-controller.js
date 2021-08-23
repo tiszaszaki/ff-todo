@@ -1,6 +1,6 @@
 app.controller('TaskAddController', function($scope, $location, $routeParams, GlobalService, TodoCardService)
 {
-	var id = Number.parseInt($routeParams.id.substr(1));
+	var id = Number.parseInt($routeParams.id);
 
 	$scope.validateFormGroup = GlobalService.validateFormGroup;
 	$scope.submitAction = function() {

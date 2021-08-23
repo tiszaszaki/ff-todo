@@ -1,19 +1,11 @@
 <div>
 	<div>Sorting:</div>
-	<div class="dropdown">
-		<button class="btn btn-primary dropdown-toggle" type="button" id="todoSortingMenu" data-bs-toggle="dropdown"
-				ng-disabled="!todo_count">
-			Sort Todos by
-		</button>
-		<ul class="dropdown-menu">
-			<li ng-repeat="(fieldName,fieldDisp) in todoSortingFields">
-				<div class="dropdown-item" ng-click="sortTodos(fieldName,fieldDisp)">{{ fieldDisp }}</div>
-			</li>
-		</ul>
-	</div>
+	<select class="form-select" ng-model="todo_sorting_field">
+		<option ng-repeat="(fieldName,fieldDisp) in todoSortingFields" ng-value="fieldName">{{ fieldDisp }}</option>
+	</select>
 	<input class="form-check-input" type="checkbox" ng-checked="task.done" id="todo_sorting_direction"
 		   data-toggle="tooltip" data-placement="bottom" title="Toggle sorting direction"
-		   ng-disabled="!todo_count">
+		   ng-disabled="!todo_count" ng-model="todo_sorting_direction">
 	<label for="todo_sorting_direction">Descending</label>
 </div>
 <div class="table mt-3">
@@ -21,7 +13,7 @@
 		<div class="col" ng-repeat="phase in phase_labels">
 			<h1 class="display-5 mt-1 mb-3">{{phase}}</h1>
 			<div ng-if="todo_list[$index].length">
-				<div ng-repeat="todo in todo_list[$index]">
+				<div ng-repeat="todo in todo_list[$index] | orderBy:todo_sorting_field:todo_sorting_direction">
 					<tsz-card content="{{todo}}"></tsz-card>
 				</div>
 			</div>

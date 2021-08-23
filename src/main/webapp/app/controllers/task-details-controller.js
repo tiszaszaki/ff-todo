@@ -1,13 +1,13 @@
 app.controller('TaskDetailsController', function($scope, $location, $routeParams, GlobalService, TodoGlobalService)
 {
-	var id = Number.parseInt($routeParams.id.substr(1));
+	var id = Number.parseInt($routeParams.id);
 
 	$scope.validateFormGroup = GlobalService.validateFormGroup;
 
 	$scope.revertAction = function(doNotify) {
-		var _done=$routeParams.done.substr(1).toLowerCase();
+		var _done=$routeParams.done.toLowerCase();
 
-		$scope.name = $routeParams.name.substr(1);
+		$scope.name = $routeParams.name;
 		if ((_done == "false") || (_done == "true"))
 		{
 			$scope.done = JSON.parse(_done);

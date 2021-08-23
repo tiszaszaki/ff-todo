@@ -1,7 +1,7 @@
 app.controller('TaskRemoveAllController', function($scope, $location, $routeParams, TodoCardService)
 {
-	var id = Number.parseInt($routeParams.id.substr(1));
-	$scope.name = $routeParams.name.substr(1);
+	var id = Number.parseInt($routeParams.id);
+	$scope.name = $routeParams.name;
 
 	$scope.submitAction = function() {
 		TodoCardService.removeAllTasksFromTodo(id)
