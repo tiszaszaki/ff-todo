@@ -8,10 +8,13 @@ app.controller('TodoDetailController', function($scope, $location, $routeParams,
 	$scope.validateFormGroup = GlobalService.validateFormGroup;
 	$scope.triggerEnterKeyPressed = GlobalService.triggerEnterKeyPressed;
 
+	console.log($routeParams);
+
 	$scope.revertAction = function(doNotify) {
 		$scope.name = $routeParams.name;
 		$scope.description = $routeParams.description;
 		$scope.phasePrepared = Number.parseInt($routeParams.phase);
+		$scope.phaseSelected = $scope.phasePrepared;
 
 		if (doNotify)
 		{
@@ -23,7 +26,7 @@ app.controller('TodoDetailController', function($scope, $location, $routeParams,
 
 	$scope.submitAction = function() {
 		console.log($scope.phaseSelected);
-		TodoCardService.editTodo(id, $scope.name, $scope.description, $scope.phaseSelected)
+		TodoCardService.editTodo(id, $scope.name, $scope.description.trim(), $scope.phaseSelected)
 				.then(function(response) {
 					$.growl.notice({message: 'Todo (' + $scope.name + ') saved successfully!'});
 					$location.path("/");

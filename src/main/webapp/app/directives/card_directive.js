@@ -19,6 +19,12 @@ app.directive("tszCard", function($location, GlobalService, TodoCardService)
             var todo = JSON.parse($scope.content);
             var phasenum = GlobalService.phaseNum;
 
+			$scope.todo_expand_status = new Map([]);
+			$scope.toggleCollapse = function(id)
+			{
+				$scope.todo_expand_status[id] = !$scope.todo_expand_status[id];
+			}
+
 			$scope.id = todo.id;
 			$scope.name = todo.name;
 			$scope.description = todo.description;
@@ -68,7 +74,16 @@ app.directive("tszCard", function($location, GlobalService, TodoCardService)
 
             $scope.prepareEditTodoModal = function()
             {
-                $location.path('/todo/edit/' + todo.id + '/' + todo.name + '/' + todo.description + '/' + todo.phase);
+            	var temp_description = todo.description;
+
+				console.log(temp_description);
+
+            	if (!temp_description)
+            	{
+            		temp_description = " ";
+            	}
+
+                $location.path('/todo/edit/' + todo.id + '/' + todo.name + '/' + temp_description + '/' + todo.phase);
             }
 
             $scope.prepareRemoveTodoConfirmModal = function()
