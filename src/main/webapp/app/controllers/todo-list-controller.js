@@ -52,6 +52,15 @@ app.controller('TodoListController', function($scope, $location, GlobalService, 
 		$location.path('/todo/remove-all');
 	};
 
+	$scope.updateSortingRelatedOptions = function(idx)
+	{
+		var fieldName = todo_sorting_field[idx];
+
+		GlobalService.todo_common_options.showDescriptionLength = (fieldName == 'descriptionLength');
+		GlobalService.todo_common_options.showDateCreated = (fieldName == 'dateCreated');
+		GlobalService.todo_common_options.showTaskCount = (fieldName == 'taskCount');
+	}
+
 	$scope.resetSorting = function(idx) {
 		$scope.todo_sorting_field[idx] = '';
 		$scope.todo_sorting_direction[idx] = false;

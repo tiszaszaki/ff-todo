@@ -25,6 +25,8 @@ app.factory('GlobalService', function() {
 			showDescriptionLength: false,
 			showDateCreated: false,
 			showTaskCount: false,
+			validateTodo: true,
+			testInvalidTodo: false,
 			readonlyTodo: false,
 			readonlyTask: false
 		},

@@ -41,8 +41,11 @@ app.directive("tszCard", function($location, GlobalService, TodoCardService)
 			$scope.readonlyTodo = options.readonlyTodo;
 			$scope.readonlyTask = options.readonlyTask;
 
-            $scope.isCardValid = (true
-                && ($scope.name != ""));
+            $scope.isCardValid = (!options.validateTodo ||
+            	(!options.testInvalidTodo
+                	&& ($scope.name != "")
+                	&& (($scope.phase >= 0) && ($scope.phase < phasenum))
+                ));
 
 			if ($scope.description)
 				$scope.descriptionLength = $scope.description.length;
