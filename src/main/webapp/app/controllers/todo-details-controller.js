@@ -6,13 +6,12 @@ app.controller('TodoDetailController', function($scope, $location, $routeParams,
 	$scope.descriptionMaxLength = GlobalService.descriptionMaxLength;
 
 	$scope.validateFormGroup = GlobalService.validateFormGroup;
-	$scope.triggerEnterKeyPressed = GlobalService.triggerEnterKeyPressed;
 
 	console.log($routeParams);
 
 	$scope.revertAction = function(doNotify) {
 		$scope.name = $routeParams.name;
-		$scope.description = $routeParams.description;
+		$scope.description = $routeParams.description.trim();
 		$scope.phasePrepared = Number.parseInt($routeParams.phase);
 		$scope.phaseSelected = $scope.phasePrepared;
 
