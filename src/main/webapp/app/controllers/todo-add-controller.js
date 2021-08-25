@@ -7,19 +7,20 @@ app.controller('TodoAddController', function($scope, $location, GlobalService, T
 
 	$scope.name = "";
 	$scope.description = "";
+	$scope.phase = 0;
 
 	$scope.submitAction = function() {
-		return TodoGlobalService.addTodo($scope.name, $scope.description.trim(), $('input[name=add-todo-phase]:checked').val())
+		return TodoGlobalService.addTodo($scope.name, $scope.description.trim(), $scope.phase)
 				.then(function(response) {
-					$.growl.notice({message: 'Todo (' + $scope.name + ') added successfully!'});
+					console.log('[INFO] Todo (' + $scope.name + ') added successfully!');
 					$location.path("/");
 				}, function(response) {
-					$.growl.error({message: 'Failed to add Todo (' + $scope.name + ')!'});
+					console.log('[ERROR] Failed to add Todo (' + $scope.name + ')!');
 				});
 	}
 	$scope.dismissAction = function() {
 		$location.path("/");
 	}
 
-	$("#add-todo-name").focus();
+	//$("#add-todo-name").focus(); // TODO: replace jQuery usage
 });

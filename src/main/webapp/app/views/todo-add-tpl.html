@@ -24,10 +24,10 @@
 			<label class="col-form-label">Phase:</label>
 		</div>
 		<div class="btn-group" role="group">
-			<div ng-repeat="phase in phase_labels">
-				<input type="radio" class="btn-check" name="add-todo-phase"
-					   id="add-todo-phase{{ $index }}" value="{{ $index }}" ng-checked="$index == 0">
-				<label class="btn btn-outline-primary" for="add-todo-phase{{ $index }}">{{ phase }}</label>
+			<div ng-repeat="_phase in phase_labels">
+				<input type="radio" class="btn-check" name="add-todo-phase" ng-model="phase"
+					   id="add-todo-phase{{ $index }}" ng-value="{{ $index }}" ng-checked="phase_checked[$index]">
+				<label class="btn btn-outline-primary" for="add-todo-phase{{ $index }}">{{ _phase }}</label>
 			</div>
 		</div>
 	</div>

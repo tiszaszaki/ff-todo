@@ -6,10 +6,10 @@ app.controller('TaskRemoveAllController', function($scope, $location, $routePara
 	$scope.submitAction = function() {
 		TodoCardService.removeAllTasksFromTodo(id)
 				.then(function(response) {
-					$.growl.notice({message: 'All Tasks were removed successfully from Todo (' + $scope.name + ')!'});
+					console.log('[INFO] All Tasks were removed successfully from Todo (' + $scope.name + ')!');
 					$location.path("/");
 				}, function(response) {
-					$.growl.warning({message: 'No Tasks were removed from Todo (' + $scope.name + ').'});
+					console.log('[ERROR] No Tasks were removed from Todo (' + $scope.name + ').');
 				});
 	}
 	$scope.dismissAction = function() {

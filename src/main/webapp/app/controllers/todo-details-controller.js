@@ -15,7 +15,7 @@ app.controller('TodoDetailController', function($scope, $location, $routeParams,
 
 		if (doNotify)
 		{
-			$.growl.warning({message: 'Changes reverted for Todo (' + $scope.name + ')!'});
+			console.log('[WARN] Changes reverted for Todo (' + $scope.name + ')!');
 		}
 	}
 
@@ -24,15 +24,15 @@ app.controller('TodoDetailController', function($scope, $location, $routeParams,
 	$scope.submitAction = function() {
 		return TodoCardService.editTodo(id, $scope.name, $scope.description.trim(), $scope.phaseSelected)
 				.then(function(response) {
-					$.growl.notice({message: 'Todo (' + $scope.name + ') saved successfully!'});
+					console.log('[INFO] Todo (' + $scope.name + ') saved successfully!');
 					$location.path("/");
 				}, function(response) {
-					$.growl.error({message: 'Failed to save Todo (' + $scope.name + ')!'});
+					console.log('[ERROR] Failed to save Todo (' + $scope.name + ')!');
 				});
 	}
 	$scope.dismissAction = function() {
 		$location.path("/");
 	}
 
-	$("#edit-todo-name").focus();
+	//$("#edit-todo-name").focus(); // TODO: replace jQuery usage
 });

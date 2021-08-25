@@ -31,16 +31,6 @@ app.controller('TodoListController', function($scope, $location, GlobalService, 
 			var id = value.id;
 
 			$scope.todo_list[value.phase].push(value);
-			$scope.todo_expand_status[id] = false;
-
-			$("#task-list-" + id + "-collapse").on("show.bs.collapse", function() {
-				console.log($scope.todo_expand_status[id]);
-				$scope.todo_expand_status[id] = true;
-			});
-			$("#task-list-" + id + "-collapse").on("hide.bs.collapse", function() {
-				console.log($scope.todo_expand_status[id]);
-				$scope.todo_expand_status[id] = false;
-			});
 		});
 	});
 

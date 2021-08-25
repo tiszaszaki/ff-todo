@@ -7,15 +7,15 @@ app.controller('TaskAddController', function($scope, $location, $routeParams, Gl
 	$scope.submitAction = function() {
 		return TodoCardService.addTaskForTodo(id, $scope.name)
 				.then(function(response) {
-					$.growl.notice({message: 'Task (' + $scope.name + ') added successfully!'});
+					console.log('[INFO] Task (' + $scope.name + ') added successfully!');
 					$location.path("/");
 				}, function(response) {
-					$.growl.error({message: 'Failed to add Task (' + $scope.name + ')!'});
+					console.log('[ERROR] Failed to add Task (' + $scope.name + ')!');
 				});
 	}
 	$scope.dismissAction = function() {
 		$location.path("/");
 	}
 
-	$("#add-task-name").focus();
+	//$("#add-task-name").focus(); // TODO: replace jQuery usage
 });

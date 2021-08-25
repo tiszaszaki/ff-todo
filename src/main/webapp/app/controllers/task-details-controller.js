@@ -15,7 +15,7 @@ app.controller('TaskDetailsController', function($scope, $location, $routeParams
 
 		if (doNotify)
 		{
-			$.growl.warning({message: 'Changes reverted for Todo (' + $scope.name + ')!'});
+			console.log('[INFO] Changes reverted for Todo (' + $scope.name + ')!');
 		}
 	}
 

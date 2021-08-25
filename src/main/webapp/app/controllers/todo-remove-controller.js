@@ -6,10 +6,10 @@ app.controller('TodoRemoveController', function($scope, $location, $routeParams,
 	$scope.submitAction = function() {
 		TodoCardService.removeTodo(id)
 				.then(function(response) {
-					$.growl.notice({message: 'Todo (' + $scope.name + ') removed successfully!'});
+					console.log('[INFO] Todo (' + $scope.name + ') removed successfully!');
 					$location.path("/");
 				}, function(response) {
-					$.growl.error({message: 'Failed to remove Todo (' + $scope.name + ')!'});
+					console.log('[ERROR] Failed to remove Todo (' + $scope.name + ')!');
 				});
 	}
 	$scope.dismissAction = function() {

@@ -103,10 +103,10 @@ app.directive("tszCard", function($location, GlobalService, TodoCardService)
             {
                 TodoCardService.shiftTodoToTheLeft(todo.id, todo.name, todo.phase)
                 	.then(function (response) {
-                		$.growl.notice({message: 'Todo (' + todo.name + ') shifted to the left successfully!'});
+                		console.log('[INFO] Todo (' + todo.name + ') shifted to the left successfully!');
                 		$location.path('/');
                 	}, function (response) {
-                		$.growl.error({message: 'Failed to shift Todo (' + todo.name + ') to the left!'});
+                		console.log('[WARN] Failed to shift Todo (' + todo.name + ') to the left!');
                 	});
             }
 
@@ -114,10 +114,10 @@ app.directive("tszCard", function($location, GlobalService, TodoCardService)
             {
                 TodoCardService.shiftTodoToTheRight(todo.id, todo.name, todo.phase)
                 	.then(function (response) {
-                		$.growl.notice({message: 'Todo (' + todo.name + ') shifted to the right successfully!'});
+                		console.log('[INFO] Todo (' + todo.name + ') shifted to the right successfully!');
                 		$location.path('/');
                 	}, function (response) {
-                		$.growl.error({message: 'Failed to shift Todo (' + todo.name + ') to the right!'});
+                		console.log('[WARN] Failed to shift Todo (' + todo.name + ') to the right!');
                 	});
             }
 
@@ -125,10 +125,10 @@ app.directive("tszCard", function($location, GlobalService, TodoCardService)
 			{
 				TodoCardService.checkTask(task.id)
 					.then(function (response) {
-						$.growl.notice({message: 'Task (' + task.name + ') checked successfully!'});
+						console.log('[INFO] Task (' + task.name + ') checked successfully!');
 						$location.path('/');
                 	}, function (response) {
-                		$.growl.error({message: 'Failed to check Task (' + task.name + ')!'});
+                		console.log('[ERROR] Failed to check Task (' + task.name + ')!');
                 	});
 			}
 
@@ -136,10 +136,10 @@ app.directive("tszCard", function($location, GlobalService, TodoCardService)
 			{
 				TodoCardService.removeTask(task.id)
 					.then(function (response) {
-						$.growl.notice({message: 'Task (' + task.name + ') removed successfully!'});
+						console.log('[INFO] Task (' + task.name + ') removed successfully!');
 						$location.path('/');
                 	}, function (response) {
-                		$.growl.error({message: 'Failed to remove Task (' + task.name + ')!'});
+                		console.log('[ERROR] Failed to remove Task (' + task.name + ')!');
                 	});
 			}
         },
