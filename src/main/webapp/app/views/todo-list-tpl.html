@@ -45,7 +45,7 @@
 			<div ng-if="todo_list[$index].length">
 				<div ng-repeat="todo in todo_list[$index] | orderBy:todo_sorting_field[$index]:todo_sorting_direction[$index]">
 					<tsz-card content="{{todo}}"
-							  task_sort_field="task_sorting_field[$index]" task_sort_dir="task_sorting_direction[$index]"></tsz-card>
+							  tasksortfield="task_sorting_field[$index]" tasksortdir="task_sorting_direction[$index]"></tsz-card>
 				</div>
 			</div>
 			<tsz-todo-emptiness-indicator ng-if="!todo_list[$index].length"></tsz-todo-emptiness-indicator>

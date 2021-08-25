@@ -10,10 +10,11 @@ app.directive("tszCard", function($location, GlobalService, TodoCardService)
 {
     return {
         restrict: 'E',
+        transclude: true,
         scope: {
         	content: '@',
-        	task_sort_field : '=',
-        	task_sort_dir : '='
+        	tasksortfield : '=',
+        	tasksortdir : '='
         },
         controller: function ($scope)
         {
@@ -43,7 +44,9 @@ app.directive("tszCard", function($location, GlobalService, TodoCardService)
 			$scope.readonlyTodo = options.readonlyTodo;
 			$scope.readonlyTask = options.readonlyTask;
 
-			console.log("Task sorting parameters for Todo (ID: " + $scope.id + "): " + $scope.task_sort_field + ", " + $scope.task_sort_dir);
+			$scope.$watchGroup(['tasksortfield', 'tasksortdir'], function() {
+				console.log("Task sorting parameters updated for Todo (ID: " + $scope.id + "): '" + $scope.tasksortfield + "', " + $scope.tasksortdir);
+			});
 
             $scope.isCardValid = (!options.validateTodo ||
             	(!options.testInvalidTodo

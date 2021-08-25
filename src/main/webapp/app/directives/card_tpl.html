@@ -25,7 +25,7 @@
 					<ul class="list-group border border-primary"
 							data-toggle="tooltip" data-placement="bottom" title="Task list">
 						<li class="list-group-item d-flex justify-content-between" ng-if="taskCount"
-								ng-repeat="task in tasks | orderBy:task_sort_field:task_sort_dir">
+								ng-repeat="task in tasks | orderBy:tasksortfield:tasksortdir">
 							<div>
 								<span ng-if="!readonlyTodo && !readonlyTask">
 									<button type="button" class="btn btn-primary btn-sm text-end" ng-click="prepareEditTaskModal(task)"
