@@ -1,7 +1,7 @@
 let App = {
 	PHASE_CNT: 3,
 	modalDescriptionMaxCharCount: 1024,
-	baseurl: window.location.origin,
+	baseurl: window.location.origin + '/fftodo',
 	currentlyPickedTodoId: undefined,
 	currentlyPickedTodoName: undefined,
 	addTaskModalTitlePrefix: undefined,

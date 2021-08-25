@@ -1,12 +1,13 @@
-app.factory('TodoGlobalService', function($http) {
+app.factory('TodoGlobalService', function($http, GlobalService) {
+	var basePath = GlobalService.basePath;
     return {
     	fetchTodos: function()
     	{
-    		return $http.get("/todo");
+    		return $http.get(basePath + "/todo");
     	},
         addTodo: function(name, description, phase)
         {
-            return $http.put("/todo", JSON.stringify( {
+            return $http.put(basePath + "/todo", JSON.stringify( {
 				name: name,
 				description: description,
 				phase: phase
@@ -17,15 +18,16 @@ app.factory('TodoGlobalService', function($http) {
         },
         removeAllTodos: function()
         {
-			return $http.delete("/todo/clear");
+			return $http.delete(basePath + "/todo/clear");
         }
     };
 });
-app.factory('TodoCardService', function($http) {
+app.factory('TodoCardService', function($http, GlobalService) {
+	var basePath = GlobalService.basePath;
     return {
         addTaskForTodo: function(id, name)
         {
-            return $http.put("/todo/" + id + "/task", JSON.stringify( {
+            return $http.put(basePath + "/todo/" + id + "/task", JSON.stringify( {
 				name: name,
 				done: false
             }), {
@@ -44,7 +46,7 @@ app.factory('TodoCardService', function($http) {
         	{
 	        	patchBody.phase = phase;
         	}
-            return $http.patch("/todo/" + id, JSON.stringify(patchBody), {
+            return $http.patch(basePath + "/todo/" + id, JSON.stringify(patchBody), {
 				contentType: "application/json; charset=utf-8",
 				dataType: "json",
             });
@@ -52,30 +54,30 @@ app.factory('TodoCardService', function($http) {
 
         removeTodo: function(id)
         {
-        	return $http.delete("/todo/" + id);
+        	return $http.delete(basePath + "/todo/" + id);
         },
         removeAllTasksFromTodo: function(id)
         {
-        	return $http.delete("/todo/" + id + "/task/clear");
+        	return $http.delete(basePath + "/todo/" + id + "/task/clear");
         },
 
         shiftTodoToTheLeft: function(id, name, phase)
         {
-        	return $http.patch("/todo/" + id + "/shift/left");
+        	return $http.patch(basePath + "/todo/" + id + "/shift/left");
         },
         shiftTodoToTheRight: function(id, name, phase)
         {
-        	return $http.patch("/todo/" + id + "/shift/right");
+        	return $http.patch(basePath + "/todo/" + id + "/shift/right");
         },
 
         checkTask: function(id)
         {
-        	return $http.patch("/task/" + id + "/check");
+        	return $http.patch(basePath + "/task/" + id + "/check");
         },
 
         removeTask: function(id)
         {
-        	return $http.delete("/task/" + id);
+        	return $http.delete(basePath + "/task/" + id);
         }
     };
 });

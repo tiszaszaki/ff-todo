@@ -24,6 +24,8 @@ app.factory('GlobalService', function() {
 		},
 		descriptionMaxLength: 1024,
 
+		basePath: "/fftodo",
+
 		validateFormGroup: _validateFormGroup,
     }
 });

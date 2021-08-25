@@ -1,7 +1,5 @@
 app.controller('TodoListController', function($scope, $location, GlobalService, TodoGlobalService)
 {
-	var todo_records = [];
-
 	$scope.todoSortingFields = {'name': 'Todo name', 'description': 'Todo description',
 			'descriptionLength': 'Todo description length', 'taskCount': 'Task count in Todo',
 			'dateCreated': 'Date of Todo created', 'dateModified': 'Date of Todo updated'};
@@ -17,28 +15,41 @@ app.controller('TodoListController', function($scope, $location, GlobalService, 
 	$scope.task_sorting_field = [];
 	$scope.task_sorting_direction = [];
 
-	TodoGlobalService.fetchTodos().then(function (response)
-	{
-		todo_records = response.data;
+	$scope.phase_labels.forEach(function() {
+		$scope.todo_sorting_field.push('');
+		$scope.todo_sorting_direction.push(false);
 
-		$scope.todo_list = [];
-
-		$scope.todo_count = todo_records.length;
-		$scope.task_count = [];
-
-		$scope.phase_labels.forEach(function() {
-			$scope.todo_list.push([]);
-			$scope.task_count.push(0);
-		});
-
-		todo_records.forEach(function(value)
-		{
-			var id = value.id;
-
-			$scope.todo_list[value.phase].push(value);
-			$scope.task_count[value.phase] += value.tasks.length;
-		});
+		$scope.task_sorting_field.push('');
+		$scope.task_sorting_direction.push(false);
 	});
+
+	$scope.updateTodoView = function()
+	{
+		var todo_records = [];
+
+		TodoGlobalService.fetchTodos().then(function (response)
+		{
+			todo_records = response.data;
+
+			$scope.todo_list = [];
+
+			$scope.todo_count = todo_records.length;
+			$scope.task_count = [];
+
+			$scope.phase_labels.forEach(function() {
+				$scope.todo_list.push([]);
+				$scope.task_count.push(0);
+			});
+
+			todo_records.forEach(function(value)
+			{
+				var id = value.id;
+
+				$scope.todo_list[value.phase].push(value);
+				$scope.task_count[value.phase] += value.tasks.length;
+			});
+		});
+	}
 
 	$scope.addTodo = function() {
 		$location.path('/todo/add');
@@ -65,4 +76,6 @@ app.controller('TodoListController', function($scope, $location, GlobalService, 
 		$scope.task_sorting_field[idx] = '';
 		$scope.task_sorting_direction[idx] = false;
 	};
+
+	$scope.updateTodoView();
 });
