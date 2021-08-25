@@ -4,11 +4,6 @@
 		<input type="text" class="form-control" id="edit-todo-name" name="name" ng-model="name" ng-value="name"
 			   placeholder="Change name for this Todo..." ng-input="validateFormGroup('edit-todo-name-form-group')"
 			   ng-keypress="($event.keyCode == 13) && submitAction() && $event.preventDefault()"	required>
-		<!-- >
-		<div ng-show="editTodoForm.name.$touched && editTodoForm.name.$invalid">
-			Please provide a name.
-		</div>
-		<-->
 	</div>
 	<div class="mb-3">
 		<label for="edit-todo-description" class="col-form-label">Description:</label>
@@ -23,12 +18,10 @@
 		<div>
 			<label class="col-form-label">Phase:</label>
 		</div>
-		<div class="btn-group" role="group">
-			<div ng-repeat="phase in phase_labels">
-				<input type="radio" class="btn-check" name="edit-todo-phase"
-					   id="edit-todo-phase{{ $index }}" ng-model="phaseSelected" value="{{ $index }}" ng-checked="$index == phasePrepared">
-				<label class="btn btn-outline-primary" for="edit-todo-phase{{ $index }}">{{ phase }}</label>
-			</div>
+		<div class="mb-2 w-25">
+			<select class="form-select" ng-model="phaseSelected">
+				<option ng-repeat="phase in phase_labels" ng-value="$index">{{ phase }}</option>
+			</select>
 		</div>
 	</div>
 	<div>

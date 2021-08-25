@@ -44,7 +44,6 @@ app.factory('TodoCardService', function($http) {
         	{
 	        	patchBody.phase = phase;
         	}
-        	console.log(patchBody);
             return $http.patch("/todo/" + id, JSON.stringify(patchBody), {
 				contentType: "application/json; charset=utf-8",
 				dataType: "json",

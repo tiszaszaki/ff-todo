@@ -4,11 +4,6 @@
 		<input type="text" class="form-control" id="add-task-name" name="name" ng-model="name"
 			   placeholder="Enter name for new Task..." ng-input="validateFormGroup('add-task-name-form-group')"
 			   ng-keypress="($event.keyCode == 13) && submitAction() && $event.preventDefault()" required>
-		<!-- >
-		<div ng-show="addTaskForm.name.$touched && addTaskForm.name.$invalid">
-			Please provide a name.
-		</div>
-		<-->
 	</div>
 	<div>
 		<label class="col-form-label">Actions:</label>

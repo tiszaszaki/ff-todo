@@ -79,8 +79,6 @@ app.directive("tszCard", function($location, GlobalService, TodoCardService)
             {
             	var temp_description = todo.description;
 
-				console.log(temp_description);
-
             	if (!temp_description)
             	{
             		temp_description = " ";

@@ -4,11 +4,6 @@
 		<input type="text" class="form-control" id="add-todo-name" name="name" ng-model="name"
 			   placeholder="Enter name for new Todo..." ng-input="validateFormGroup('add-todo-name-form-group')"
 			   ng-keypress="($event.keyCode == 13) && submitAction() && $event.preventDefault()" required>
-		<!-- >
-		<div ng-show="addTodoForm.name.$touched && addTodoForm.name.$invalid">
-			Please provide a name.
-		</div>
-		<-->
 	</div>
 	<div class="mb-3">
 		<label for="add-todo-description" class="col-form-label">Description:</label>
@@ -23,12 +18,10 @@
 		<div>
 			<label class="col-form-label">Phase:</label>
 		</div>
-		<div class="btn-group" role="group">
-			<div ng-repeat="_phase in phase_labels">
-				<input type="radio" class="btn-check" name="add-todo-phase" ng-model="phase"
-					   id="add-todo-phase{{ $index }}" ng-value="{{ $index }}" ng-checked="phase_checked[$index]">
-				<label class="btn btn-outline-primary" for="add-todo-phase{{ $index }}">{{ _phase }}</label>
-			</div>
+		<div class="mb-2 w-25">
+			<select class="form-select" ng-model="phaseSelected">
+				<option ng-repeat="phase in phase_labels" ng-value="$index">{{ phase }}</option>
+			</select>
 		</div>
 	</div>
 	<div>

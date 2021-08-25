@@ -7,10 +7,10 @@ app.controller('TodoAddController', function($scope, $location, GlobalService, T
 
 	$scope.name = "";
 	$scope.description = "";
-	$scope.phase = 0;
+	$scope.phaseSelected = 0;
 
 	$scope.submitAction = function() {
-		return TodoGlobalService.addTodo($scope.name, $scope.description.trim(), $scope.phase)
+		return TodoGlobalService.addTodo($scope.name, $scope.description.trim(), $scope.phaseSelected)
 				.then(function(response) {
 					console.log('[INFO] Todo (' + $scope.name + ') added successfully!');
 					$location.path("/");
