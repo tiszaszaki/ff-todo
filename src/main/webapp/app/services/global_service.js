@@ -1,5 +1,5 @@
 app.factory('GlobalService', function() {
-	var _phase_labels = ['Todo', 'In progress', 'Done'];
+	var _phase_labels = ['Backlog', 'In progress', 'Done'];
 	var _phaseNum = _phase_labels.length;
 
 	var _validateFormGroup = function(formGroupId) {

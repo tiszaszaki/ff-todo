@@ -12,6 +12,8 @@ app.directive("tszCard", function($location, GlobalService, TodoCardService)
         restrict: 'E',
         scope: {
         	content: '@',
+        	task_sort_field : '=',
+        	task_sort_dir : '='
         },
         controller: function ($scope)
         {
@@ -40,6 +42,8 @@ app.directive("tszCard", function($location, GlobalService, TodoCardService)
 
 			$scope.readonlyTodo = options.readonlyTodo;
 			$scope.readonlyTask = options.readonlyTask;
+
+			console.log("Task sorting parameters for Todo (ID: " + $scope.id + "): " + $scope.task_sort_field + ", " + $scope.task_sort_dir);
 
             $scope.isCardValid = (!options.validateTodo ||
             	(!options.testInvalidTodo
