@@ -3,10 +3,9 @@ app.controller('TaskAddController', function($scope, $location, $routeParams, Gl
 	var id = Number.parseInt($routeParams.id);
 
 	$scope.validateFormGroup = GlobalService.validateFormGroup;
-	$scope.triggerEnterKeyPressed = GlobalService.triggerEnterKeyPressed;
 
 	$scope.submitAction = function() {
-		TodoCardService.addTaskForTodo(id, $scope.name)
+		return TodoCardService.addTaskForTodo(id, $scope.name)
 				.then(function(response) {
 					$.growl.notice({message: 'Task (' + $scope.name + ') added successfully!'});
 					$location.path("/");

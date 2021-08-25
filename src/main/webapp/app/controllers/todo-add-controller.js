@@ -5,8 +5,11 @@ app.controller('TodoAddController', function($scope, $location, GlobalService, T
 
 	$scope.validateFormGroup = GlobalService.validateFormGroup;
 
+	$scope.name = "";
+	$scope.description = "";
+
 	$scope.submitAction = function() {
-		TodoGlobalService.addTodo($scope.name, $scope.description.trim(), $('input[name=add-todo-phase]:checked').val())
+		return TodoGlobalService.addTodo($scope.name, $scope.description.trim(), $('input[name=add-todo-phase]:checked').val())
 				.then(function(response) {
 					$.growl.notice({message: 'Todo (' + $scope.name + ') added successfully!'});
 					$location.path("/");

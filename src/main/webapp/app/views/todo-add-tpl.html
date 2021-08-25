@@ -3,7 +3,7 @@
 		<label for="add-todo-name" class="col-form-label">Name:</label>
 		<input type="text" class="form-control" id="add-todo-name" name="name" ng-model="name"
 			   placeholder="Enter name for new Todo..." ng-input="validateFormGroup('add-todo-name-form-group')"
-			   ng-keypress="($event.keyCode == 13) && submitAction()" required>
+			   ng-keypress="($event.keyCode == 13) && submitAction() && $event.preventDefault()" required>
 		<!-- >
 		<div ng-show="addTodoForm.name.$touched && addTodoForm.name.$invalid">
 			Please provide a name.
@@ -14,8 +14,7 @@
 		<label for="add-todo-description" class="col-form-label">Description:</label>
 		<textarea class="form-control" id="add-todo-description" ng-model="description"
 				  placeholder="Enter description for new Todo (optional)..."
-				  maxlength="{{ descriptionMaxLength }}"
-				  ng-keypress="($event.keyCode == 13) && submitAction()"></textarea>
+				  maxlength="{{ descriptionMaxLength }}"></textarea>
 		<div class="d-flex justify-content-end">
 			<span class="badge badge-pill bg-secondary mt-3">{{ descriptionMaxLength - description.length }}</span>
 		</div>
