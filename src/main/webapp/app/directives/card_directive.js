@@ -28,12 +28,14 @@ app.directive("tszCard", function($location, GlobalService, TodoCardService)
 				$scope.todo_expand_status[id] = !$scope.todo_expand_status[id];
 			}
 
+			$scope.customDateFormat = GlobalService.customDateFormat;
+
 			$scope.id = todo.id;
 			$scope.name = todo.name;
 			$scope.description = todo.description;
 			$scope.phase = todo.phase;
-			$scope.datemodified = moment(todo.dateModified).fromNow();
-			$scope.datecreated = moment(todo.dateCreated).fromNow();
+			$scope.datemodified = Date.parse(todo.dateModified);
+			$scope.datecreated = Date.parse(todo.dateCreated);
 			$scope.tasks = todo.tasks;
 
 			$scope.id2 = Number.parseInt($scope.id) + 1;
@@ -43,10 +45,6 @@ app.directive("tszCard", function($location, GlobalService, TodoCardService)
 
 			$scope.readonlyTodo = options.readonlyTodo;
 			$scope.readonlyTask = options.readonlyTask;
-
-			$scope.$watchGroup(['tasksortfield', 'tasksortdir'], function() {
-				console.log("Task sorting parameters updated for Todo (ID: " + $scope.id + "): '" + $scope.tasksortfield + "', " + $scope.tasksortdir);
-			});
 
             $scope.isCardValid = (!options.validateTodo ||
             	(!options.testInvalidTodo

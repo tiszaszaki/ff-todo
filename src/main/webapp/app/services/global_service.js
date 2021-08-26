@@ -26,6 +26,8 @@ app.factory('GlobalService', function() {
 
 		basePath: "/fftodo",
 
+		customDateFormat: "yyyy-MM-dd hh:mm:ss.sss",
+
 		validateFormGroup: _validateFormGroup,
     }
 });

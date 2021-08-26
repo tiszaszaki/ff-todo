@@ -92,8 +92,8 @@
         </ul>
     </div>
     <div class="card-footer text-muted">
-        <p>Updated {{ datemodified }}</p>
-        <p ng-if="showDateCreated">Created {{ datecreated }}</p>
+        <p>Date updated: {{ datemodified | date:customDateFormat }}</p>
+        <p ng-if="showDateCreated">Date created: {{ datecreated | date:customDateFormat }}</p>
     </div>
 </div>
 <tsz-card-invalid ng-if="!isCardValid"></tsz-card-invalid>
