@@ -22,10 +22,9 @@ app.directive("tszCard", function($location, GlobalService, TodoCardService)
             var todo = JSON.parse($scope.content);
             var phasenum = GlobalService.phaseNum;
 
-			$scope.todo_expand_status = new Map([]);
-			$scope.toggleCollapse = function(id)
+			$scope.toggleCollapse = function()
 			{
-				$scope.todo_expand_status[id] = !$scope.todo_expand_status[id];
+				$scope.todo_expand_status = !$scope.todo_expand_status;
 			}
 
 			$scope.customDateFormat = GlobalService.customDateFormat;

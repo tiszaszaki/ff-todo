@@ -15,11 +15,11 @@
                 <p class="card-text">Description length: {{ descriptionLength }}</p>
             </li>
             <li class="list-group-item">
-				<button class="btn btn-secondary mb-3" type="button" ng-click="toggleCollapse(id)"
+				<button class="btn btn-secondary mb-3" type="button" ng-click="toggleCollapse()"
 						data-bs-toggle="collapse" data-bs-target="#task-list-{{id}}-collapse"
 						data-toggle="tooltip" data-placement="bottom" title="Toggle Task list">
-					<i ng-if="todo_expand_status[id]" class="fas fa-folder-minus"></i>
-					<i ng-if="!todo_expand_status[id]" class="fas fa-folder-plus"></i>
+					<i ng-if="todo_expand_status" class="fas fa-folder-minus"></i>
+					<i ng-if="!todo_expand_status" class="fas fa-folder-plus"></i>
 				</button>
 				<div id="task-list-{{id}}-collapse" class="collapse">
 					<ul class="list-group border border-primary"
@@ -79,12 +79,12 @@
 						<button type="button" class="btn btn-primary btn-sm text-end" ng-click="shiftTodoLeft()"
 								data-toggle="tooltip" data-placement="bottom" title="Shift Todo to the left"
 								ng-disabled="!phaseLeftExists">
-							<i class="fas fa-arrow-left"></i></i>
+							<i class="fas fa-arrow-left"></i>
 						</button>
 						<button type="button" class="btn btn-primary btn-sm text-end" ng-click="shiftTodoRight()"
 								data-toggle="tooltip" data-placement="bottom" title="Shift Todo to the right"
 								ng-disabled="!phaseRightExists">
-							<i class="fas fa-arrow-right"></i></i>
+							<i class="fas fa-arrow-right"></i>
 						</button>
 					</div>
 				</div>
