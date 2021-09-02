@@ -19,7 +19,7 @@ import hu.feketefamily.fftodo.service.TaskService;
 import hu.feketefamily.fftodo.service.TodoService;
 
 @RestController
-@RequestMapping("/fftodo/todo")
+@RequestMapping("/ff-todo/todo")
 public class TodoController {
 
 	@Autowired

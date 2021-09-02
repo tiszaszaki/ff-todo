@@ -1,7 +1,7 @@
 let App = {
 	PHASE_CNT: 3,
 	modalDescriptionMaxCharCount: 1024,
-	baseurl: window.location.origin + '/fftodo',
+	baseurl: window.location.origin + '/ff-todo',
 	currentlyPickedTodoId: undefined,
 	currentlyPickedTodoName: undefined,
 	addTaskModalTitlePrefix: undefined,
@@ -258,7 +258,7 @@ let App = {
 							</div>
 							<div class="btn-group" role="group">
 								<input type="radio" class="btn-check" name="${modalPrefix}-todo-phase" id="${modalPrefix}-todo-phase0" value="0" checked>
-								<label class="btn btn-outline-primary" for="${modalPrefix}-todo-phase0">Todo</label>
+								<label class="btn btn-outline-primary" for="${modalPrefix}-todo-phase0">Backlog</label>
 
 								<input type="radio" class="btn-check" name="${modalPrefix}-todo-phase" id="${modalPrefix}-todo-phase1" value="1">
 								<label class="btn btn-outline-primary" for="${modalPrefix}-todo-phase1">In progress</label>

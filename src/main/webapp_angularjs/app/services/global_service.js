@@ -24,7 +24,7 @@ app.factory('GlobalService', function() {
 		},
 		descriptionMaxLength: 1024,
 
-		basePath: "/fftodo",
+		basePath: "/ff-todo",
 
 		customDateFormat: "yyyy-MM-dd hh:mm:ss.sss",
 

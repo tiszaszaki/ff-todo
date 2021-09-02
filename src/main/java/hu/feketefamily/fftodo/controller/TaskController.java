@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import hu.feketefamily.fftodo.service.TaskService;
 
 @RestController
-@RequestMapping("/fftodo/task")
+@RequestMapping("/ff-todo/task")
 public class TaskController {
 
 	@Autowired
