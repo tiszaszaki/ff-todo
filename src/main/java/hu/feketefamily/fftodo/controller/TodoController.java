@@ -33,6 +33,11 @@ public class TodoController {
 		return ResponseEntity.ok(todoService.getTodos());
 	}
 
+	@GetMapping("/{id}")
+	public ResponseEntity<Todo> getTodo(@PathVariable Long id) {
+		return ResponseEntity.ok(todoService.getTodo(id));
+	}
+
 	@GetMapping("/sorted/{dir}/{propName}")
 	public ResponseEntity<List<Todo>> getTodosSorted(@PathVariable("dir") String dirStr, @PathVariable String propName) {
 		Sort.Direction dir=Sort.Direction.valueOf(dirStr.toUpperCase());
