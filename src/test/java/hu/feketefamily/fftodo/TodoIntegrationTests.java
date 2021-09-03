@@ -8,6 +8,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import hu.feketefamily.fftodo.constants.TodoCommon;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -27,8 +28,7 @@ import hu.feketefamily.fftodo.model.entity.Todo;
 @AutoConfigureMockMvc
 public class TodoIntegrationTests {
 
-	private static final String baseurl = "/ff-todo/";
-	private static final String todoPath = baseurl + "todo";
+	private static final String todoPath = TodoCommon.todoPath;
 	private static final String todoPath2 = todoPath + "/";
 
 	private static final String VALID_NAME = "validName";
@@ -111,7 +111,7 @@ public class TodoIntegrationTests {
 		return Stream.of(
 			Arguments.of(Todo.builder().description(VALID_DESCRIPTION).build()),
 			Arguments.of(Todo.builder().name("").description(VALID_DESCRIPTION).build()),
-			Arguments.of(Todo.builder().name(VALID_NAME).description("a".repeat(1025)).build())
+			Arguments.of(Todo.builder().name(VALID_NAME).description("a".repeat(TodoCommon.maxDescriptionLength + 1)).build())
 		);
 	}
 }

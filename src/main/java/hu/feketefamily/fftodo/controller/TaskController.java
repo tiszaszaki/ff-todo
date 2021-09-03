@@ -1,5 +1,6 @@
 package hu.feketefamily.fftodo.controller;
 
+import hu.feketefamily.fftodo.constants.TodoCommon;
 import hu.feketefamily.fftodo.model.entity.Task;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -8,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import hu.feketefamily.fftodo.service.TaskService;
 
 @RestController
-@RequestMapping("/ff-todo/task")
+@RequestMapping(TodoCommon.taskPath)
 public class TaskController {
 
 	@Autowired

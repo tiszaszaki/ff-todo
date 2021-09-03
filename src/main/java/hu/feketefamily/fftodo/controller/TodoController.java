@@ -1,5 +1,6 @@
 package hu.feketefamily.fftodo.controller;
 
+import hu.feketefamily.fftodo.constants.TodoCommon;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +20,7 @@ import hu.feketefamily.fftodo.service.TaskService;
 import hu.feketefamily.fftodo.service.TodoService;
 
 @RestController
-@RequestMapping("/ff-todo/todo")
+@RequestMapping(TodoCommon.todoPath)
 public class TodoController {
 
 	@Autowired

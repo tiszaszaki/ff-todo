@@ -16,6 +16,8 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+
+import hu.feketefamily.fftodo.constants.TodoCommon;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -35,14 +37,14 @@ public class Todo {
 	@NotBlank
 	@Column(nullable = false, unique = true)
 	private String name;
-	@Size(max = 1024)
-	@Column(length = 1024)
+	@Size(max = TodoCommon.maxDescriptionLength)
+	@Column(length = TodoCommon.maxDescriptionLength)
 	private String description;
 	@Formula("LENGTH(description)")
 	private Long descriptionLength;
 	@NotNull
-	@Min(0)
-	@Max(2)
+	@Min(TodoCommon.phaseMin)
+	@Max(TodoCommon.phaseMax)
 	private Integer phase;
 	@Column(nullable = false)
 	private Date dateCreated;

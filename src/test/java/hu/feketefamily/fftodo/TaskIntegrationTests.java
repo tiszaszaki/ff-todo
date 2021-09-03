@@ -7,6 +7,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import hu.feketefamily.fftodo.constants.TodoCommon;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -30,9 +31,8 @@ import hu.feketefamily.fftodo.service.TodoService;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class TaskIntegrationTests {
 
-	private static final String baseurl = "/ff-todo/";
-	private static final String todoPath = baseurl + "todo/";
-	private static final String taskPath = baseurl + "task/";
+	private static final String todoPath = TodoCommon.todoPath + "/";
+	private static final String taskPath = TodoCommon.taskPath + "/";
 
 	private static final String todoTaskPath(Long id)
 	{
