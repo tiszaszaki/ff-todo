@@ -30,6 +30,15 @@ import hu.feketefamily.fftodo.service.TodoService;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class TaskIntegrationTests {
 
+	private static final String baseurl = "/ff-todo/";
+	private static final String todoPath = baseurl + "todo/";
+	private static final String taskPath = baseurl + "task/";
+
+	private static final String todoTaskPath(Long id)
+	{
+		return todoPath + id + "/task";
+	}
+
 	private static final String VALID_NAME = "validName";
 	private static final Boolean VALID_DONE = true;
 	private static Long VALID_ID;
@@ -75,7 +84,7 @@ public class TaskIntegrationTests {
 		Assertions.assertEquals(1, tasks.size());
 
 		mockMvc.perform(
-			put("/todo/" + VALID_TODO_ID + "/task")
+			put(todoTaskPath(VALID_TODO_ID))
 			.content(mapper.writeValueAsString(
 				Task.builder()
 					.name(VALID_NAME)
@@ -95,7 +104,7 @@ public class TaskIntegrationTests {
 	@Test
 	void addInvalidTask() throws Exception {
 		mockMvc.perform(
-			put("/todo/" + VALID_TODO_ID + "/task")
+			put(todoTaskPath(VALID_TODO_ID))
 				.content(mapper.writeValueAsString(Task.builder().done(VALID_DONE).build()))
 				.contentType(MediaType.APPLICATION_JSON)
 		).andExpect(status().is(HttpStatus.BAD_REQUEST.value()))
@@ -105,7 +114,7 @@ public class TaskIntegrationTests {
 	@Test
 	void addTaskToInvalidTodo() throws Exception {
 		mockMvc.perform(
-			put("/todo/" + INVALID_TODO_ID + "/task")
+			put(todoTaskPath(INVALID_TODO_ID))
 				.content(mapper.writeValueAsString(
 					Task.builder()
 						.name(VALID_NAME)
@@ -120,7 +129,7 @@ public class TaskIntegrationTests {
 	@Test
 	void updateNonExistentTask() throws Exception {
 		mockMvc.perform(
-			patch("/task/" + NON_EXISTENT_ID)
+			patch(taskPath + NON_EXISTENT_ID)
 				.content(mapper.writeValueAsString(
 					Task.builder()
 						.name(VALID_NAME)
@@ -134,7 +143,7 @@ public class TaskIntegrationTests {
 	@Test
 	void updateInvalidTasks() throws Exception {
 		mockMvc.perform(
-			patch("/task/" + VALID_ID)
+			patch(taskPath + VALID_ID)
 				.content(mapper.writeValueAsString(Task.builder().done(VALID_DONE).build()))
 				.contentType(MediaType.APPLICATION_JSON)
 		).andExpect(status().is(HttpStatus.BAD_REQUEST.value()));
@@ -143,14 +152,14 @@ public class TaskIntegrationTests {
 	@Test
 	void removeExistingTask() throws Exception {
 		mockMvc.perform(
-			delete("/task/" + VALID_ID)
+			delete(taskPath + VALID_ID)
 		).andExpect(status().is(HttpStatus.OK.value()));
 	}
 
 	@Test
 	void removeNonExistentTask() throws Exception {
 		mockMvc.perform(
-			delete("/task/" + NON_EXISTENT_ID)
+			delete(taskPath + NON_EXISTENT_ID)
 		).andExpect(status().is(HttpStatus.OK.value()));
 	}
 }

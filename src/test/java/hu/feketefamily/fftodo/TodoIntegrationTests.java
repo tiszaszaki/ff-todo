@@ -27,6 +27,10 @@ import hu.feketefamily.fftodo.model.entity.Todo;
 @AutoConfigureMockMvc
 public class TodoIntegrationTests {
 
+	private static final String baseurl = "/ff-todo/";
+	private static final String todoPath = baseurl + "todo";
+	private static final String todoPath2 = todoPath + "/";
+
 	private static final String VALID_NAME = "validName";
 	private static final String VALID_DESCRIPTION = "validDescription";
 	private static final int VALID_PHASE = 0;
@@ -41,7 +45,7 @@ public class TodoIntegrationTests {
 	@Test
 	void addValidTodo() throws Exception {
 		mockMvc.perform(
-			put("/todo")
+			put(todoPath)
 			.content(mapper.writeValueAsString(
 				Todo.builder()
 					.name(VALID_NAME)
@@ -57,7 +61,7 @@ public class TodoIntegrationTests {
 	@MethodSource("provideInvalidTodos")
 	void addInvalidTodo(Todo invalidTodo) throws Exception {
 		mockMvc.perform(
-			put("/todo")
+			put(todoPath)
 				.content(mapper.writeValueAsString(invalidTodo))
 				.contentType(MediaType.APPLICATION_JSON)
 		).andExpect(status().is(HttpStatus.BAD_REQUEST.value()))
@@ -67,21 +71,21 @@ public class TodoIntegrationTests {
 	@Test
 	void getTodos() throws Exception {
 		mockMvc.perform(
-			get("/todo")
+			get(todoPath)
 		).andExpect(status().is(HttpStatus.OK.value()));
 	}
 
 	@Test
 	void removeNonExistentTodo() throws Exception {
 		mockMvc.perform(
-			delete("/todo/" + NON_EXISTENT_ID)
+			delete(todoPath2 + NON_EXISTENT_ID)
 		).andExpect(status().is(HttpStatus.OK.value()));
 	}
 
 	@Test
 	void updateNonExistentTodo() throws Exception {
 		mockMvc.perform(
-			patch("/todo/" + NON_EXISTENT_ID)
+			patch(todoPath2 + NON_EXISTENT_ID)
 				.content(mapper.writeValueAsString(
 					Todo.builder()
 						.name(VALID_NAME)
@@ -97,7 +101,7 @@ public class TodoIntegrationTests {
 	@MethodSource("provideInvalidTodos")
 	void updateInvalidTodo(Todo invalidTodo) throws Exception {
 		mockMvc.perform(
-			patch("/todo/" + NON_EXISTENT_ID)
+			patch(todoPath2 + NON_EXISTENT_ID)
 				.content(mapper.writeValueAsString(invalidTodo))
 				.contentType(MediaType.APPLICATION_JSON)
 		).andExpect(status().is(HttpStatus.BAD_REQUEST.value()));
