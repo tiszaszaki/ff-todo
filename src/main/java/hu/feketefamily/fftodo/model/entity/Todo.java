@@ -48,6 +48,7 @@ public class Todo {
 	private Date dateCreated;
 	@Column(nullable = false)
 	private Date dateModified;
+	private Date deadline;
 	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE, mappedBy = "todo")
 	private List<Task> tasks;
 	@Formula("(SELECT COUNT(t.todo_id) FROM Task t WHERE t.todo_id = id)")

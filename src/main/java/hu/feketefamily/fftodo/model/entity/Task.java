@@ -14,6 +14,8 @@ import javax.validation.constraints.NotBlank;
 
 import lombok.*;
 
+import java.util.Date;
+
 @Data
 @Builder
 @NoArgsConstructor
@@ -29,6 +31,7 @@ public class Task {
 	private String name;
 	@Column(nullable = false)
 	private Boolean done;
+	private Date deadline;
 	@ManyToOne
 	@JoinColumn(name = "todo_id", nullable = false)
 	@JsonIgnore
