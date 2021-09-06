@@ -32,7 +32,8 @@ import org.hibernate.annotations.Formula;
 @Table(name = "todo")
 public class Todo {
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(updatable = false, nullable = false)
 	private Long id;
 	@NotBlank
 	@Column(nullable = false, unique = true)

@@ -24,7 +24,8 @@ import java.util.Date;
 @Table(name = "task")
 public class Task {
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(updatable = false, nullable = false)
 	private Long id;
 	@NotBlank
 	@Column(nullable = false)
