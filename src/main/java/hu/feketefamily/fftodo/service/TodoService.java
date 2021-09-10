@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import javax.validation.Valid;
@@ -51,9 +52,16 @@ public class TodoService {
 	}
 
 	public Todo addTodo(@Valid Todo todo) {
+		Calendar dateCalc=Calendar.getInstance();
 		Date now=new Date();
+
+		dateCalc.setTime(now);
+
 		todo.setDateCreated(now);
-		todo.setDateModified(now);
+
+		//dateCalc.add(Calendar.DAY_OF_MONTH, -5);
+		todo.setDateModified(dateCalc.getTime());
+
 		log.info("Saving Todo: {{}}", todo.toString());
 		return todoRepository.save(todo);
 	}

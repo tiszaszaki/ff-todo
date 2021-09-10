@@ -11,11 +11,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 
 import hu.feketefamily.fftodo.constants.TodoCommon;
 import lombok.AllArgsConstructor;
@@ -47,8 +43,10 @@ public class Todo {
 	@Min(TodoCommon.phaseMin)
 	@Max(TodoCommon.phaseMax)
 	private Integer phase;
+	@PastOrPresent
 	@Column(nullable = false)
 	private Date dateCreated;
+	@PastOrPresent
 	@Column(nullable = false)
 	private Date dateModified;
 	private Date deadline;
@@ -56,4 +54,15 @@ public class Todo {
 	private List<Task> tasks;
 	@Formula("(SELECT COUNT(t.todo_id) FROM Task t WHERE t.todo_id = id)")
 	private Long taskCount;
+
+	/*
+	@AssertTrue
+	public Boolean isValid() {
+		Boolean result = true;
+		result &= (!this.dateModified.before(this.dateCreated));
+		result &= (!this.deadline.before(this.dateCreated));
+		result &= (!this.deadline.before(this.dateModified));
+		return result;
+	}
+	*/
 }
