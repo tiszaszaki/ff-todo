@@ -9,10 +9,13 @@ import org.springframework.stereotype.Repository;
 import hu.feketefamily.fftodo.model.entity.Todo;
 
 import java.util.Date;
+import java.util.List;
 
 @Repository
 public interface TodoRepository extends JpaRepository<Todo, Long> {
 	@Modifying
 	@Query("UPDATE Todo t SET t.name = :name, t.description = :description, t.phase = :phase, t.dateModified= :now WHERE t.id = :id")
 	int updateById(@Param("id") Long id, @Param("name") String name, @Param("description") String description, @Param("phase") int phase, @Param("now") Date dateModified);
+	int deleteByBoardId(Long boardId);
+	List<Todo> findByBoardId(Long boardId);
 }

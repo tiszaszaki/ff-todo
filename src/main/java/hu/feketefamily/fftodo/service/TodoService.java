@@ -2,6 +2,7 @@ package hu.feketefamily.fftodo.service;
 
 import static hu.feketefamily.fftodo.constants.ErrorMessages.TODO_NOT_EXIST_MESSAGE;
 
+import hu.feketefamily.fftodo.constants.TodoCommon;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -23,9 +24,13 @@ import lombok.extern.log4j.Log4j2;
 public class TodoService {
 
 	@Autowired
+	private BoardService boardService;
+
+	@Autowired
 	private TodoRepository todoRepository;
 
-	public final Integer phase_N=3;
+	public final Integer phaseMin= TodoCommon.phaseMin;
+	public final Integer phaseMax= TodoCommon.phaseMax;
 
 	public enum ShiftDirection
 	{
@@ -41,7 +46,13 @@ public class TodoService {
 		List<Todo> result = todoRepository.findAll();
 		log.info("Queried " + result.size() + " Todos");
 		return result;
+	}
 
+	public List<Todo> getTodosFromBoard(Long id)
+	{
+		List<Todo> result = todoRepository.findByBoardId(id);
+		log.info("Queried " + result.size() + " Todos from Board with id {{}}", id);
+		return result;
 	}
 
 	public List<Todo> getTodosSorted(Sort.Direction dir, String propName)
@@ -51,7 +62,7 @@ public class TodoService {
 		return result;
 	}
 
-	public Todo addTodo(@Valid Todo todo) {
+	public Todo addTodo(Long boardId, @Valid Todo todo) {
 		Calendar dateCalc=Calendar.getInstance();
 		Date now=new Date();
 
@@ -62,7 +73,9 @@ public class TodoService {
 		//dateCalc.add(Calendar.DAY_OF_MONTH, -5);
 		todo.setDateModified(dateCalc.getTime());
 
-		log.info("Saving Todo: {{}}", todo.toString());
+		todo.setBoard(boardService.getBoard(boardId));
+
+		log.info("Saving Todo for Board with id {{}}: {{}}", boardId, todo.toString());
 		return todoRepository.save(todo);
 	}
 
@@ -120,8 +133,8 @@ public class TodoService {
 		if (isValidDir)
 		{
 			isValidPhase = true;
-			isValidPhase &= ((oldPhase >= 0) && (oldPhase < phase_N));
-			isValidPhase &= ((newPhase >= 0) && (newPhase < phase_N));
+			isValidPhase &= ((oldPhase >= phaseMin) && (oldPhase <= phaseMax));
+			isValidPhase &= ((newPhase >= phaseMin) && (newPhase <= phaseMax));
 		}
 
 		if (isValidDir && isValidPhase) {

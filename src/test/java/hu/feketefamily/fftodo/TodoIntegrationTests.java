@@ -111,7 +111,7 @@ public class TodoIntegrationTests {
 		return Stream.of(
 			Arguments.of(Todo.builder().description(VALID_DESCRIPTION).build()),
 			Arguments.of(Todo.builder().name("").description(VALID_DESCRIPTION).build()),
-			Arguments.of(Todo.builder().name(VALID_NAME).description("a".repeat(TodoCommon.maxDescriptionLength + 1)).build())
+			Arguments.of(Todo.builder().name(VALID_NAME).description("a".repeat(TodoCommon.maxTodoDescriptionLength + 1)).build())
 		);
 	}
 }

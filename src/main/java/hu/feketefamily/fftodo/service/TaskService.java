@@ -47,7 +47,7 @@ public class TaskService {
 
 	public void addTask(Long todoId, Task task) {
 		task.setTodo(todoService.getTodo(todoId));
-		log.info("Saving Task: {{}}", task.toString());
+		log.info("Saving Task for Todo with id {{}}: {{}}", todoId, task.toString());
 		taskRepository.save(task);
 		todoService.updateTodoDate(todoId);
 	}

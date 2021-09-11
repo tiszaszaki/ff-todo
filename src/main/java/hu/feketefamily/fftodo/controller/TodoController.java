@@ -58,11 +58,6 @@ public class TodoController {
 		return ResponseEntity.ok(taskService.getTasksSortedFromTodo(id, dir, propName));
 	}
 
-	@PutMapping
-	public ResponseEntity<Todo> addTodo(@RequestBody Todo todo) {
-		return ResponseEntity.ok(todoService.addTodo(todo));
-	}
-
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Void> removeTodo(@PathVariable Long id) {
 		todoService.removeTodo(id);

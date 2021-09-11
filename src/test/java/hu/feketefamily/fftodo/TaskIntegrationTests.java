@@ -8,6 +8,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import hu.feketefamily.fftodo.constants.TodoCommon;
+import hu.feketefamily.fftodo.model.entity.Board;
+import hu.feketefamily.fftodo.service.BoardService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -45,6 +47,11 @@ public class TaskIntegrationTests {
 	private static final Long NON_EXISTENT_ID = 123L;
 	private static Long VALID_TODO_ID;
 	private static final Long INVALID_TODO_ID = 666L;
+	private static Long VALID_BOARD_ID;
+	private static final Long INVALID_BOARD_ID = 666L;
+
+	@Autowired
+	private BoardService boardService;
 
 	@Autowired
 	private TodoService todoService;
@@ -60,7 +67,20 @@ public class TaskIntegrationTests {
 
 	@BeforeAll
 	void beforeAll() throws Exception {
+		boardService.addBoard(
+			Board.builder()
+				.name("board")
+				.description("board description")
+				.author("board author")
+				.build()
+		);
+		VALID_BOARD_ID = null;
+		for (Long id : boardService.getAllBoardsId()) {
+			if (VALID_BOARD_ID != null)
+				VALID_BOARD_ID = id;
+		}
 		todoService.addTodo(
+			VALID_BOARD_ID,
 			Todo.builder()
 				.name("todo")
 				.description("todo description")

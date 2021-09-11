@@ -2,22 +2,12 @@ package hu.feketefamily.fftodo.model.entity;
 
 import java.util.Date;
 import java.util.List;
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.*;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import hu.feketefamily.fftodo.constants.TodoCommon;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.Formula;
 
 @Data
@@ -34,8 +24,8 @@ public class Todo {
 	@NotBlank
 	@Column(nullable = false, unique = true)
 	private String name;
-	@Size(max = TodoCommon.maxDescriptionLength)
-	@Column(length = TodoCommon.maxDescriptionLength)
+	@Size(max = TodoCommon.maxTodoDescriptionLength)
+	@Column(length = TodoCommon.maxTodoDescriptionLength)
 	private String description;
 	@Formula("LENGTH(description)")
 	private Long descriptionLength;
@@ -54,6 +44,11 @@ public class Todo {
 	private List<Task> tasks;
 	@Formula("(SELECT COUNT(t.todo_id) FROM Task t WHERE t.todo_id = id)")
 	private Long taskCount;
+	@ManyToOne
+	@JoinColumn(name = "board_id", nullable = false)
+	@JsonIgnore
+	@ToString.Exclude
+	private Board board;
 
 	/*
 	@AssertTrue
