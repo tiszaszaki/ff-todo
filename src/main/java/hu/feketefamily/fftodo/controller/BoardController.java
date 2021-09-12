@@ -60,8 +60,7 @@ public class BoardController {
 
 	@PutMapping("/{id}/todo")
 	public ResponseEntity<Todo> addTodo(@PathVariable Long id, @RequestBody Todo todo) {
-		todoService.addTodo(id, todo);
-		return ResponseEntity.ok().build();
+		return ResponseEntity.ok(todoService.addTodo(id, todo));
 	}
 
 	@DeleteMapping("/{id}/todo/clear")
