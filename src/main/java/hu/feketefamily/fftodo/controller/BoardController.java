@@ -7,8 +7,11 @@ import hu.feketefamily.fftodo.service.BoardService;
 import hu.feketefamily.fftodo.service.TodoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -22,7 +25,7 @@ public class BoardController {
 	private TodoService todoService;
 
 	@GetMapping
-	public ResponseEntity<Set<Long>> getBoard() {
+	public ResponseEntity<Set<Long>> getBoards() {
 		return ResponseEntity.ok(boardService.getAllBoardsId());
 	}
 
@@ -37,9 +40,32 @@ public class BoardController {
 		return ResponseEntity.ok(todoService.getTodosFromBoard(id));
 	}
 
+	@PutMapping
+	public ResponseEntity<Todo> addBoard(@RequestBody Board board) {
+		boardService.addBoard(board);
+		return ResponseEntity.ok().build();
+	}
+
+	@DeleteMapping("/{id}")
+	public ResponseEntity<Void> removeBoard(@PathVariable Long id) {
+		boardService.removeBoard(id);
+		return ResponseEntity.ok().build();
+	}
+
+	@PatchMapping("/{id}")
+	public ResponseEntity<Void> updateBoard(@PathVariable Long id, @RequestBody Board patchedBoard) {
+		boardService.updateBoard(id, patchedBoard);
+		return ResponseEntity.ok().build();
+	}
+
 	@PutMapping("/{id}/todo")
 	public ResponseEntity<Todo> addTodo(@PathVariable Long id, @RequestBody Todo todo) {
 		todoService.addTodo(id, todo);
 		return ResponseEntity.ok().build();
+	}
+
+	@DeleteMapping("/{id}/todo/clear")
+	public ResponseEntity<Long> removeAllTodos(@PathVariable Long id) {
+		return ResponseEntity.ok(todoService.removeAllTodos(id));
 	}
 }

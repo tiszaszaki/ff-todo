@@ -64,11 +64,6 @@ public class TodoController {
 		return ResponseEntity.ok().build();
 	}
 
-	@DeleteMapping("/clear")
-	public ResponseEntity<Long> removeAllTodos() {
-		return ResponseEntity.ok(todoService.removeAllTodos());
-	}
-
 	@PatchMapping("/{id}")
 	public ResponseEntity<Void> updateTodo(@PathVariable Long id, @RequestBody Todo patchedTodo) {
 		todoService.updateTodo(id, patchedTodo);
@@ -76,7 +71,7 @@ public class TodoController {
 	}
 
 	@PatchMapping("/{id}/shift/{dir}")
-	public ResponseEntity<Void> updateTodo(@PathVariable Long id, @PathVariable("dir") String dirStr) {
+	public ResponseEntity<Void> shiftTodo(@PathVariable Long id, @PathVariable("dir") String dirStr) {
 		TodoService.ShiftDirection dir=TodoService.ShiftDirection.valueOf(dirStr.toUpperCase());
 		todoService.shiftTodo(id, dir);
 		return ResponseEntity.ok().build();

@@ -1,5 +1,6 @@
 package hu.feketefamily.fftodo.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import hu.feketefamily.fftodo.constants.TodoCommon;
 import lombok.*;
 
@@ -37,6 +38,7 @@ public class Board {
 	@Column(nullable = false)
 	private Boolean readonlyTasks;
 	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE, mappedBy = "board")
+	@JsonIgnore
 	@ToString.Exclude
 	private List<Todo> todos;
 }

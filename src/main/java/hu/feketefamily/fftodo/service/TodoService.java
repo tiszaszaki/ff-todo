@@ -88,14 +88,15 @@ public class TodoService {
 		}
 	}
 
-	public Long removeAllTodos() {
-		long temp_count=todoRepository.count();
+	@Transactional
+	public Long removeAllTodos(Long boardId) {
+		long temp_count=todoRepository.findByBoardId(boardId).size();
 
 		if (temp_count > 0) {
-			log.info("Deleting all Todos...");
-			todoRepository.deleteAll();
+			log.info("Deleting all Todos from Board with id {{}}...", boardId);
+			todoRepository.deleteByBoardId(boardId);
 		} else {
-			log.warn("No Todos were deleted.");
+			log.warn("No Todos were deleted from Board with id {{}}...", boardId);
 		}
 
 		return temp_count;
