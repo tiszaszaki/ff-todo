@@ -68,4 +68,26 @@ public class BoardController {
 	public ResponseEntity<Long> removeAllTodos(@PathVariable Long id) {
 		return ResponseEntity.ok(todoService.removeAllTodos(id));
 	}
+
+	@GetMapping("/{id}/readonly-todos")
+	public ResponseEntity<Boolean> getBoardReadonlyTodosSetting(@PathVariable Long id) {
+		return ResponseEntity.ok(boardService.isReadonlyTodos(id));
+	}
+
+	@PatchMapping("/{id}/readonly-todos/{readonly}")
+	public ResponseEntity<Void> setBoardReadonlyTodosSetting(@PathVariable Long id, @PathVariable Boolean readonly) {
+		boardService.setReadonlyTodos(id, readonly);
+		return ResponseEntity.ok().build();
+	}
+
+	@GetMapping("/{id}/readonly-tasks")
+	public ResponseEntity<Boolean> getBoardReadonlyTasksSetting(@PathVariable Long id) {
+		return ResponseEntity.ok(boardService.isReadonlyTasks(id));
+	}
+
+	@PatchMapping("/{id}/readonly-tasks/{readonly}")
+	public ResponseEntity<Void> setBoardReadonlyTaskSetting(@PathVariable Long id, @PathVariable Boolean readonly) {
+		boardService.setReadonlyTasks(id, readonly);
+		return ResponseEntity.ok().build();
+	}
 }

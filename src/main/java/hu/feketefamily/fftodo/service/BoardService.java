@@ -60,4 +60,32 @@ public class BoardService {
 			log.warn("No Boards were updated with id {{}}", id);
 		}
 	}
+
+	public Boolean isReadonlyTodos(Long id) {
+		Board board = getBoard(id);
+		return board.getReadonlyTodos();
+	}
+
+	@Transactional
+	public void setReadonlyTodos(Long id, Boolean readonly) {
+		readonly = !getBoard(id).getReadonlyTodos();
+		if (boardRepository.updateReadonlyTodos(id, readonly) >= 1)
+		{
+			log.info("Successfully updated Read-only Todos setting for Board with id {{}} to {}", id, readonly);
+		}
+	}
+
+	public Boolean isReadonlyTasks(Long id) {
+		Board board = getBoard(id);
+		return board.getReadonlyTasks();
+	}
+
+	@Transactional
+	public void setReadonlyTasks(Long id, Boolean readonly) {
+		readonly = !getBoard(id).getReadonlyTasks();
+		if (boardRepository.updateReadonlyTasks(id, readonly) >= 1)
+		{
+			log.info("Successfully updated Read-only Tasks setting for Board with id {{}} to {}", id, readonly);
+		}
+	}
 }
