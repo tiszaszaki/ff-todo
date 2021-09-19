@@ -7,9 +7,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import hu.feketefamily.fftodo.constants.TodoCommon;
-import hu.feketefamily.fftodo.model.entity.Board;
-import hu.feketefamily.fftodo.service.BoardService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -23,15 +20,18 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
 import hu.feketefamily.fftodo.constants.ErrorMessages;
+import hu.feketefamily.fftodo.constants.TodoCommon;
+import hu.feketefamily.fftodo.model.entity.Board;
 import hu.feketefamily.fftodo.model.entity.Task;
 import hu.feketefamily.fftodo.model.entity.Todo;
+import hu.feketefamily.fftodo.service.BoardService;
 import hu.feketefamily.fftodo.service.TaskService;
 import hu.feketefamily.fftodo.service.TodoService;
 
 @SpringBootTest
 @AutoConfigureMockMvc
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class TaskIntegrationTests {
+class TaskIntegrationTests {
 
 	private static final String todoPath = TodoCommon.todoPath + "/";
 	private static final String taskPath = TodoCommon.taskPath + "/";
@@ -47,8 +47,6 @@ public class TaskIntegrationTests {
 	private static final Long NON_EXISTENT_ID = 123L;
 	private static Long VALID_TODO_ID;
 	private static final Long INVALID_TODO_ID = 666L;
-	private static Long VALID_BOARD_ID;
-	private static final Long INVALID_BOARD_ID = 666L;
 
 	@Autowired
 	private BoardService boardService;
@@ -66,21 +64,16 @@ public class TaskIntegrationTests {
 	private ObjectMapper mapper;
 
 	@BeforeAll
-	void beforeAll() throws Exception {
-		boardService.addBoard(
+	void beforeAll() {
+		var validBoardId = boardService.addBoard(
 			Board.builder()
-				.name("board")
+				.name("task testing board")
 				.description("board description")
 				.author("board author")
 				.build()
-		);
-		VALID_BOARD_ID = null;
-		for (Long id : boardService.getAllBoardsId()) {
-			if (VALID_BOARD_ID != null)
-				VALID_BOARD_ID = id;
-		}
+		).getId();
 		todoService.addTodo(
-			VALID_BOARD_ID,
+			validBoardId,
 			Todo.builder()
 				.name("todo")
 				.description("todo description")

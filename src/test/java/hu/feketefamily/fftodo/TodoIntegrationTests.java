@@ -8,8 +8,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import hu.feketefamily.fftodo.constants.TodoCommon;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -22,14 +23,21 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.stream.Stream;
 import hu.feketefamily.fftodo.constants.ErrorMessages;
+import hu.feketefamily.fftodo.constants.TodoCommon;
+import hu.feketefamily.fftodo.model.entity.Board;
 import hu.feketefamily.fftodo.model.entity.Todo;
+import hu.feketefamily.fftodo.service.BoardService;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-public class TodoIntegrationTests {
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+class TodoIntegrationTests {
 
 	private static final String todoPath = TodoCommon.todoPath;
 	private static final String todoPath2 = todoPath + "/";
+
+	private static String VALID_TODO_CREATE_PATH;
+	private static String INVALID_TODO_CREATE_PATH;
 
 	private static final String VALID_NAME = "validName";
 	private static final String VALID_DESCRIPTION = "validDescription";
@@ -37,15 +45,31 @@ public class TodoIntegrationTests {
 	private static final Long NON_EXISTENT_ID = 1L;
 
 	@Autowired
+	private BoardService boardService;
+
+	@Autowired
 	private MockMvc mockMvc;
 
 	@Autowired
 	private ObjectMapper mapper;
 
+	@BeforeAll
+	void beforeAll() {
+		var validTodoId = boardService.addBoard(
+			Board.builder()
+				.name("todo testing board")
+				.description("board description")
+				.author("board author")
+				.build()
+		).getId();
+		VALID_TODO_CREATE_PATH = TodoCommon.boardPath + "/" + validTodoId + "/todo";
+		INVALID_TODO_CREATE_PATH = TodoCommon.boardPath + "/666/todo";
+	}
+
 	@Test
 	void addValidTodo() throws Exception {
 		mockMvc.perform(
-			put(todoPath)
+			put(VALID_TODO_CREATE_PATH)
 			.content(mapper.writeValueAsString(
 				Todo.builder()
 					.name(VALID_NAME)
@@ -61,11 +85,27 @@ public class TodoIntegrationTests {
 	@MethodSource("provideInvalidTodos")
 	void addInvalidTodo(Todo invalidTodo) throws Exception {
 		mockMvc.perform(
-			put(todoPath)
+			put(VALID_TODO_CREATE_PATH)
 				.content(mapper.writeValueAsString(invalidTodo))
 				.contentType(MediaType.APPLICATION_JSON)
 		).andExpect(status().is(HttpStatus.BAD_REQUEST.value()))
 			.andExpect(content().string(ErrorMessages.CONSTRAINT_VIOLATION_MESSAGE));
+	}
+
+	@Test
+	void addTodoToInvalidBoard() throws Exception {
+		mockMvc.perform(
+			put(INVALID_TODO_CREATE_PATH)
+				.content(mapper.writeValueAsString(
+					Todo.builder()
+						.name(VALID_NAME)
+						.description(VALID_DESCRIPTION)
+						.phase(VALID_PHASE)
+						.build()
+				))
+				.contentType(MediaType.APPLICATION_JSON)
+		).andExpect(status().is(HttpStatus.BAD_REQUEST.value()))
+			.andExpect(content().string(ErrorMessages.BOARD_NOT_EXIST_MESSAGE));
 	}
 
 	@Test
