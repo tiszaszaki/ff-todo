@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -160,5 +161,19 @@ public class TodoService {
 		{
 			log.warn("No Todos were updated with id {{}}", id);
 		}
+	}
+
+	public Integer getDescriptionMaxLength() {
+		Integer maxLength=TodoCommon.maxTodoDescriptionLength;
+		log.info("Querying maximum description length setting for all Todos: {}", maxLength);
+		return maxLength;
+	}
+
+	public List<Integer> getTodoPhaseRange() {
+		List<Integer> results=new ArrayList<>();
+		results.add(TodoCommon.phaseMin);
+		results.add(TodoCommon.phaseMax);
+		log.info("Querying phase range setting for all Todos: {}", results.toString());
+		return results;
 	}
 }

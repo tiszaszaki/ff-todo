@@ -87,4 +87,14 @@ public class TodoController {
 	public ResponseEntity<Integer> removeAllTasks(@PathVariable Long id) {
 		return ResponseEntity.ok(taskService.removeAllTasksFromTodo(id));
 	}
+
+	@GetMapping("/description-max-length")
+	public ResponseEntity<Integer> getDescriptionMaxLength() {
+		return ResponseEntity.ok(todoService.getDescriptionMaxLength());
+	}
+
+	@GetMapping("/phase-val-range")
+	public ResponseEntity< List<Integer> > getTodoPhaseRange() {
+		return ResponseEntity.ok(todoService.getTodoPhaseRange());
+	}
 }

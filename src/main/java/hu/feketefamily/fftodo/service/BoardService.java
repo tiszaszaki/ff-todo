@@ -1,5 +1,6 @@
 package hu.feketefamily.fftodo.service;
 
+import hu.feketefamily.fftodo.constants.TodoCommon;
 import hu.feketefamily.fftodo.exception.NotExistException;
 import hu.feketefamily.fftodo.model.entity.Board;
 import hu.feketefamily.fftodo.model.repository.BoardRepository;
@@ -61,9 +62,17 @@ public class BoardService {
 		}
 	}
 
+	public Integer getDescriptionMaxLength() {
+		Integer maxLength=TodoCommon.maxBoardDescriptionLength;
+		log.info("Querying maximum description length setting for all Boards: {}", maxLength);
+		return maxLength;
+	}
+
 	public Boolean isReadonlyTodos(Long id) {
 		Board board = getBoard(id);
-		return board.getReadonlyTodos();
+		Boolean readonly = board.getReadonlyTodos();
+		log.info("Querying Read-only Todos setting for Board with id {{}}: {}", id, readonly);
+		return readonly;
 	}
 
 	@Transactional
@@ -77,7 +86,9 @@ public class BoardService {
 
 	public Boolean isReadonlyTasks(Long id) {
 		Board board = getBoard(id);
-		return board.getReadonlyTasks();
+		Boolean readonly = board.getReadonlyTasks();
+		log.info("Querying Read-only Tasks setting for Board with id {{}}: {}", id, readonly);
+		return readonly;
 	}
 
 	@Transactional

@@ -68,6 +68,11 @@ public class BoardController {
 		return ResponseEntity.ok(todoService.removeAllTodos(id));
 	}
 
+	@GetMapping("/description-max-length")
+	public ResponseEntity<Integer> getDescriptionMaxLength() {
+		return ResponseEntity.ok(boardService.getDescriptionMaxLength());
+	}
+
 	@GetMapping("/{id}/readonly-todos")
 	public ResponseEntity<Boolean> getBoardReadonlyTodosSetting(@PathVariable Long id) {
 		return ResponseEntity.ok(boardService.isReadonlyTodos(id));
