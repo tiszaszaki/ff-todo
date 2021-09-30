@@ -35,9 +35,11 @@ public class Todo {
 	private Integer phase;
 	@PastOrPresent
 	@Column(nullable = false)
+	@Temporal(TemporalType.TIMESTAMP)
 	private Date dateCreated;
 	@PastOrPresent
 	@Column(nullable = false)
+	@Temporal(TemporalType.TIMESTAMP)
 	private Date dateModified;
 	private Date deadline;
 	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE, mappedBy = "todo")

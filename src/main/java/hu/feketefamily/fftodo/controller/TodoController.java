@@ -70,6 +70,11 @@ public class TodoController {
 		return ResponseEntity.ok().build();
 	}
 
+	@PatchMapping("/{id}/clone/{phase}")
+	public ResponseEntity<Todo> cloneTodo(@PathVariable Long id, @PathVariable Integer phase) {
+		return ResponseEntity.ok(todoService.cloneTodo(id, phase));
+	}
+
 	@PatchMapping("/{id}/shift/{dir}")
 	public ResponseEntity<Void> shiftTodo(@PathVariable Long id, @PathVariable("dir") String dirStr) {
 		TodoService.ShiftDirection dir=TodoService.ShiftDirection.valueOf(dirStr.toUpperCase());

@@ -32,6 +32,7 @@ public class Board {
 	private String author;
 	@PastOrPresent
 	@Column(updatable = false, nullable = false)
+	@Temporal(TemporalType.TIMESTAMP)
 	private Date dateCreated;
 	@Column(nullable = false)
 	private Boolean readonlyTodos;

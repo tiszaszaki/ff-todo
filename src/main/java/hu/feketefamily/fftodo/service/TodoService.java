@@ -163,6 +163,12 @@ public class TodoService {
 		}
 	}
 
+	@Transactional
+	public Todo cloneTodo(Long id, Integer phase) {
+		log.info("Trying to clone Todo with id {{}}: ", id);
+		return todoRepository.cloneById(id, new Date());
+	}
+
 	public Integer getDescriptionMaxLength() {
 		Integer maxLength=TodoCommon.maxTodoDescriptionLength;
 		log.info("Querying maximum description length setting for all Todos: {}", maxLength);

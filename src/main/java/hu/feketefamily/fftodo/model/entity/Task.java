@@ -2,14 +2,7 @@ package hu.feketefamily.fftodo.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 
 import lombok.*;
@@ -32,6 +25,7 @@ public class Task {
 	private String name;
 	@Column(nullable = false)
 	private Boolean done;
+	@Temporal(TemporalType.TIMESTAMP)
 	private Date deadline;
 	@ManyToOne
 	@JoinColumn(name = "todo_id", nullable = false)

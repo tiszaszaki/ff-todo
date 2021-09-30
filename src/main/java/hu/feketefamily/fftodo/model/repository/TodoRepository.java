@@ -13,6 +13,10 @@ import java.util.List;
 
 @Repository
 public interface TodoRepository extends JpaRepository<Todo, Long> {
+	@Query("INSERT into Todo (name, description, phase, dateCreated, dateModified)\n" +
+		"select concat(t2.name,' (copied)'), t2.description, t2.phase, :date_new, :date_new from Todo as t2 where t2.id = :id")
+	Todo cloneById(@Param("id") Long id, @Param("date_new") Date dateNew);
+
 	@Modifying
 	@Query("UPDATE Todo t SET t.name = :name, t.description = :description, t.phase = :phase, t.dateModified= :now WHERE t.id = :id")
 	int updateById(@Param("id") Long id, @Param("name") String name, @Param("description") String description, @Param("phase") int phase, @Param("now") Date dateModified);
