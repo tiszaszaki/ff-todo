@@ -71,8 +71,9 @@ public class TodoController {
 	}
 
 	@PatchMapping("/{id}/clone/{phase}")
-	public ResponseEntity<Todo> cloneTodo(@PathVariable Long id, @PathVariable Integer phase) {
-		return ResponseEntity.ok(todoService.cloneTodo(id, phase));
+	public ResponseEntity<Void> cloneTodo(@PathVariable Long id, @PathVariable Integer phase) {
+		todoService.cloneTodo(id, phase);
+		return ResponseEntity.ok().build();
 	}
 
 	@PatchMapping("/{id}/shift/{dir}")

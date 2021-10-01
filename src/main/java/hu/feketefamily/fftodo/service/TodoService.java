@@ -164,9 +164,15 @@ public class TodoService {
 	}
 
 	@Transactional
-	public Todo cloneTodo(Long id, Integer phase) {
-		log.info("Trying to clone Todo with id {{}}: ", id);
-		return todoRepository.cloneById(id, new Date());
+	public void cloneTodo(Long id, Integer phase) {
+		if (todoRepository.cloneById(id, phase, new Date()) >= 1)
+		{
+			log.info("Successfully cloned Todo with id {{}}", id);
+		}
+		else
+		{
+			log.warn("No Todos were cloned with id {{}}", id);
+		}
 	}
 
 	public Integer getDescriptionMaxLength() {

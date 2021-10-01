@@ -1,5 +1,6 @@
 package hu.feketefamily.fftodo.model.repository;
 
+import hu.feketefamily.fftodo.constants.TodoCommon;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -13,9 +14,11 @@ import java.util.List;
 
 @Repository
 public interface TodoRepository extends JpaRepository<Todo, Long> {
-	@Query("INSERT into Todo (name, description, phase, dateCreated, dateModified)\n" +
-		"select concat(t2.name,' (copied)'), t2.description, t2.phase, :date_new, :date_new from Todo as t2 where t2.id = :id")
-	Todo cloneById(@Param("id") Long id, @Param("date_new") Date dateNew);
+	@Modifying
+	@Query("INSERT into Todo (name, description, phase, dateCreated, dateModified, board)\n" +
+		"select concat(t2.name,'" + TodoCommon.todoCloneSuffix + "'), t2.description, :phase, " +
+		":date_new, :date_new, t2.board from Todo as t2 where t2.id = :id")
+	int cloneById(@Param("id") Long id, @Param("phase") Integer phase, @Param("date_new") Date dateNew);
 
 	@Modifying
 	@Query("UPDATE Todo t SET t.name = :name, t.description = :description, t.phase = :phase, t.dateModified= :now WHERE t.id = :id")

@@ -6,6 +6,8 @@ public class TodoCommon {
 	public static final int phaseMin = 0;
 	public static final int phaseMax = 2;
 
+	public static final String todoCloneSuffix = " (cloned)";
+
 	public static final String boardPath = "/ff-todo/board";
 	public static final String todoPath = "/ff-todo/todo";
 	public static final String taskPath = "/ff-todo/task";
