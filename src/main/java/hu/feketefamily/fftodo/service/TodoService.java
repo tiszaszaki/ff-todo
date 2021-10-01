@@ -3,6 +3,7 @@ package hu.feketefamily.fftodo.service;
 import static hu.feketefamily.fftodo.constants.ErrorMessages.TODO_NOT_EXIST_MESSAGE;
 
 import hu.feketefamily.fftodo.constants.TodoCommon;
+import hu.feketefamily.fftodo.model.repository.TaskRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -29,6 +30,9 @@ public class TodoService {
 
 	@Autowired
 	private TodoRepository todoRepository;
+
+	@Autowired
+	private TaskRepository taskRepository;
 
 	public final Integer phaseMin= TodoCommon.phaseMin;
 	public final Integer phaseMax= TodoCommon.phaseMax;
@@ -167,7 +171,19 @@ public class TodoService {
 	public void cloneTodo(Long id, Integer phase) {
 		if (todoRepository.cloneById(id, phase, new Date()) >= 1)
 		{
+			Todo tempTodo = getTodo(id);
+			Integer results;
+
 			log.info("Successfully cloned Todo with id {{}}", id);
+
+			if ((results = taskRepository.cloneByTodoId(id, tempTodo.getName())) >= 1)
+			{
+				log.info("Successfully cloned {} Tasks from Todo with id {{}}", results, id);
+			}
+			else
+			{
+				log.warn("No Tasks were cloned with from Todo with id {{}}", id);
+			}
 		}
 		else
 		{

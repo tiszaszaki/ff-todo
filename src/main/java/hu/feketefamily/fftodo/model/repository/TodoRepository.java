@@ -15,9 +15,10 @@ import java.util.List;
 @Repository
 public interface TodoRepository extends JpaRepository<Todo, Long> {
 	@Modifying
-	@Query("INSERT into Todo (name, description, phase, dateCreated, dateModified, board)\n" +
-		"select concat(t2.name,'" + TodoCommon.todoCloneSuffix + "'), t2.description, :phase, " +
-		":date_new, :date_new, t2.board from Todo as t2 where t2.id = :id")
+	@Query(
+		"INSERT INTO Todo (name, description, phase, dateCreated, dateModified, board)\n" +
+		"SELECT CONCAT(t2.name,'" + TodoCommon.todoCloneSuffix + "'), t2.description, :phase, " +
+		":date_new, :date_new, t2.board FROM Todo AS t2 WHERE t2.id = :id\n")
 	int cloneById(@Param("id") Long id, @Param("phase") Integer phase, @Param("date_new") Date dateNew);
 
 	@Modifying
