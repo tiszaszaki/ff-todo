@@ -70,9 +70,9 @@ public class TodoController {
 		return ResponseEntity.ok().build();
 	}
 
-	@PatchMapping("/{id}/clone/{phase}")
-	public ResponseEntity<Void> cloneTodo(@PathVariable Long id, @PathVariable Integer phase) {
-		todoService.cloneTodo(id, phase);
+	@PatchMapping("/{id}/clone/{phase}/{board}")
+	public ResponseEntity<Void> cloneTodo(@PathVariable Long id, @PathVariable Integer phase, @PathVariable("board") Long boardId) {
+		todoService.cloneTodo(id, phase, boardId);
 		return ResponseEntity.ok().build();
 	}
 

@@ -168,13 +168,13 @@ public class TodoService {
 	}
 
 	@Transactional
-	public void cloneTodo(Long id, Integer phase) {
-		if (todoRepository.cloneById(id, phase, new Date()) >= 1)
+	public void cloneTodo(Long id, Integer phase, Long boardId) {
+		if (todoRepository.cloneById(id, phase, boardId, new Date()) >= 1)
 		{
 			Todo tempTodo = getTodo(id);
 			Integer results;
 
-			log.info("Successfully cloned Todo with id {{}}", id);
+			log.info("Successfully cloned Todo with id {{}} to phase {} on Board with id {{}}", id, phase, boardId);
 
 			if ((results = taskRepository.cloneByTodoId(id, tempTodo.getName())) >= 1)
 			{
