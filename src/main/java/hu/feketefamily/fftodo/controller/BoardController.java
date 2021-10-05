@@ -41,9 +41,8 @@ public class BoardController {
 	}
 
 	@PutMapping
-	public ResponseEntity<Todo> addBoard(@RequestBody Board board) {
-		boardService.addBoard(board);
-		return ResponseEntity.ok().build();
+	public ResponseEntity<Board> addBoard(@RequestBody Board board) {
+		return ResponseEntity.ok(boardService.addBoard(board));
 	}
 
 	@DeleteMapping("/{id}")
