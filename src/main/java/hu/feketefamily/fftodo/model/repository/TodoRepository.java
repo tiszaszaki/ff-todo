@@ -22,8 +22,10 @@ public interface TodoRepository extends JpaRepository<Todo, Long> {
 	int cloneById(@Param("id") Long id, @Param("phase") Integer phase, @Param("boardId") Long boardId, @Param("date_new") Date dateNew);
 
 	@Modifying
-	@Query("UPDATE Todo t SET t.name = :name, t.description = :description, t.phase = :phase, t.dateModified= :now WHERE t.id = :id")
-	int updateById(@Param("id") Long id, @Param("name") String name, @Param("description") String description, @Param("phase") int phase, @Param("now") Date dateModified);
+	@Query("UPDATE Todo t SET t.name = :name, t.description = :description, t.phase = :phase," +
+		"t.dateModified = :now, t.deadline = :deadline WHERE t.id = :id")
+	int updateById(@Param("id") Long id, @Param("name") String name, @Param("description") String description, @Param("phase") int phase,
+				   @Param("now") Date dateModified, @Param("deadline") Date deadline);
 	int deleteByBoardId(Long boardId);
 	List<Todo> findByBoardId(Long boardId);
 }

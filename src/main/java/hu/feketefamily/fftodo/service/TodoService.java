@@ -157,7 +157,8 @@ public class TodoService {
 
 	@Transactional
 	public void updateTodo(Long id, @Valid Todo patchedTodo) {
-		if (todoRepository.updateById(id, patchedTodo.getName(), patchedTodo.getDescription(), patchedTodo.getPhase(), new Date()) >= 1)
+		if (todoRepository.updateById(id, patchedTodo.getName(), patchedTodo.getDescription(), patchedTodo.getPhase(),
+			new Date(), patchedTodo.getDeadline()) >= 1)
 		{
 			log.info("Successfully updated Todo with id {{}}: {}", id, patchedTodo);
 		}
