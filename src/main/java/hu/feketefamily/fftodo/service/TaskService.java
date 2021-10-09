@@ -74,7 +74,7 @@ public class TaskService {
 
 	@Transactional
 	public void updateTask(Long id, @Valid Task patchedTask) {
-		if (taskRepository.updateById(id, patchedTask.getName(), patchedTask.getDone()) >= 1)
+		if (taskRepository.updateById(id, patchedTask.getName(), patchedTask.getDone(), patchedTask.getDeadline()) >= 1)
 		{
 			Task tempTask=getTask(id);
 			Long todoId=tempTask.getTodo().getId();

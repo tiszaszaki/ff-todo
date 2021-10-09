@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 
 import hu.feketefamily.fftodo.model.entity.Task;
 
+import java.util.Date;
 import java.util.List;
 
 @Repository
@@ -22,8 +23,9 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
 	int cloneByTodoId(@Param("id") Long todoId, @Param("name") String todoName);
 
 	@Modifying
-	@Query("UPDATE Task t SET t.name = :name, t.done = :done WHERE t.id = :id")
-	int updateById(@Param("id") Long id, @Param("name") String name, @Param("done") Boolean done);
+	@Query("UPDATE Task t SET t.name = :name, t.done = :done, t.deadline = :deadline WHERE t.id = :id")
+	int updateById(@Param("id") Long id, @Param("name") String name, @Param("done") Boolean done,
+		@Param("deadline") Date deadline);
 	int deleteByTodoId(Long todoId);
 	List<Task> findByTodoId(Long todoId);
 	List<Task> findByTodoId(Long todoId, Sort sort);
