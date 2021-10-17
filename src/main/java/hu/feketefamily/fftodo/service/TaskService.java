@@ -31,20 +31,6 @@ public class TaskService {
 		return taskRepository.findById(id).orElseThrow(() -> new NotExistException(TASK_NOT_EXIST_MESSAGE) );
 	}
 
-	public List<Task> getTasksFromTodo(Long id)
-	{
-		List<Task> result = taskRepository.findByTodoId(id);
-		log.info("Queried " + result.size() + " Tasks from Todo with id {{}}", id);
-		return result;
-	}
-
-	public List<Task> getTasksSortedFromTodo(Long id, Sort.Direction dir, String propName)
-	{
-		List<Task> result = taskRepository.findByTodoId(id, Sort.by(dir, propName));
-		log.info("Queried " + result.size() + " sorted ({},'{}') Tasks from Todo with id {{}}", dir, propName, id);
-		return result;
-	}
-
 	public void addTask(Long todoId, Task task) {
 		task.setTodo(todoService.getTodo(todoId));
 		log.info("Saving Task for Todo with id {{}}: {{}}", todoId, task.toString());
@@ -62,14 +48,6 @@ public class TaskService {
 		} else {
 			log.warn("Deleting non-existing Task with id {{}}", id);
 		}
-	}
-
-	@Transactional
-	public void checkTask(Long id) {
-		Task tempTask=getTask(id);
-		tempTask.setDone(!tempTask.getDone());
-		log.info("Updating done status of Task with id {{}}", id);
-		updateTask(id, tempTask);
 	}
 
 	@Transactional

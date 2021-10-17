@@ -27,8 +27,6 @@ public class Todo {
 	@Size(max = TodoCommon.maxTodoDescriptionLength)
 	@Column(length = TodoCommon.maxTodoDescriptionLength)
 	private String description;
-	@Formula("LENGTH(description)")
-	private Long descriptionLength;
 	@NotNull
 	@Min(TodoCommon.phaseMin)
 	@Max(TodoCommon.phaseMax)
@@ -44,8 +42,6 @@ public class Todo {
 	private Date deadline;
 	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE, mappedBy = "todo")
 	private List<Task> tasks;
-	@Formula("(SELECT COUNT(t.todo_id) FROM Task t WHERE t.todo_id = id)")
-	private Long taskCount;
 	@ManyToOne
 	@JoinColumn(name = "board_id", nullable = false)
 	@JsonIgnore

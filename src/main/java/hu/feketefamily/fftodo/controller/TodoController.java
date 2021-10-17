@@ -39,25 +39,6 @@ public class TodoController {
 		return ResponseEntity.ok(todoService.getTodo(id));
 	}
 
-	@GetMapping("/sorted/{dir}/{propName}")
-	public ResponseEntity<List<Todo>> getTodosSorted(@PathVariable("dir") String dirStr, @PathVariable String propName) {
-		Sort.Direction dir=Sort.Direction.valueOf(dirStr.toUpperCase());
-		return ResponseEntity.ok(todoService.getTodosSorted(dir, propName));
-	}
-
-	@GetMapping("/{id}/tasks")
-	public ResponseEntity<List<Task>> getTasksFromTodo(@PathVariable Long id)
-	{
-		return ResponseEntity.ok(taskService.getTasksFromTodo(id));
-	}
-
-	@GetMapping("/{id}/tasks/sorted/{dir}/{propName}")
-	public ResponseEntity<List<Task>> getTasksSortedFromTodo(@PathVariable Long id, @PathVariable("dir") String dirStr, @PathVariable String propName)
-	{
-		Sort.Direction dir=Sort.Direction.valueOf(dirStr.toUpperCase());
-		return ResponseEntity.ok(taskService.getTasksSortedFromTodo(id, dir, propName));
-	}
-
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Void> removeTodo(@PathVariable Long id) {
 		todoService.removeTodo(id);
@@ -73,13 +54,6 @@ public class TodoController {
 	@PatchMapping("/{id}/clone/{phase}/{board}")
 	public ResponseEntity<Void> cloneTodo(@PathVariable Long id, @PathVariable Integer phase, @PathVariable("board") Long boardId) {
 		todoService.cloneTodo(id, phase, boardId);
-		return ResponseEntity.ok().build();
-	}
-
-	@PatchMapping("/{id}/shift/{dir}")
-	public ResponseEntity<Void> shiftTodo(@PathVariable Long id, @PathVariable("dir") String dirStr) {
-		TodoService.ShiftDirection dir=TodoService.ShiftDirection.valueOf(dirStr.toUpperCase());
-		todoService.shiftTodo(id, dir);
 		return ResponseEntity.ok().build();
 	}
 
