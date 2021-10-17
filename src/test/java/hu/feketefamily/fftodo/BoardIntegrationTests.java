@@ -97,6 +97,20 @@ public class BoardIntegrationTests {
 	}
 
 	@Test
+	void removeExistingBoard() throws Exception {
+		Long existingBoardId = boardService.addBoard(
+			Board.builder()
+				.name(VALID_NAME + "5")
+				.description(VALID_DESCRIPTION)
+				.author(VALID_AUTHOR)
+				.build()
+		).getId();
+		mockMvc.perform(
+			delete(TodoCommon.boardPath + "/" + existingBoardId)
+		).andExpect(status().is(HttpStatus.OK.value()));
+	}
+
+	@Test
 	void updateNonExistentBoard() throws Exception {
 		mockMvc.perform(
 			patch(TodoCommon.boardPath + "/" + NON_EXISTENT_ID)
@@ -111,9 +125,31 @@ public class BoardIntegrationTests {
 		).andExpect(status().is(HttpStatus.OK.value()));
 	}
 
+	@Test
+	void updateValidBoard() throws Exception {
+		Long validBoardId = boardService.addBoard(
+			Board.builder()
+				.name(VALID_NAME + "3")
+				.description(VALID_DESCRIPTION)
+				.author(VALID_AUTHOR)
+				.build()
+		).getId();
+		mockMvc.perform(
+			patch(TodoCommon.boardPath + "/" + validBoardId)
+				.content(mapper.writeValueAsString(
+					Board.builder()
+						.name(VALID_NAME + "4")
+						.description(VALID_DESCRIPTION)
+						.author(VALID_AUTHOR)
+						.build()
+				))
+				.contentType(MediaType.APPLICATION_JSON)
+		).andExpect(status().is(HttpStatus.OK.value()));
+	}
+
 	@ParameterizedTest
 	@MethodSource("provideInvalidBoards")
-	void updateInvalidTodo(Board invalidBoard) throws Exception {
+	void updateInvalidBoard(Board invalidBoard) throws Exception {
 		mockMvc.perform(
 			patch(TodoCommon.boardPath + "/" + NON_EXISTENT_ID)
 				.content(mapper.writeValueAsString(invalidBoard))
@@ -126,7 +162,7 @@ public class BoardIntegrationTests {
 		mockMvc.perform(
 			get(TodoCommon.boardPath + "/" + "description-max-length")
 		).andExpect(status().is(HttpStatus.OK.value())
-		).andExpect(content().string(Long.toString(TodoCommon.maxTodoDescriptionLength)));
+		).andExpect(content().string(Long.toString(TodoCommon.maxBoardDescriptionLength)));
 	}
 
 	private static Stream<Arguments> provideInvalidBoards() {
