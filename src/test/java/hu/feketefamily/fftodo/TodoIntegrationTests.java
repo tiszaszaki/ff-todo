@@ -11,6 +11,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import hu.feketefamily.fftodo.model.entity.Task;
 import hu.feketefamily.fftodo.service.TaskService;
 import hu.feketefamily.fftodo.service.TodoService;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -24,6 +25,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.List;
 import java.util.stream.Stream;
 import hu.feketefamily.fftodo.constants.ErrorMessages;
 import hu.feketefamily.fftodo.constants.TodoCommon;
@@ -233,6 +235,8 @@ class TodoIntegrationTests {
 
 	@Test
 	void clearNonEmptyTodoList() throws Exception {
+		List<Todo> todos = todoService.getTodosFromBoard(VALID_BOARD_ID);
+		Assertions.assertNotEquals(0, todos.size());
 		todoService.addTodo(
 			VALID_BOARD_ID,
 			Todo.builder()
@@ -248,6 +252,8 @@ class TodoIntegrationTests {
 
 	@Test
 	void clearEmptyTodoList() throws Exception {
+		List<Todo> todos = todoService.getTodosFromBoard(EMPTY_BOARD_ID);
+		Assertions.assertEquals(0, todos.size());
 		mockMvc.perform(
 			delete(TodoCommon.boardTodoPath(EMPTY_BOARD_ID) + "/clear")
 		).andExpect(status().is(HttpStatus.OK.value()));

@@ -29,11 +29,11 @@ public class TaskService {
 		return taskRepository.findById(id).orElseThrow(() -> new NotExistException(TASK_NOT_EXIST_MESSAGE) );
 	}
 
-	public void addTask(Long todoId, Task task) {
+	public Task addTask(Long todoId, Task task) {
 		task.setTodo(todoService.getTodo(todoId));
 		log.info("Saving Task for Todo with id {{}}: {{}}", todoId, task.toString());
-		taskRepository.save(task);
 		todoService.updateTodoDate(todoId);
+		return taskRepository.save(task);
 	}
 
 	public void removeTask(Long id) {

@@ -57,9 +57,8 @@ public class TodoController {
 	}
 
 	@PutMapping("/{id}/task")
-	public ResponseEntity<Void> addTask(@PathVariable Long id, @RequestBody Task task) {
-		taskService.addTask(id, task);
-		return ResponseEntity.ok().build();
+	public ResponseEntity<Task> addTask(@PathVariable Long id, @RequestBody Task task) {
+		return ResponseEntity.ok(taskService.addTask(id, task));
 	}
 
 	@DeleteMapping("/{id}/task/clear")

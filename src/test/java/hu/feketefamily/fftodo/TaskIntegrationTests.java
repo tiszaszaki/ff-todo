@@ -40,6 +40,7 @@ class TaskIntegrationTests {
 	private static Long VALID_TODO_ID;
 	private static final Long INVALID_TODO_ID = 666L;
 
+	private static Long NON_EMPTY_TASKLIST_TODO_ID;
 	private static Long EMPTY_TASKLIST_TODO_ID;
 
 	@Autowired
@@ -67,38 +68,51 @@ class TaskIntegrationTests {
 				.build()
 		).getId();
 
-		todoService.addTodo(
+		VALID_TODO_ID = todoService.addTodo(
 			validBoardId,
 			Todo.builder()
 				.name("todo")
 				.description("todo description")
 				.phase(1)
 				.build()
-		);
-		VALID_TODO_ID = todoService.getTodos().get(0).getId();
-		taskService.addTask(
+		).getId();
+		VALID_ID = taskService.addTask(
 			VALID_TODO_ID,
 			Task.builder()
 				.name(VALID_NAME)
 				.done(VALID_DONE)
 				.build()
-		);
-		VALID_ID = todoService.getTodo(VALID_TODO_ID).getTasks().get(0).getId();
+		).getId();
 
-		todoService.addTodo(
+		NON_EMPTY_TASKLIST_TODO_ID = todoService.addTodo(
 			validBoardId,
 			Todo.builder()
-				.name("todo with empty task list")
+				.name("todo with only one Task")
 				.description("todo description")
 				.phase(1)
 				.build()
-		);
-		EMPTY_TASKLIST_TODO_ID = todoService.getTodos().get(0).getId();
+		).getId();
+		taskService.addTask(
+			NON_EMPTY_TASKLIST_TODO_ID,
+			Task.builder()
+				.name(VALID_NAME)
+				.done(VALID_DONE)
+				.build()
+		).getId();
+
+		EMPTY_TASKLIST_TODO_ID = todoService.addTodo(
+			validBoardId,
+			Todo.builder()
+				.name("todo with empty Task list")
+				.description("todo description")
+				.phase(1)
+				.build()
+		).getId();
 	}
 
 	@Test
 	void addValidTask() throws Exception {
-		Long initTaskCount = 2L;
+		Long initTaskCount = 1L;
 		List<Task> tasks = todoService.getTodo(VALID_TODO_ID).getTasks();
 		Assertions.assertEquals(initTaskCount, tasks.size());
 
@@ -200,13 +214,17 @@ class TaskIntegrationTests {
 
 	@Test
 	void clearNonEmptyTaskList() throws Exception {
+		List<Task> tasks = todoService.getTodo(NON_EMPTY_TASKLIST_TODO_ID).getTasks();
+		Assertions.assertNotEquals(0, tasks.size());
 		mockMvc.perform(
-			delete(TodoCommon.todoTaskPath(VALID_TODO_ID) + "/clear")
+			delete(TodoCommon.todoTaskPath(NON_EMPTY_TASKLIST_TODO_ID) + "/clear")
 		).andExpect(status().is(HttpStatus.OK.value()));
 	}
 
 	@Test
 	void clearEmptyTaskList() throws Exception {
+		List<Task> tasks = todoService.getTodo(EMPTY_TASKLIST_TODO_ID).getTasks();
+		Assertions.assertEquals(0, tasks.size());
 		mockMvc.perform(
 			delete(TodoCommon.todoTaskPath(EMPTY_TASKLIST_TODO_ID) + "/clear")
 		).andExpect(status().is(HttpStatus.OK.value()));
