@@ -1,6 +1,5 @@
 package hu.feketefamily.fftodo;
 
-import hu.feketefamily.fftodo.constants.TodoCommon;
 import hu.feketefamily.fftodo.model.repository.TodoRepository;
 import hu.feketefamily.fftodo.service.TodoService;
 import org.junit.jupiter.api.Test;

@@ -45,7 +45,7 @@ class TodoIntegrationTests {
 	private static final String VALID_NAME = "validName";
 	private static final String VALID_DESCRIPTION = "validDescription";
 	private static final int VALID_PHASE = 0;
-	private static final Long NON_EXISTENT_ID = 1L;
+	private static final Long NON_EXISTENT_ID = 666L;
 
 	@Autowired
 	private BoardService boardService;

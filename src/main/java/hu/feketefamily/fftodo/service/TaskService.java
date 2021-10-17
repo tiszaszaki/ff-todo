@@ -2,7 +2,6 @@ package hu.feketefamily.fftodo.service;
 
 import hu.feketefamily.fftodo.exception.NotExistException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
@@ -12,7 +11,6 @@ import hu.feketefamily.fftodo.model.repository.TaskRepository;
 import lombok.extern.log4j.Log4j2;
 
 import javax.validation.Valid;
-import java.util.List;
 
 import static hu.feketefamily.fftodo.constants.ErrorMessages.TASK_NOT_EXIST_MESSAGE;
 

@@ -98,8 +98,9 @@ class TaskIntegrationTests {
 
 	@Test
 	void addValidTask() throws Exception {
+		Long initTaskCount = 2L;
 		List<Task> tasks = todoService.getTodo(VALID_TODO_ID).getTasks();
-		Assertions.assertEquals(1, tasks.size());
+		Assertions.assertEquals(initTaskCount, tasks.size());
 
 		mockMvc.perform(
 			put(TodoCommon.todoTaskPath(VALID_TODO_ID))
@@ -113,7 +114,7 @@ class TaskIntegrationTests {
 		).andExpect(status().is(HttpStatus.OK.value()));
 
 		tasks = todoService.getTodo(VALID_TODO_ID).getTasks();
-		Assertions.assertEquals(2, tasks.size());
+		Assertions.assertEquals(initTaskCount + 1, tasks.size());
 		Task task = tasks.get(1);
 		Assertions.assertEquals(VALID_NAME, task.getName());
 		Assertions.assertEquals(VALID_DONE, task.getDone());
