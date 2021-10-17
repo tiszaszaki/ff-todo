@@ -77,7 +77,7 @@ public class BoardService {
 
 	@Transactional
 	public void setReadonlyTodos(Long id, Boolean readonly) {
-		readonly = !getBoard(id).getReadonlyTodos();
+		//readonly = !getBoard(id).getReadonlyTodos();
 		if (boardRepository.updateReadonlyTodos(id, readonly) >= 1)
 		{
 			log.info("Successfully updated Read-only Todos setting for Board with id {{}} to {}", id, readonly);
@@ -93,7 +93,7 @@ public class BoardService {
 
 	@Transactional
 	public void setReadonlyTasks(Long id, Boolean readonly) {
-		readonly = !getBoard(id).getReadonlyTasks();
+		//readonly = !getBoard(id).getReadonlyTasks();
 		if (boardRepository.updateReadonlyTasks(id, readonly) >= 1)
 		{
 			log.info("Successfully updated Read-only Tasks setting for Board with id {{}} to {}", id, readonly);

@@ -5,6 +5,7 @@ import hu.feketefamily.fftodo.constants.ErrorMessages;
 import hu.feketefamily.fftodo.constants.TodoCommon;
 import hu.feketefamily.fftodo.model.entity.Board;
 import hu.feketefamily.fftodo.service.BoardService;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -28,6 +29,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class BoardIntegrationTests {
+	private static Long VALID_BOARD_ID;
+
 	private static final String VALID_NAME = "validName";
 	private static final String VALID_DESCRIPTION = "validDescription";
 	private static final String VALID_AUTHOR = "validAuthor";
@@ -42,13 +45,24 @@ public class BoardIntegrationTests {
 	@Autowired
 	private ObjectMapper mapper;
 
+	@BeforeAll
+	void beforeAll() {
+		VALID_BOARD_ID = boardService.addBoard(
+			Board.builder()
+				.name(VALID_NAME)
+				.description(VALID_DESCRIPTION)
+				.author(VALID_AUTHOR)
+				.build()
+		).getId();
+	}
+
 	@Test
 	void addValidBoard() throws Exception {
 		mockMvc.perform(
 			put(TodoCommon.boardPath)
 				.content(mapper.writeValueAsString(
 					Board.builder()
-						.name(VALID_NAME)
+						.name(VALID_NAME + "2")
 						.description(VALID_DESCRIPTION)
 						.author(VALID_AUTHOR)
 						.build()
@@ -70,15 +84,8 @@ public class BoardIntegrationTests {
 
 	@Test
 	void getExistingBoard() throws Exception {
-		Long validBoardId = boardService.addBoard(
-			Board.builder()
-				.name(VALID_NAME + "2")
-				.description(VALID_DESCRIPTION)
-				.author(VALID_AUTHOR)
-				.build()
-		).getId();
 		mockMvc.perform(
-			get(TodoCommon.boardPath + "/" + validBoardId)
+			get(TodoCommon.boardPath + "/" + VALID_BOARD_ID)
 		).andExpect(status().is(HttpStatus.OK.value()));
 	}
 
@@ -100,7 +107,7 @@ public class BoardIntegrationTests {
 	void removeExistingBoard() throws Exception {
 		Long existingBoardId = boardService.addBoard(
 			Board.builder()
-				.name(VALID_NAME + "5")
+				.name(VALID_NAME + "3")
 				.description(VALID_DESCRIPTION)
 				.author(VALID_AUTHOR)
 				.build()
@@ -129,7 +136,7 @@ public class BoardIntegrationTests {
 	void updateValidBoard() throws Exception {
 		Long validBoardId = boardService.addBoard(
 			Board.builder()
-				.name(VALID_NAME + "3")
+				.name(VALID_NAME + "4")
 				.description(VALID_DESCRIPTION)
 				.author(VALID_AUTHOR)
 				.build()
@@ -138,7 +145,7 @@ public class BoardIntegrationTests {
 			patch(TodoCommon.boardPath + "/" + validBoardId)
 				.content(mapper.writeValueAsString(
 					Board.builder()
-						.name(VALID_NAME + "4")
+						.name(VALID_NAME + "5")
 						.description(VALID_DESCRIPTION)
 						.author(VALID_AUTHOR)
 						.build()
@@ -163,6 +170,34 @@ public class BoardIntegrationTests {
 			get(TodoCommon.boardPath + "/" + "description-max-length")
 		).andExpect(status().is(HttpStatus.OK.value())
 		).andExpect(content().string(Long.toString(TodoCommon.maxBoardDescriptionLength)));
+	}
+
+	@ParameterizedTest
+	@MethodSource("provideBooleanValues")
+	void accessReadonlyTodoSetting(Boolean readonlyVal) throws Exception {
+		mockMvc.perform(
+			patch(TodoCommon.boardPath + "/" + VALID_BOARD_ID + "/readonly-todos/" + readonlyVal)
+		).andExpect(status().is(HttpStatus.OK.value()));
+		mockMvc.perform(
+			get(TodoCommon.boardPath + "/" + VALID_BOARD_ID + "/readonly-todos")
+		).andExpect(status().is(HttpStatus.OK.value())
+		).andExpect(content().string(Boolean.toString(readonlyVal)));
+	}
+
+	@ParameterizedTest
+	@MethodSource("provideBooleanValues")
+	void accessReadonlyTaskSetting(Boolean readonlyVal) throws Exception {
+		mockMvc.perform(
+			patch(TodoCommon.boardPath + "/" + VALID_BOARD_ID + "/readonly-tasks/" + readonlyVal)
+		).andExpect(status().is(HttpStatus.OK.value()));
+		mockMvc.perform(
+			get(TodoCommon.boardPath + "/" + VALID_BOARD_ID + "/readonly-tasks")
+		).andExpect(status().is(HttpStatus.OK.value())
+		).andExpect(content().string(Boolean.toString(readonlyVal)));
+	}
+
+	private static Stream<Arguments> provideBooleanValues() {
+		return Stream.of(Arguments.of(false), Arguments.of(true));
 	}
 
 	private static Stream<Arguments> provideInvalidBoards() {
