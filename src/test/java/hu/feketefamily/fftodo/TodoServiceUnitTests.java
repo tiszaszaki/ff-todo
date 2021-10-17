@@ -1,5 +1,6 @@
 package hu.feketefamily.fftodo;
 
+import hu.feketefamily.fftodo.constants.TodoCommon;
 import hu.feketefamily.fftodo.model.repository.TodoRepository;
 import hu.feketefamily.fftodo.service.TodoService;
 import org.junit.jupiter.api.Test;
@@ -12,7 +13,7 @@ import static org.mockito.Mockito.*;
 @SpringBootTest
 public class TodoServiceUnitTests {
 
-	private Long TEST_TODO_ID = 1L;
+	private static final Long TEST_TODO_ID = 1L;
 
 	@InjectMocks
 	private TodoService todoService;

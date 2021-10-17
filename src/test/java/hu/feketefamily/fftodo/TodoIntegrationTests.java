@@ -36,9 +36,6 @@ import hu.feketefamily.fftodo.service.BoardService;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class TodoIntegrationTests {
 
-	private static final String todoPath = TodoCommon.todoPath;
-	private static final String todoPath2 = todoPath + "/";
-
 	private static String VALID_TODO_CREATE_PATH;
 	private static String INVALID_TODO_CREATE_PATH;
 
@@ -140,7 +137,7 @@ class TodoIntegrationTests {
 				.build()
 		).getId();
 		mockMvc.perform(
-			get(todoPath2 + validTodoId)
+			get(TodoCommon.todoPath + "/" + validTodoId)
 		).andExpect(status().is(HttpStatus.OK.value()));
 	}
 
@@ -154,7 +151,7 @@ class TodoIntegrationTests {
 	@Test
 	void getTodos() throws Exception {
 		mockMvc.perform(
-			get(todoPath)
+			get(TodoCommon.todoPath)
 		).andExpect(status().is(HttpStatus.OK.value()));
 	}
 
@@ -169,7 +166,7 @@ class TodoIntegrationTests {
 				.build()
 		).getId();
 		mockMvc.perform(
-			patch(todoPath2 + validTodoId + "/clone/" + VALID_PHASE + "/" + VALID_BOARD_ID)
+			patch(TodoCommon.todoPath + "/" + validTodoId + "/clone/" + VALID_PHASE + "/" + VALID_BOARD_ID)
 		).andExpect(status().is(HttpStatus.OK.value()));
 	}
 
@@ -191,28 +188,28 @@ class TodoIntegrationTests {
 				.build()
 		);
 		mockMvc.perform(
-			patch(todoPath2 + validTodoId + "/clone/" + VALID_PHASE + "/" + VALID_BOARD_ID)
+			patch(TodoCommon.todoPath + "/" + validTodoId + "/clone/" + VALID_PHASE + "/" + VALID_BOARD_ID)
 		).andExpect(status().is(HttpStatus.OK.value()));
 	}
 
 	@Test
 	void cloneNonExistentTodo() throws Exception {
 		mockMvc.perform(
-			patch(todoPath2 + NON_EXISTENT_ID + "/clone/" + VALID_PHASE + "/" + VALID_BOARD_ID)
+			patch(TodoCommon.todoPath + "/" + NON_EXISTENT_ID + "/clone/" + VALID_PHASE + "/" + VALID_BOARD_ID)
 		).andExpect(status().is(HttpStatus.OK.value()));
 	}
 
 	@Test
 	void removeNonExistentTodo() throws Exception {
 		mockMvc.perform(
-			delete(todoPath2 + NON_EXISTENT_ID)
+			delete(TodoCommon.todoPath + "/" + NON_EXISTENT_ID)
 		).andExpect(status().is(HttpStatus.OK.value()));
 	}
 
 	@Test
 	void updateNonExistentTodo() throws Exception {
 		mockMvc.perform(
-			patch(todoPath2 + NON_EXISTENT_ID)
+			patch(TodoCommon.todoPath + "/" + NON_EXISTENT_ID)
 				.content(mapper.writeValueAsString(
 					Todo.builder()
 						.name(VALID_NAME)
@@ -228,7 +225,7 @@ class TodoIntegrationTests {
 	@MethodSource("provideInvalidTodos")
 	void updateInvalidTodo(Todo invalidTodo) throws Exception {
 		mockMvc.perform(
-			patch(todoPath2 + NON_EXISTENT_ID)
+			patch(TodoCommon.todoPath + "/" + NON_EXISTENT_ID)
 				.content(mapper.writeValueAsString(invalidTodo))
 				.contentType(MediaType.APPLICATION_JSON)
 		).andExpect(status().is(HttpStatus.BAD_REQUEST.value()));
@@ -254,6 +251,26 @@ class TodoIntegrationTests {
 		mockMvc.perform(
 			delete(TodoCommon.boardTodoPath(EMPTY_BOARD_ID) + "/clear")
 		).andExpect(status().is(HttpStatus.OK.value()));
+	}
+
+	@Test
+	void getDescriptionMaxLength() throws Exception {
+		mockMvc.perform(
+			get(TodoCommon.todoPath + "/" + "description-max-length")
+		).andExpect(status().is(HttpStatus.OK.value())
+		).andExpect(content().string(Long.toString(TodoCommon.maxTodoDescriptionLength)));
+	}
+
+	@Test
+	void getTodoPhaseRange() throws Exception {
+		String tempBodyStr = new StringBuilder()
+			.append("[").append(Long.toString(TodoCommon.phaseMin))
+			.append(",").append(Long.toString(TodoCommon.phaseMax))
+			.append("]").toString();
+		mockMvc.perform(
+			get(TodoCommon.todoPath + "/" + "phase-val-range")
+		).andExpect(status().is(HttpStatus.OK.value())
+		).andExpect(content().string(tempBodyStr));
 	}
 
 	private static Stream<Arguments> provideInvalidTodos() {

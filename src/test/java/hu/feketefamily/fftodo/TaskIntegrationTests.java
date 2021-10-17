@@ -33,20 +33,14 @@ import hu.feketefamily.fftodo.service.TodoService;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class TaskIntegrationTests {
 
-	private static final String todoPath = TodoCommon.todoPath + "/";
-	private static final String taskPath = TodoCommon.taskPath + "/";
-
-	private static final String todoTaskPath(Long id)
-	{
-		return todoPath + id + "/task";
-	}
-
 	private static final String VALID_NAME = "validName";
 	private static final Boolean VALID_DONE = true;
 	private static Long VALID_ID;
 	private static final Long NON_EXISTENT_ID = 123L;
 	private static Long VALID_TODO_ID;
 	private static final Long INVALID_TODO_ID = 666L;
+
+	private static Long EMPTY_TASKLIST_TODO_ID;
 
 	@Autowired
 	private BoardService boardService;
@@ -72,6 +66,7 @@ class TaskIntegrationTests {
 				.author("board author")
 				.build()
 		).getId();
+
 		todoService.addTodo(
 			validBoardId,
 			Todo.builder()
@@ -89,6 +84,16 @@ class TaskIntegrationTests {
 				.build()
 		);
 		VALID_ID = todoService.getTodo(VALID_TODO_ID).getTasks().get(0).getId();
+
+		todoService.addTodo(
+			validBoardId,
+			Todo.builder()
+				.name("todo with empty task list")
+				.description("todo description")
+				.phase(1)
+				.build()
+		);
+		EMPTY_TASKLIST_TODO_ID = todoService.getTodos().get(0).getId();
 	}
 
 	@Test
@@ -97,7 +102,7 @@ class TaskIntegrationTests {
 		Assertions.assertEquals(1, tasks.size());
 
 		mockMvc.perform(
-			put(todoTaskPath(VALID_TODO_ID))
+			put(TodoCommon.todoTaskPath(VALID_TODO_ID))
 			.content(mapper.writeValueAsString(
 				Task.builder()
 					.name(VALID_NAME)
@@ -117,7 +122,7 @@ class TaskIntegrationTests {
 	@Test
 	void addInvalidTask() throws Exception {
 		mockMvc.perform(
-			put(todoTaskPath(VALID_TODO_ID))
+			put(TodoCommon.todoTaskPath(VALID_TODO_ID))
 				.content(mapper.writeValueAsString(Task.builder().done(VALID_DONE).build()))
 				.contentType(MediaType.APPLICATION_JSON)
 		).andExpect(status().is(HttpStatus.BAD_REQUEST.value()))
@@ -127,7 +132,7 @@ class TaskIntegrationTests {
 	@Test
 	void addTaskToInvalidTodo() throws Exception {
 		mockMvc.perform(
-			put(todoTaskPath(INVALID_TODO_ID))
+			put(TodoCommon.todoTaskPath(INVALID_TODO_ID))
 				.content(mapper.writeValueAsString(
 					Task.builder()
 						.name(VALID_NAME)
@@ -142,7 +147,7 @@ class TaskIntegrationTests {
 	@Test
 	void updateNonExistentTask() throws Exception {
 		mockMvc.perform(
-			patch(taskPath + NON_EXISTENT_ID)
+			patch(TodoCommon.taskPath + "/" + NON_EXISTENT_ID)
 				.content(mapper.writeValueAsString(
 					Task.builder()
 						.name(VALID_NAME)
@@ -154,10 +159,26 @@ class TaskIntegrationTests {
 	}
 
 	@Test
+	void updateValidTasks() throws Exception {
+		mockMvc.perform(
+			patch(TodoCommon.taskPath + "/" + VALID_ID)
+				.content(mapper.writeValueAsString(
+					Task.builder()
+						.name(VALID_NAME)
+						.done(VALID_DONE)
+						.build()))
+				.contentType(MediaType.APPLICATION_JSON)
+		).andExpect(status().is(HttpStatus.OK.value()));
+	}
+
+	@Test
 	void updateInvalidTasks() throws Exception {
 		mockMvc.perform(
-			patch(taskPath + VALID_ID)
-				.content(mapper.writeValueAsString(Task.builder().done(VALID_DONE).build()))
+			patch(TodoCommon.taskPath + "/" + VALID_ID)
+				.content(mapper.writeValueAsString(
+					Task.builder()
+						.done(VALID_DONE)
+						.build()))
 				.contentType(MediaType.APPLICATION_JSON)
 		).andExpect(status().is(HttpStatus.BAD_REQUEST.value()));
 	}
@@ -165,14 +186,28 @@ class TaskIntegrationTests {
 	@Test
 	void removeExistingTask() throws Exception {
 		mockMvc.perform(
-			delete(taskPath + VALID_ID)
+			delete(TodoCommon.taskPath + "/" + VALID_ID)
 		).andExpect(status().is(HttpStatus.OK.value()));
 	}
 
 	@Test
 	void removeNonExistentTask() throws Exception {
 		mockMvc.perform(
-			delete(taskPath + NON_EXISTENT_ID)
+			delete(TodoCommon.taskPath + "/" + NON_EXISTENT_ID)
+		).andExpect(status().is(HttpStatus.OK.value()));
+	}
+
+	@Test
+	void clearNonEmptyTaskList() throws Exception {
+		mockMvc.perform(
+			delete(TodoCommon.todoTaskPath(VALID_TODO_ID) + "/clear")
+		).andExpect(status().is(HttpStatus.OK.value()));
+	}
+
+	@Test
+	void clearEmptyTaskList() throws Exception {
+		mockMvc.perform(
+			delete(TodoCommon.todoTaskPath(EMPTY_TASKLIST_TODO_ID) + "/clear")
 		).andExpect(status().is(HttpStatus.OK.value()));
 	}
 }
