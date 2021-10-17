@@ -11,4 +11,12 @@ public class TodoCommon {
 	public static final String boardPath = "/ff-todo/board";
 	public static final String todoPath = "/ff-todo/todo";
 	public static final String taskPath = "/ff-todo/task";
+
+	public static String boardTodoPath(Long id) {
+		return boardPath + "/" + id + "/todo";
+	}
+
+	public static String todoTaskPath(Long id) {
+		return todoPath + "/" + id + "/task";
+	}
 }

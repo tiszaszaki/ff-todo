@@ -8,6 +8,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import hu.feketefamily.fftodo.model.entity.Task;
+import hu.feketefamily.fftodo.service.TaskService;
+import hu.feketefamily.fftodo.service.TodoService;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -39,6 +42,9 @@ class TodoIntegrationTests {
 	private static String VALID_TODO_CREATE_PATH;
 	private static String INVALID_TODO_CREATE_PATH;
 
+	private static Long VALID_BOARD_ID;
+	private static Long EMPTY_BOARD_ID;
+
 	private static final String VALID_NAME = "validName";
 	private static final String VALID_DESCRIPTION = "validDescription";
 	private static final int VALID_PHASE = 0;
@@ -48,6 +54,12 @@ class TodoIntegrationTests {
 	private BoardService boardService;
 
 	@Autowired
+	private TodoService todoService;
+
+	@Autowired
+	private TaskService taskService;
+
+	@Autowired
 	private MockMvc mockMvc;
 
 	@Autowired
@@ -55,15 +67,24 @@ class TodoIntegrationTests {
 
 	@BeforeAll
 	void beforeAll() {
-		var validTodoId = boardService.addBoard(
+		VALID_BOARD_ID = boardService.addBoard(
 			Board.builder()
 				.name("todo testing board")
 				.description("board description")
 				.author("board author")
 				.build()
 		).getId();
-		VALID_TODO_CREATE_PATH = TodoCommon.boardPath + "/" + validTodoId + "/todo";
-		INVALID_TODO_CREATE_PATH = TodoCommon.boardPath + "/666/todo";
+
+		EMPTY_BOARD_ID = boardService.addBoard(
+			Board.builder()
+				.name("todo testing board 2")
+				.description("board description")
+				.author("board author")
+				.build()
+		).getId();
+
+		VALID_TODO_CREATE_PATH = TodoCommon.boardTodoPath(VALID_BOARD_ID);
+		INVALID_TODO_CREATE_PATH = TodoCommon.boardTodoPath(666L);
 	}
 
 	@Test
@@ -109,9 +130,75 @@ class TodoIntegrationTests {
 	}
 
 	@Test
+	void getExistingTodo() throws Exception {
+		Long validTodoId = todoService.addTodo(
+			VALID_BOARD_ID,
+			Todo.builder()
+				.name(VALID_NAME + "2")
+				.description(VALID_DESCRIPTION)
+				.phase(VALID_PHASE)
+				.build()
+		).getId();
+		mockMvc.perform(
+			get(todoPath2 + validTodoId)
+		).andExpect(status().is(HttpStatus.OK.value()));
+	}
+
+	@Test
+	void getTodosFromBoard() throws Exception {
+		mockMvc.perform(
+			get(TodoCommon.boardTodoPath(VALID_BOARD_ID) + "s")
+		).andExpect(status().is(HttpStatus.OK.value()));
+	}
+
+	@Test
 	void getTodos() throws Exception {
 		mockMvc.perform(
 			get(todoPath)
+		).andExpect(status().is(HttpStatus.OK.value()));
+	}
+
+	@Test
+	void cloneExistingTodo() throws Exception {
+		Long validTodoId = todoService.addTodo(
+			VALID_BOARD_ID,
+			Todo.builder()
+				.name(VALID_NAME + "3")
+				.description(VALID_DESCRIPTION)
+				.phase(VALID_PHASE)
+				.build()
+		).getId();
+		mockMvc.perform(
+			patch(todoPath2 + validTodoId + "/clone/" + VALID_PHASE + "/" + VALID_BOARD_ID)
+		).andExpect(status().is(HttpStatus.OK.value()));
+	}
+
+	@Test
+	void cloneExistingTodoWithTasks() throws Exception {
+		Long validTodoId = todoService.addTodo(
+			VALID_BOARD_ID,
+			Todo.builder()
+				.name(VALID_NAME + "4")
+				.description(VALID_DESCRIPTION)
+				.phase(VALID_PHASE)
+				.build()
+		).getId();
+		taskService.addTask(
+			validTodoId,
+			Task.builder()
+				.name("task-" + VALID_NAME)
+				.done(false)
+				.build()
+		);
+		mockMvc.perform(
+			patch(todoPath2 + validTodoId + "/clone/" + VALID_PHASE + "/" + VALID_BOARD_ID)
+		).andExpect(status().is(HttpStatus.OK.value()));
+	}
+
+	@Test
+	void cloneNonExistentTodo() throws Exception {
+		mockMvc.perform(
+			patch(todoPath2 + NON_EXISTENT_ID + "/clone/" + VALID_PHASE + "/" + VALID_BOARD_ID)
 		).andExpect(status().is(HttpStatus.OK.value()));
 	}
 
@@ -145,6 +232,28 @@ class TodoIntegrationTests {
 				.content(mapper.writeValueAsString(invalidTodo))
 				.contentType(MediaType.APPLICATION_JSON)
 		).andExpect(status().is(HttpStatus.BAD_REQUEST.value()));
+	}
+
+	@Test
+	void clearNonEmptyTodoList() throws Exception {
+		todoService.addTodo(
+			VALID_BOARD_ID,
+			Todo.builder()
+				.name(VALID_NAME + "5")
+				.description(VALID_DESCRIPTION)
+				.phase(VALID_PHASE)
+				.build()
+		).getId();
+		mockMvc.perform(
+			delete(TodoCommon.boardTodoPath(VALID_BOARD_ID) + "/clear")
+		).andExpect(status().is(HttpStatus.OK.value()));
+	}
+
+	@Test
+	void clearEmptyTodoList() throws Exception {
+		mockMvc.perform(
+			delete(TodoCommon.boardTodoPath(EMPTY_BOARD_ID) + "/clear")
+		).andExpect(status().is(HttpStatus.OK.value()));
 	}
 
 	private static Stream<Arguments> provideInvalidTodos() {

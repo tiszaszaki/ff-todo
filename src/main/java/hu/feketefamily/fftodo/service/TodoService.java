@@ -5,7 +5,6 @@ import static hu.feketefamily.fftodo.constants.ErrorMessages.TODO_NOT_EXIST_MESS
 import hu.feketefamily.fftodo.constants.TodoCommon;
 import hu.feketefamily.fftodo.model.repository.TaskRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
