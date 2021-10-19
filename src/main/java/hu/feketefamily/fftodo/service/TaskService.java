@@ -38,11 +38,13 @@ public class TaskService {
 
 	public void removeTask(Long id) {
 		if (taskRepository.existsById(id)) {
-			Task tempTask=getTask(id);
-			Long todoId=tempTask.getTodo().getId();
 			log.info("Deleting Task with id: {{}}", id);
+			try {
+				Task tempTask = getTask(id);
+				Long todoId = tempTask.getTodo().getId();
+				todoService.updateTodoDate(todoId);
+			} catch (NotExistException e) { }
 			taskRepository.deleteById(id);
-			todoService.updateTodoDate(todoId);
 		} else {
 			log.warn("Deleting non-existing Task with id {{}}", id);
 		}
