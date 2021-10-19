@@ -1,4 +1,4 @@
-package hu.feketefamily.fftodo;
+package hu.feketefamily.fftodo.integrationtests;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import hu.feketefamily.fftodo.constants.ErrorMessages;

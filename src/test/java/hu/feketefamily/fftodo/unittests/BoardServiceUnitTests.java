@@ -1,4 +1,4 @@
-package hu.feketefamily.fftodo;
+package hu.feketefamily.fftodo.unittests;
 
 import hu.feketefamily.fftodo.model.repository.BoardRepository;
 import hu.feketefamily.fftodo.service.BoardService;

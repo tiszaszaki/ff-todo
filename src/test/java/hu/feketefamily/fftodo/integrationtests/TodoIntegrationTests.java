@@ -1,4 +1,4 @@
-package hu.feketefamily.fftodo;
+package hu.feketefamily.fftodo.integrationtests;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
