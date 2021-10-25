@@ -34,7 +34,7 @@ public class BoardController {
 	@GetMapping("/{id}/todos")
 	public ResponseEntity<List<Todo>> getTodosFromBoard(@PathVariable Long id)
 	{
-		return ResponseEntity.ok(todoService.getTodosFromBoard(id));
+		return ResponseEntity.ok(todoService.getTodosFromBoard(id, true));
 	}
 
 	@PutMapping

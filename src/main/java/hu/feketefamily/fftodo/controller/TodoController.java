@@ -30,12 +30,12 @@ public class TodoController {
 
 	@GetMapping
 	public ResponseEntity<List<Todo>> getTodos() {
-		return ResponseEntity.ok(todoService.getTodos());
+		return ResponseEntity.ok(todoService.getTodos(true));
 	}
 
 	@GetMapping("/{id}")
 	public ResponseEntity<Todo> getTodo(@PathVariable Long id) {
-		return ResponseEntity.ok(todoService.getTodo(id));
+		return ResponseEntity.ok(todoService.getTodo(id, true));
 	}
 
 	@DeleteMapping("/{id}")

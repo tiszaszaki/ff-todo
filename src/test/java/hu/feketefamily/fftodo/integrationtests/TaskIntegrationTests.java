@@ -113,7 +113,7 @@ class TaskIntegrationTests {
 	@Test
 	void addValidTask() throws Exception {
 		Long initTaskCount = 1L;
-		List<Task> tasks = todoService.getTodo(VALID_TODO_ID).getTasks();
+		List<Task> tasks = todoService.getTodo(VALID_TODO_ID, false).getTasks();
 		Assertions.assertEquals(initTaskCount, tasks.size());
 
 		mockMvc.perform(
@@ -127,7 +127,7 @@ class TaskIntegrationTests {
 			.contentType(MediaType.APPLICATION_JSON)
 		).andExpect(status().is(HttpStatus.OK.value()));
 
-		tasks = todoService.getTodo(VALID_TODO_ID).getTasks();
+		tasks = todoService.getTodo(VALID_TODO_ID, false).getTasks();
 		Assertions.assertEquals(initTaskCount + 1, tasks.size());
 		Task task = tasks.get(1);
 		Assertions.assertEquals(VALID_NAME, task.getName());
@@ -214,7 +214,7 @@ class TaskIntegrationTests {
 
 	@Test
 	void clearNonEmptyTaskList() throws Exception {
-		List<Task> tasks = todoService.getTodo(NON_EMPTY_TASKLIST_TODO_ID).getTasks();
+		List<Task> tasks = todoService.getTodo(NON_EMPTY_TASKLIST_TODO_ID, false).getTasks();
 		Assertions.assertNotEquals(0, tasks.size());
 		mockMvc.perform(
 			delete(TodoCommon.todoTaskPath(NON_EMPTY_TASKLIST_TODO_ID) + "/clear")
@@ -223,7 +223,7 @@ class TaskIntegrationTests {
 
 	@Test
 	void clearEmptyTaskList() throws Exception {
-		List<Task> tasks = todoService.getTodo(EMPTY_TASKLIST_TODO_ID).getTasks();
+		List<Task> tasks = todoService.getTodo(EMPTY_TASKLIST_TODO_ID, false).getTasks();
 		Assertions.assertEquals(0, tasks.size());
 		mockMvc.perform(
 			delete(TodoCommon.todoTaskPath(EMPTY_TASKLIST_TODO_ID) + "/clear")

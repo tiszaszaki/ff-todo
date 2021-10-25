@@ -30,7 +30,7 @@ public class TaskService {
 	}
 
 	public Task addTask(Long todoId, Task task) {
-		task.setTodo(todoService.getTodo(todoId));
+		task.setTodo(todoService.getTodo(todoId, false));
 		log.info("Saving Task for Todo with id {{}}: {{}}", todoId, task.toString());
 		todoService.updateTodoDate(todoId);
 		return taskRepository.save(task);

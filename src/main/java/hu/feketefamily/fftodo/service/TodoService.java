@@ -3,6 +3,7 @@ package hu.feketefamily.fftodo.service;
 import static hu.feketefamily.fftodo.constants.ErrorMessages.TODO_NOT_EXIST_MESSAGE;
 
 import hu.feketefamily.fftodo.constants.TodoCommon;
+import hu.feketefamily.fftodo.model.entity.Task;
 import hu.feketefamily.fftodo.model.repository.TaskRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -36,20 +37,40 @@ public class TodoService {
 	public final Integer phaseMin= TodoCommon.phaseMin;
 	public final Integer phaseMax= TodoCommon.phaseMax;
 
-	public Todo getTodo(Long id) {
-		return todoRepository.findById(id).orElseThrow(() -> new NotExistException(TODO_NOT_EXIST_MESSAGE) );
-	}
-
-	public List<Todo> getTodos() {
-		List<Todo> result = todoRepository.findAll();
-		log.info("Queried " + result.size() + " Todos");
+	public Todo getTodo(Long id, Boolean logTaskList) {
+		Todo result = todoRepository.findById(id).orElseThrow(() -> new NotExistException(TODO_NOT_EXIST_MESSAGE) );
+		if (logTaskList)
+		{
+			Integer i = 0;
+			for (Task t : result.getTasks()) {
+				log.info("Task #{} for Todo with ID {{}}: {}", ++i, result.getId(), t.toString());
+			}
+		}
 		return result;
 	}
 
-	public List<Todo> getTodosFromBoard(Long id)
+	public List<Todo> getTodos(Boolean logPerTodo) {
+		List<Todo> result = todoRepository.findAll();
+		log.info("Queried {} Todos", result.size());
+		if (logPerTodo) {
+			Integer i = 0;
+			for (Todo t : result) {
+				log.info("Todo #{}: {}", ++i, t.toString());
+			}
+		}
+		return result;
+	}
+
+	public List<Todo> getTodosFromBoard(Long id, Boolean logPerTodo)
 	{
 		List<Todo> result = todoRepository.findByBoardId(id);
-		log.info("Queried " + result.size() + " Todos from Board with id {{}}", id);
+		log.info("Queried {} Todos from Board with id {{}}", result.size(), id);
+		if (logPerTodo) {
+			Integer i = 0;
+			for (Todo t : result) {
+				log.info("Todo #{}: {}", ++i, t.toString());
+			}
+		}
 		return result;
 	}
 
@@ -96,7 +117,7 @@ public class TodoService {
 	@Transactional
 	public void updateTodoDate(Long id)
 	{
-		Todo tempTodo=getTodo(id);
+		Todo tempTodo=getTodo(id, false);
 		tempTodo.setDateModified(new Date());
 		log.info("Refreshing date modified for Todo with id {{}}", id);
 		updateTodo(id, tempTodo);
@@ -119,7 +140,7 @@ public class TodoService {
 	public void cloneTodo(Long id, Integer phase, Long boardId) {
 		if (todoRepository.cloneById(id, phase, boardId, new Date()) >= 1)
 		{
-			Todo tempTodo = getTodo(id);
+			Todo tempTodo = getTodo(id, false);
 			Integer results;
 
 			log.info("Successfully cloned Todo with id {{}} to phase {} on Board with id {{}}", id, phase, boardId);

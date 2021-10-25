@@ -235,7 +235,7 @@ class TodoIntegrationTests {
 
 	@Test
 	void clearNonEmptyTodoList() throws Exception {
-		List<Todo> todos = todoService.getTodosFromBoard(VALID_BOARD_ID);
+		List<Todo> todos = todoService.getTodosFromBoard(VALID_BOARD_ID, false);
 		Assertions.assertNotEquals(0, todos.size());
 		todoService.addTodo(
 			VALID_BOARD_ID,
@@ -252,7 +252,7 @@ class TodoIntegrationTests {
 
 	@Test
 	void clearEmptyTodoList() throws Exception {
-		List<Todo> todos = todoService.getTodosFromBoard(EMPTY_BOARD_ID);
+		List<Todo> todos = todoService.getTodosFromBoard(EMPTY_BOARD_ID, false);
 		Assertions.assertEquals(0, todos.size());
 		mockMvc.perform(
 			delete(TodoCommon.boardTodoPath(EMPTY_BOARD_ID) + "/clear")
