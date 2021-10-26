@@ -49,6 +49,10 @@ public class TodoService {
 		return result;
 	}
 
+	public Todo getTodoByName(String name) {
+		return todoRepository.findByName(name).orElseThrow(() -> new NotExistException(TODO_NOT_EXIST_MESSAGE) );
+	}
+
 	public List<Todo> getTodos(Boolean logPerTodo) {
 		List<Todo> result = todoRepository.findAll();
 		log.info("Queried {} Todos", result.size());

@@ -11,6 +11,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import hu.feketefamily.fftodo.model.entity.Task;
 import hu.feketefamily.fftodo.service.TaskService;
 import hu.feketefamily.fftodo.service.TodoService;
+import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -33,6 +34,7 @@ import hu.feketefamily.fftodo.model.entity.Board;
 import hu.feketefamily.fftodo.model.entity.Todo;
 import hu.feketefamily.fftodo.service.BoardService;
 
+@Log4j2
 @SpringBootTest
 @AutoConfigureMockMvc
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -144,6 +146,43 @@ class TodoIntegrationTests {
 	}
 
 	@Test
+	void getExistingTodoWithTasks() throws Exception {
+		Long validTodoId = todoService.addTodo(
+			VALID_BOARD_ID,
+			Todo.builder()
+				.name(VALID_NAME + "2")
+				.description(VALID_DESCRIPTION)
+				.phase(VALID_PHASE)
+				.build()
+		).getId();
+		taskService.addTask(
+			validTodoId,
+			Task.builder()
+				.name("task-" + VALID_NAME + "-2")
+				.done(true)
+				.build()
+		);
+		mockMvc.perform(
+			get(TodoCommon.todoPath + "/" + validTodoId)
+		).andExpect(status().is(HttpStatus.OK.value()));
+	}
+
+	@Test
+	void getExistingTodoByName() throws Exception {
+		String validTodoName = todoService.addTodo(
+			VALID_BOARD_ID,
+			Todo.builder()
+				.name(VALID_NAME + "2B")
+				.description(VALID_DESCRIPTION)
+				.phase(VALID_PHASE)
+				.build()
+		).getName();
+		mockMvc.perform(
+			get(TodoCommon.todoPath + "/name/" + validTodoName)
+		).andExpect(status().is(HttpStatus.OK.value()));
+	}
+
+	@Test
 	void getTodosFromBoard() throws Exception {
 		mockMvc.perform(
 			get(TodoCommon.boardTodoPath(VALID_BOARD_ID) + "s")
@@ -170,6 +209,33 @@ class TodoIntegrationTests {
 		mockMvc.perform(
 			patch(TodoCommon.todoPath + "/" + validTodoId + "/clone/" + VALID_PHASE + "/" + VALID_BOARD_ID)
 		).andExpect(status().is(HttpStatus.OK.value()));
+	}
+
+	@Test
+	void cloneExistingTodoShouldResultSame() throws Exception {
+		String originalTodoName = VALID_NAME + "3B";
+		String clonedTodoName = originalTodoName + TodoCommon.todoCloneSuffix;
+
+		Todo originalTodo =	Todo.builder()
+			.name(originalTodoName)
+			.description(VALID_DESCRIPTION)
+			.phase(VALID_PHASE)
+			.build();
+		Long validTodoId = todoService.addTodo(VALID_BOARD_ID, originalTodo).getId();
+		Todo clonedTodo;
+		Long clonedTodoId;
+
+		todoService.cloneTodo(validTodoId, VALID_PHASE, VALID_BOARD_ID);
+		clonedTodo = todoService.getTodoByName(clonedTodoName);
+		clonedTodoId = clonedTodo.getId();
+
+		log.info("cloneExistingTodoShouldResultSame(): original is {{}}", originalTodo);
+		log.info("cloneExistingTodoShouldResultSame(): cloned is {{}}", clonedTodo);
+
+		mockMvc.perform(
+			get(TodoCommon.todoPath + "/" + clonedTodoId)
+		).andExpect(status().is(HttpStatus.OK.value()));
+		//).andExpect(content().json(mapper.writeValueAsString(originalTodo))
 	}
 
 	@Test

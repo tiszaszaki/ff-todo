@@ -38,6 +38,11 @@ public class TodoController {
 		return ResponseEntity.ok(todoService.getTodo(id, true));
 	}
 
+	@GetMapping("/name/{name}")
+	public ResponseEntity<Todo> getTodoByName(@PathVariable String name) {
+		return ResponseEntity.ok(todoService.getTodoByName(name));
+	}
+
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Void> removeTodo(@PathVariable Long id) {
 		todoService.removeTodo(id);

@@ -11,6 +11,7 @@ import hu.feketefamily.fftodo.model.entity.Todo;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface TodoRepository extends JpaRepository<Todo, Long> {
@@ -27,5 +28,6 @@ public interface TodoRepository extends JpaRepository<Todo, Long> {
 	int updateById(@Param("id") Long id, @Param("name") String name, @Param("description") String description, @Param("phase") int phase,
 				   @Param("now") Date dateModified, @Param("deadline") Date deadline);
 	int deleteByBoardId(Long boardId);
+	Optional<Todo> findByName(String name);
 	List<Todo> findByBoardId(Long boardId);
 }
