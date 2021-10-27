@@ -226,8 +226,7 @@ class TodoIntegrationTests {
 		Todo clonedTodo;
 		Long clonedTodoId;
 
-		todoService.cloneTodo(validTodoId, originalTodo.getPhase(), originalTodo.getBoard().getId());
-		clonedTodo = todoService.getTodoByName(clonedTodoName);
+		clonedTodo = todoService.cloneTodo(validTodoId, originalTodo.getPhase(), originalTodo.getBoard().getId());
 		clonedTodoId = clonedTodo.getId();
 
 		log.info("{}(): original is {{}}", thisMethodName, originalTodo);
