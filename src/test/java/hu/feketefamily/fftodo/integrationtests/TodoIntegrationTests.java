@@ -212,7 +212,8 @@ class TodoIntegrationTests {
 	}
 
 	@Test
-	void cloneExistingTodoShouldResultSame() throws Exception {
+	void cloningExistingTodoShouldResultSimilar() throws Exception {
+		String thisMethodName = new Object(){}.getClass().getEnclosingMethod().getName();
 		String originalTodoName = VALID_NAME + "3B";
 		String clonedTodoName = originalTodoName + TodoCommon.todoCloneSuffix;
 
@@ -225,17 +226,20 @@ class TodoIntegrationTests {
 		Todo clonedTodo;
 		Long clonedTodoId;
 
-		todoService.cloneTodo(validTodoId, VALID_PHASE, VALID_BOARD_ID);
+		todoService.cloneTodo(validTodoId, originalTodo.getPhase(), originalTodo.getBoard().getId());
 		clonedTodo = todoService.getTodoByName(clonedTodoName);
 		clonedTodoId = clonedTodo.getId();
 
-		log.info("cloneExistingTodoShouldResultSame(): original is {{}}", originalTodo);
-		log.info("cloneExistingTodoShouldResultSame(): cloned is {{}}", clonedTodo);
+		log.info("{}(): original is {{}}", thisMethodName, originalTodo);
+		log.info("{}(): cloned is   {{}}", thisMethodName, clonedTodo);
+
+		Assertions.assertEquals(clonedTodoName, clonedTodo.getName());
+		Assertions.assertEquals(originalTodo.getDescription(), clonedTodo.getDescription());
+		Assertions.assertEquals(originalTodo.getPhase(), clonedTodo.getPhase());
 
 		mockMvc.perform(
 			get(TodoCommon.todoPath + "/" + clonedTodoId)
 		).andExpect(status().is(HttpStatus.OK.value()));
-		//).andExpect(content().json(mapper.writeValueAsString(originalTodo))
 	}
 
 	@Test
