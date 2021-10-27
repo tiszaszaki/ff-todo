@@ -207,7 +207,7 @@ class TodoIntegrationTests {
 				.build()
 		).getId();
 		mockMvc.perform(
-			patch(TodoCommon.todoPath + "/" + validTodoId + "/clone/" + VALID_PHASE + "/" + VALID_BOARD_ID)
+			get(TodoCommon.todoPath + "/" + validTodoId + "/clone/" + VALID_PHASE + "/" + VALID_BOARD_ID)
 		).andExpect(status().is(HttpStatus.OK.value()));
 	}
 
@@ -259,14 +259,14 @@ class TodoIntegrationTests {
 				.build()
 		);
 		mockMvc.perform(
-			patch(TodoCommon.todoPath + "/" + validTodoId + "/clone/" + VALID_PHASE + "/" + VALID_BOARD_ID)
+			get(TodoCommon.todoPath + "/" + validTodoId + "/clone/" + VALID_PHASE + "/" + VALID_BOARD_ID)
 		).andExpect(status().is(HttpStatus.OK.value()));
 	}
 
 	@Test
 	void cloneNonExistentTodo() throws Exception {
 		mockMvc.perform(
-			patch(TodoCommon.todoPath + "/" + NON_EXISTENT_ID + "/clone/" + VALID_PHASE + "/" + VALID_BOARD_ID)
+			get(TodoCommon.todoPath + "/" + NON_EXISTENT_ID + "/clone/" + VALID_PHASE + "/" + VALID_BOARD_ID)
 		).andExpect(status().is(HttpStatus.OK.value()));
 	}
 
