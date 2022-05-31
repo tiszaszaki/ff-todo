@@ -64,9 +64,17 @@ public class BoardController {
 		return ResponseEntity.ok(todoService.removeAllTodos(id));
 	}
 
+	@GetMapping("/name-max-length")
+	public ResponseEntity<Integer> getNameMaxLength() {
+		return ResponseEntity.ok(boardService.getNameMaxLength());
+	}
 	@GetMapping("/description-max-length")
 	public ResponseEntity<Integer> getDescriptionMaxLength() {
 		return ResponseEntity.ok(boardService.getDescriptionMaxLength());
+	}
+	@GetMapping("/author-max-length")
+	public ResponseEntity<Integer> getAuthorMaxLength() {
+		return ResponseEntity.ok(boardService.getAuthorMaxLength());
 	}
 
 	@GetMapping("/{id}/readonly-todos")

@@ -27,6 +27,7 @@ import hu.feketefamily.fftodo.model.entity.Todo;
 import hu.feketefamily.fftodo.service.BoardService;
 import hu.feketefamily.fftodo.service.TaskService;
 import hu.feketefamily.fftodo.service.TodoService;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -111,9 +112,17 @@ class TaskIntegrationTests {
 	}
 
 	@Test
+	void getTasksFromTodo() throws Exception {
+		mockMvc.perform(
+			MockMvcRequestBuilders.get(
+				TodoCommon.todoTaskPath(VALID_TODO_ID)+"s"
+			)
+		).andExpect(status().is(HttpStatus.OK.value()));
+	}
+	@Test
 	void addValidTask() throws Exception {
 		Long initTaskCount = 1L;
-		List<Task> tasks = todoService.getTodo(VALID_TODO_ID, false).getTasks();
+		List<Task> tasks = taskService.getTasksFromTodo(VALID_TODO_ID, false);
 		Assertions.assertEquals(initTaskCount, tasks.size());
 
 		mockMvc.perform(
@@ -127,7 +136,7 @@ class TaskIntegrationTests {
 			.contentType(MediaType.APPLICATION_JSON)
 		).andExpect(status().is(HttpStatus.OK.value()));
 
-		tasks = todoService.getTodo(VALID_TODO_ID, false).getTasks();
+		tasks = taskService.getTasksFromTodo(VALID_TODO_ID, false);
 		Assertions.assertEquals(initTaskCount + 1, tasks.size());
 		Task task = tasks.get(1);
 		Assertions.assertEquals(VALID_NAME, task.getName());
@@ -214,7 +223,7 @@ class TaskIntegrationTests {
 
 	@Test
 	void clearNonEmptyTaskList() throws Exception {
-		List<Task> tasks = todoService.getTodo(NON_EMPTY_TASKLIST_TODO_ID, false).getTasks();
+		List<Task> tasks = taskService.getTasksFromTodo(NON_EMPTY_TASKLIST_TODO_ID, false);
 		Assertions.assertNotEquals(0, tasks.size());
 		mockMvc.perform(
 			delete(TodoCommon.todoTaskPath(NON_EMPTY_TASKLIST_TODO_ID) + "/clear")
@@ -223,7 +232,7 @@ class TaskIntegrationTests {
 
 	@Test
 	void clearEmptyTaskList() throws Exception {
-		List<Task> tasks = todoService.getTodo(EMPTY_TASKLIST_TODO_ID, false).getTasks();
+		List<Task> tasks = taskService.getTasksFromTodo(EMPTY_TASKLIST_TODO_ID, false);
 		Assertions.assertEquals(0, tasks.size());
 		mockMvc.perform(
 			delete(TodoCommon.todoTaskPath(EMPTY_TASKLIST_TODO_ID) + "/clear")

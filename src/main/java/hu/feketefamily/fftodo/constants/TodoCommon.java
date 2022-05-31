@@ -1,8 +1,13 @@
 package hu.feketefamily.fftodo.constants;
 
 public class TodoCommon {
+	public static final int maxBoardNameLength = 64;
+
 	public static final int maxBoardDescriptionLength = 1024;
 	public static final int maxTodoDescriptionLength = 1024;
+
+	public static final int maxBoardAuthorLength = 128;
+
 	public static final int phaseMin = 0;
 	public static final int phaseMax = 2;
 

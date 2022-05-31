@@ -23,12 +23,14 @@ public class Board {
 	@Column(updatable = false, nullable = false)
 	private Long id;
 	@NotBlank
-	@Column(nullable = false, unique = true)
+	@Size(max = TodoCommon.maxBoardNameLength)
+	@Column(nullable = false, unique = true, length = TodoCommon.maxBoardNameLength)
 	private String name;
 	@Size(max = TodoCommon.maxBoardDescriptionLength)
 	@Column(length = TodoCommon.maxBoardDescriptionLength)
 	private String description;
-	@Column(nullable = false)
+	@Size(max = TodoCommon.maxBoardAuthorLength)
+	@Column(nullable = false, length = TodoCommon.maxBoardAuthorLength)
 	private String author;
 	@PastOrPresent
 	@Column(updatable = false, nullable = false)

@@ -62,9 +62,19 @@ public class BoardService {
 		}
 	}
 
+	public Integer getNameMaxLength() {
+		Integer maxLength=TodoCommon.maxBoardNameLength;
+		log.info("Querying maximum name length setting for all Boards: {}", maxLength);
+		return maxLength;
+	}
 	public Integer getDescriptionMaxLength() {
 		Integer maxLength=TodoCommon.maxBoardDescriptionLength;
 		log.info("Querying maximum description length setting for all Boards: {}", maxLength);
+		return maxLength;
+	}
+	public Integer getAuthorMaxLength() {
+		Integer maxLength=TodoCommon.maxBoardAuthorLength;
+		log.info("Querying maximum author length setting for all Boards: {}", maxLength);
 		return maxLength;
 	}
 

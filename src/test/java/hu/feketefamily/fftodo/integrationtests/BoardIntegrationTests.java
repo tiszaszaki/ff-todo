@@ -165,11 +165,27 @@ public class BoardIntegrationTests {
 	}
 
 	@Test
+	void getNameMaxLength() throws Exception {
+		mockMvc.perform(
+			get(TodoCommon.boardPath + "/" + "name-max-length")
+		).andExpect(status().is(HttpStatus.OK.value())
+		).andExpect(content().string(Long.toString(TodoCommon.maxBoardNameLength)));
+	}
+
+	@Test
 	void getDescriptionMaxLength() throws Exception {
 		mockMvc.perform(
 			get(TodoCommon.boardPath + "/" + "description-max-length")
 		).andExpect(status().is(HttpStatus.OK.value())
 		).andExpect(content().string(Long.toString(TodoCommon.maxBoardDescriptionLength)));
+	}
+
+	@Test
+	void getAuthorMaxLength() throws Exception {
+		mockMvc.perform(
+			get(TodoCommon.boardPath + "/" + "author-max-length")
+		).andExpect(status().is(HttpStatus.OK.value())
+		).andExpect(content().string(Long.toString(TodoCommon.maxBoardAuthorLength)));
 	}
 
 	@ParameterizedTest
@@ -202,9 +218,30 @@ public class BoardIntegrationTests {
 
 	private static Stream<Arguments> provideInvalidBoards() {
 		return Stream.of(
-			Arguments.of(Board.builder().description(VALID_DESCRIPTION).build()),
-			Arguments.of(Board.builder().name("").description(VALID_DESCRIPTION).build()),
-			Arguments.of(Board.builder().name(VALID_NAME).description("a".repeat(TodoCommon.maxBoardDescriptionLength + 1)).build())
+			Arguments.of(Board.builder() // missing name
+				.description(VALID_DESCRIPTION)
+				.author(VALID_AUTHOR)
+				.build()),
+			Arguments.of(Board.builder() // blank name
+				.name("")
+				.description(VALID_DESCRIPTION)
+				.author(VALID_AUTHOR)
+				.build()),
+			Arguments.of(Board.builder() // name with invalid length
+				.name("a".repeat(TodoCommon.maxBoardNameLength + 1))
+				.description(VALID_DESCRIPTION)
+				.author(VALID_AUTHOR)
+				.build()),
+			Arguments.of(Board.builder() // description with invalid length
+				.name(VALID_NAME)
+				.description("a".repeat(TodoCommon.maxBoardDescriptionLength + 1))
+				.author(VALID_AUTHOR)
+				.build()),
+			Arguments.of(Board.builder() // author with invalid length
+				.name(VALID_NAME)
+				.description(VALID_DESCRIPTION)
+				.author("a".repeat(TodoCommon.maxBoardAuthorLength + 1))
+				.build())
 		);
 	}
 }
