@@ -38,6 +38,12 @@ public class TodoController {
 		return ResponseEntity.ok(todoService.getTodo(id, true));
 	}
 
+	@GetMapping("/{id}/tasks")
+	public ResponseEntity<List<Task>> getTasksFromTodo(@PathVariable Long id)
+	{
+		return ResponseEntity.ok(taskService.getTasksFromTodo(id, true));
+	}
+
 	@GetMapping("/name/{name}")
 	public ResponseEntity<Todo> getTodoByName(@PathVariable String name) {
 		return ResponseEntity.ok(todoService.getTodoByName(name));
@@ -66,7 +72,7 @@ public class TodoController {
 	}
 
 	@DeleteMapping("/{id}/task/clear")
-	public ResponseEntity<Integer> removeAllTasks(@PathVariable Long id) {
+	public ResponseEntity<Integer> removeAllTasksFromTodo(@PathVariable Long id) {
 		return ResponseEntity.ok(taskService.removeAllTasksFromTodo(id));
 	}
 

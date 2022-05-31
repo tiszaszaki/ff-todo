@@ -27,7 +27,7 @@ public class BoardService {
 		return boardRepository.findById(id).orElseThrow(() -> new NotExistException(BOARD_NOT_EXIST_MESSAGE) );
 	}
 
-	public Set<Long> getAllBoardsId() {
+	public Set<Long> getBoardsId() {
 		return boardRepository.getAllIds();
 	}
 

@@ -1,6 +1,7 @@
 package hu.feketefamily.fftodo.service;
 
 import hu.feketefamily.fftodo.exception.NotExistException;
+import hu.feketefamily.fftodo.model.entity.Todo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -11,6 +12,8 @@ import hu.feketefamily.fftodo.model.repository.TaskRepository;
 import lombok.extern.log4j.Log4j2;
 
 import javax.validation.Valid;
+
+import java.util.List;
 
 import static hu.feketefamily.fftodo.constants.ErrorMessages.TASK_NOT_EXIST_MESSAGE;
 
@@ -25,6 +28,18 @@ public class TaskService {
 	@Autowired
 	private TaskRepository taskRepository;
 
+	public List<Task> getTasksFromTodo(Long todoId, Boolean logPerTask)
+	{
+		List<Task> result = taskRepository.findByTodoId(todoId);
+		log.info("Queried {} Tasks from Todo with id {{}}", result.size(), todoId);
+		if (logPerTask) {
+			Integer i = 0;
+			for (Task t : result) {
+				log.info("Task #{}: {}", ++i, t.toString());
+			}
+		}
+		return result;
+	}
 	public Task getTask(Long id) {
 		return taskRepository.findById(id).orElseThrow(() -> new NotExistException(TASK_NOT_EXIST_MESSAGE) );
 	}

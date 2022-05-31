@@ -22,8 +22,8 @@ public class BoardController {
 	private TodoService todoService;
 
 	@GetMapping
-	public ResponseEntity<Set<Long>> getBoards() {
-		return ResponseEntity.ok(boardService.getAllBoardsId());
+	public ResponseEntity<Set<Long>> getBoardIds() {
+		return ResponseEntity.ok(boardService.getBoardsId());
 	}
 
 	@GetMapping("/{id}")
