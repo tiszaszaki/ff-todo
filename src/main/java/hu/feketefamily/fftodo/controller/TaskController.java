@@ -26,4 +26,9 @@ public class TaskController {
 		taskService.updateTask(id, patchedTask);
 		return ResponseEntity.ok().build();
 	}
+
+	@GetMapping("/name-max-length")
+	public ResponseEntity<Integer> getNameMaxLength() {
+		return ResponseEntity.ok(taskService.getNameMaxLength());
+	}
 }

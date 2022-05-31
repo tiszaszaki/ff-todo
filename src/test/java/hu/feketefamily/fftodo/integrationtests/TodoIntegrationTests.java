@@ -329,6 +329,14 @@ class TodoIntegrationTests {
 	}
 
 	@Test
+	void getNameMaxLength() throws Exception {
+		mockMvc.perform(
+			get(TodoCommon.todoPath + "/" + "name-max-length")
+		).andExpect(status().is(HttpStatus.OK.value())
+		).andExpect(content().string(Long.toString(TodoCommon.maxTodoNameLength)));
+	}
+
+	@Test
 	void getDescriptionMaxLength() throws Exception {
 		mockMvc.perform(
 			get(TodoCommon.todoPath + "/" + "description-max-length")
@@ -350,9 +358,21 @@ class TodoIntegrationTests {
 
 	private static Stream<Arguments> provideInvalidTodos() {
 		return Stream.of(
-			Arguments.of(Todo.builder().description(VALID_DESCRIPTION).build()),
-			Arguments.of(Todo.builder().name("").description(VALID_DESCRIPTION).build()),
-			Arguments.of(Todo.builder().name(VALID_NAME).description("a".repeat(TodoCommon.maxTodoDescriptionLength + 1)).build())
+			Arguments.of(Todo.builder() // missing name
+				.description(VALID_DESCRIPTION)
+				.build()),
+			Arguments.of(Todo.builder() // blank name
+				.name("")
+				.description(VALID_DESCRIPTION)
+				.build()),
+			Arguments.of(Todo.builder() // description with invalid length
+				.name("a".repeat(TodoCommon.maxTodoNameLength + 1))
+				.description(VALID_DESCRIPTION)
+				.build()),
+			Arguments.of(Todo.builder() // description with invalid length
+				.name(VALID_NAME)
+				.description("a".repeat(TodoCommon.maxTodoDescriptionLength + 1))
+				.build())
 		);
 	}
 }

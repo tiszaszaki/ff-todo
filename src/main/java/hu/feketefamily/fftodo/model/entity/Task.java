@@ -4,7 +4,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 
+import hu.feketefamily.fftodo.constants.TodoCommon;
 import lombok.*;
 
 import java.util.Date;
@@ -21,7 +23,8 @@ public class Task {
 	@Column(updatable = false, nullable = false)
 	private Long id;
 	@NotBlank
-	@Column(nullable = false)
+	@Size(max = TodoCommon.maxTaskNameLength)
+	@Column(nullable = false, length = TodoCommon.maxTaskNameLength)
 	private String name;
 	@Column(nullable = false)
 	private Boolean done;

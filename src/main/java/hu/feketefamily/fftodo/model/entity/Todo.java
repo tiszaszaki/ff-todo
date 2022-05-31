@@ -21,7 +21,8 @@ public class Todo {
 	@Column(updatable = false, nullable = false)
 	private Long id;
 	@NotBlank
-	@Column(nullable = false, unique = true)
+	@Size(max = TodoCommon.maxTodoNameLength)
+	@Column(nullable = false, unique = true, length = TodoCommon.maxTodoNameLength)
 	private String name;
 	@Size(max = TodoCommon.maxTodoDescriptionLength)
 	@Column(length = TodoCommon.maxTodoDescriptionLength)

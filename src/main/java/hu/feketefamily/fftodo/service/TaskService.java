@@ -1,5 +1,6 @@
 package hu.feketefamily.fftodo.service;
 
+import hu.feketefamily.fftodo.constants.TodoCommon;
 import hu.feketefamily.fftodo.exception.NotExistException;
 import hu.feketefamily.fftodo.model.entity.Todo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -92,5 +93,11 @@ public class TaskService {
 		todoService.updateTodoDate(id);
 
 		return temp_count;
+	}
+
+	public Integer getNameMaxLength() {
+		Integer maxLength= TodoCommon.maxTaskNameLength;
+		log.info("Querying maximum name length setting for all Tasks: {}", maxLength);
+		return maxLength;
 	}
 }

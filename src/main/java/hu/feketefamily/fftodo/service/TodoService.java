@@ -170,6 +170,12 @@ public class TodoService {
 		}
 	}
 
+	public Integer getNameMaxLength() {
+		Integer maxLength=TodoCommon.maxTodoNameLength;
+		log.info("Querying maximum name length setting for all Todos: {}", maxLength);
+		return maxLength;
+	}
+
 	public Integer getDescriptionMaxLength() {
 		Integer maxLength=TodoCommon.maxTodoDescriptionLength;
 		log.info("Querying maximum description length setting for all Todos: {}", maxLength);

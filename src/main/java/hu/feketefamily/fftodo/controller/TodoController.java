@@ -76,6 +76,11 @@ public class TodoController {
 		return ResponseEntity.ok(taskService.removeAllTasksFromTodo(id));
 	}
 
+	@GetMapping("/name-max-length")
+	public ResponseEntity<Integer> getNameMaxLength() {
+		return ResponseEntity.ok(todoService.getNameMaxLength());
+	}
+
 	@GetMapping("/description-max-length")
 	public ResponseEntity<Integer> getDescriptionMaxLength() {
 		return ResponseEntity.ok(todoService.getDescriptionMaxLength());

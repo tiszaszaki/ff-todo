@@ -1,8 +1,6 @@
 package hu.feketefamily.fftodo.integrationtests;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -11,6 +9,9 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -19,6 +20,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
+import java.util.stream.Stream;
+
 import hu.feketefamily.fftodo.constants.ErrorMessages;
 import hu.feketefamily.fftodo.constants.TodoCommon;
 import hu.feketefamily.fftodo.model.entity.Board;
@@ -195,14 +198,12 @@ class TaskIntegrationTests {
 		).andExpect(status().is(HttpStatus.OK.value()));
 	}
 
-	@Test
-	void updateInvalidTasks() throws Exception {
+	@ParameterizedTest
+	@MethodSource("provideInvalidTasks")
+	void updateInvalidTask(Task invalidTask) throws Exception {
 		mockMvc.perform(
-			patch(TodoCommon.taskPath + "/" + VALID_ID)
-				.content(mapper.writeValueAsString(
-					Task.builder()
-						.done(VALID_DONE)
-						.build()))
+			patch(TodoCommon.taskPath + "/" + NON_EXISTENT_ID)
+				.content(mapper.writeValueAsString(invalidTask))
 				.contentType(MediaType.APPLICATION_JSON)
 		).andExpect(status().is(HttpStatus.BAD_REQUEST.value()));
 	}
@@ -237,5 +238,26 @@ class TaskIntegrationTests {
 		mockMvc.perform(
 			delete(TodoCommon.todoTaskPath(EMPTY_TASKLIST_TODO_ID) + "/clear")
 		).andExpect(status().is(HttpStatus.OK.value()));
+	}
+
+	@Test
+	void getNameMaxLength() throws Exception {
+		mockMvc.perform(
+			get(TodoCommon.taskPath + "/" + "name-max-length")
+		).andExpect(status().is(HttpStatus.OK.value())
+		).andExpect(content().string(Long.toString(TodoCommon.maxTaskNameLength)));
+	}
+
+	private static Stream<Arguments> provideInvalidTasks() {
+		return Stream.of(
+			Arguments.of(Task.builder() // missing name
+				.build()),
+			Arguments.of(Task.builder() // blank name
+				.name("")
+				.build()),
+			Arguments.of(Task.builder() // description with invalid length
+				.name("a".repeat(TodoCommon.maxTaskNameLength + 1))
+				.build())
+		);
 	}
 }
