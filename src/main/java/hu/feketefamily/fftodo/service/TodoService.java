@@ -142,9 +142,23 @@ public class TodoService {
 
 	@Transactional
 	public Todo cloneTodo(Long id, Integer phase, Long boardId) {
+		Todo originalTodo = getTodo(id, false);
+		String originalTodoName = originalTodo.getName();
+		Integer lengthOverrun = (originalTodoName.length() + TodoCommon.todoCloneSuffix.length()) - TodoCommon.maxTodoNameLength;
+		if (lengthOverrun > 0)
+		{
+			Integer strTruncateIdx = TodoCommon.maxTodoNameLength / 32, lengthOverrunHalf;
+			String modifiedOriginalTodoName = "";
+			lengthOverrun += TodoCommon.fieldTruncateStr.length();
+			lengthOverrunHalf = lengthOverrun / 2;
+			modifiedOriginalTodoName += originalTodoName.substring(0, strTruncateIdx - lengthOverrunHalf);
+			modifiedOriginalTodoName += TodoCommon.fieldTruncateStr;
+			modifiedOriginalTodoName += originalTodoName.substring(strTruncateIdx + lengthOverrun - lengthOverrunHalf);
+			originalTodo.setName(modifiedOriginalTodoName);
+			log.warn("Truncated name of Todo with id {{}} from \"{}\" to \"{}\"", id, originalTodoName, modifiedOriginalTodoName);
+		}
 		if (todoRepository.cloneById(id, phase, boardId, new Date()) >= 1)
 		{
-			Todo originalTodo = getTodo(id, false);
 			String clonedTodoName = originalTodo.getName() + TodoCommon.todoCloneSuffix;
 			Todo clonedTodo = getTodoByName(clonedTodoName);
 			Integer results;
