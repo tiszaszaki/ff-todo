@@ -29,6 +29,18 @@ public class TaskService {
 	@Autowired
 	private TaskRepository taskRepository;
 
+	public List<Task> getTasks(Boolean logPerTask) {
+		List<Task> result = taskRepository.findAll();
+		log.info("Queried {} Tasks", result.size());
+		if (logPerTask) {
+			Integer i = 0;
+			for (Task t : result) {
+				log.info("Task #{}: {}", ++i, t.toString());
+			}
+		}
+		return result;
+	}
+
 	public List<Task> getTasksFromTodo(Long todoId, Boolean logPerTask)
 	{
 		List<Task> result = taskRepository.findByTodoId(todoId);

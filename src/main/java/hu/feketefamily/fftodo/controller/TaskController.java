@@ -2,11 +2,14 @@ package hu.feketefamily.fftodo.controller;
 
 import hu.feketefamily.fftodo.constants.TodoCommon;
 import hu.feketefamily.fftodo.model.entity.Task;
+import hu.feketefamily.fftodo.model.entity.Todo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import hu.feketefamily.fftodo.service.TaskService;
+
+import java.util.List;
 
 @RestController
 @RequestMapping(TodoCommon.taskPath)
@@ -14,6 +17,11 @@ public class TaskController {
 
 	@Autowired
 	private TaskService taskService;
+
+	@GetMapping
+	public ResponseEntity<List<Task>> getTasks() {
+		return ResponseEntity.ok(taskService.getTasks(true));
+	}
 
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Void> removeTask(@PathVariable Long id) {

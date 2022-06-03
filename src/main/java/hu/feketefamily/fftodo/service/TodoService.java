@@ -142,46 +142,42 @@ public class TodoService {
 
 	@Transactional
 	public Todo cloneTodo(Long id, Integer phase, Long boardId) {
-		Todo originalTodo = getTodo(id, false);
-		String originalTodoName = originalTodo.getName();
-		Integer lengthOverrun = (originalTodoName.length() + TodoCommon.todoCloneSuffix.length()) - TodoCommon.maxTodoNameLength;
-		if (lengthOverrun > 0)
-		{
-			Integer strTruncateIdx = TodoCommon.maxTodoNameLength / 32, lengthOverrunHalf;
-			String modifiedOriginalTodoName = "";
-			lengthOverrun += TodoCommon.fieldTruncateStr.length();
-			lengthOverrunHalf = lengthOverrun / 2;
-			modifiedOriginalTodoName += originalTodoName.substring(0, strTruncateIdx - lengthOverrunHalf);
-			modifiedOriginalTodoName += TodoCommon.fieldTruncateStr;
-			modifiedOriginalTodoName += originalTodoName.substring(strTruncateIdx + lengthOverrun - lengthOverrunHalf);
-			originalTodo.setName(modifiedOriginalTodoName);
-			log.warn("Truncated name of Todo with id {{}} from \"{}\" to \"{}\"", id, originalTodoName, modifiedOriginalTodoName);
-		}
-		if (todoRepository.cloneById(id, phase, boardId, new Date()) >= 1)
-		{
-			String clonedTodoName = originalTodo.getName() + TodoCommon.todoCloneSuffix;
-			Todo clonedTodo = getTodoByName(clonedTodoName);
-			Integer results;
-
-			log.info("Successfully cloned Todo with id {{}} to phase {} on Board with id {{}}", id, phase, boardId);
-
-			if ((results = taskRepository.cloneByTodoId(id, originalTodo.getName())) >= 1)
-			{
-				log.info("Successfully cloned {} Tasks from Todo with id {{}}", results, id);
+		Todo result = null;
+		if (todoRepository.existsById(id)) {
+			Todo originalTodo = getTodo(id, false);
+			String originalTodoName = originalTodo.getName();
+			Integer lengthOverrun = (originalTodoName.length() + TodoCommon.todoCloneSuffix.length()) - TodoCommon.maxTodoNameLength;
+			if (lengthOverrun > 0) {
+				Integer strTruncateIdx = TodoCommon.maxTodoNameLength / 2, lengthOverrunHalf;
+				String modifiedOriginalTodoName = "";
+				lengthOverrun += TodoCommon.fieldTruncateStr.length();
+				lengthOverrunHalf = lengthOverrun / 2;
+				modifiedOriginalTodoName += originalTodoName.substring(0, strTruncateIdx - lengthOverrunHalf);
+				modifiedOriginalTodoName += TodoCommon.fieldTruncateStr;
+				modifiedOriginalTodoName += originalTodoName.substring(strTruncateIdx + lengthOverrun - lengthOverrunHalf);
+				originalTodo.setName(modifiedOriginalTodoName);
+				log.warn("Truncated name of Todo with id {{}} from \"{}\" to \"{}\"", id, originalTodoName, modifiedOriginalTodoName);
 			}
-			else
-			{
-				log.warn("No Tasks were cloned with from Todo with id {{}}", id);
-			}
+			if (todoRepository.cloneById(id, phase, boardId, new Date()) >= 1) {
+				String clonedTodoName = originalTodo.getName() + TodoCommon.todoCloneSuffix;
+				Todo clonedTodo = getTodoByName(clonedTodoName);
+				Integer results;
 
-			return clonedTodo;
+				log.info("Successfully cloned Todo with id {{}} to phase {} on Board with id {{}}", id, phase, boardId);
+
+				if ((results = taskRepository.cloneByTodoId(id, originalTodo.getName())) >= 1) {
+					log.info("Successfully cloned {} Tasks from Todo with id {{}}", results, id);
+				} else {
+					log.warn("No Tasks were cloned with from Todo with id {{}}", id);
+				}
+
+				result = clonedTodo;
+			}
 		}
-		else
-		{
+		if (result == null) {
 			log.warn("No Todos were cloned with id {{}}", id);
-
-			return null;
 		}
+		return result;
 	}
 
 	public Integer getNameMaxLength() {

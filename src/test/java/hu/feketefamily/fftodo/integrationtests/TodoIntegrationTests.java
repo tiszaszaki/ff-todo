@@ -46,6 +46,7 @@ class TodoIntegrationTests {
 	private static Long VALID_BOARD_ID;
 	private static Long EMPTY_BOARD_ID;
 
+	private static String EXTREME_LONG_NAME_TO_CLONE;
 	private static final String VALID_NAME = "validName";
 	private static final String VALID_DESCRIPTION = "validDescription";
 	private static final int VALID_PHASE = 0;
@@ -83,6 +84,8 @@ class TodoIntegrationTests {
 				.author("board author")
 				.build()
 		).getId();
+
+		EXTREME_LONG_NAME_TO_CLONE = "a".repeat(TodoCommon.maxTodoNameLength);
 
 		VALID_TODO_CREATE_PATH = TodoCommon.boardTodoPath(VALID_BOARD_ID);
 		INVALID_TODO_CREATE_PATH = TodoCommon.boardTodoPath(666L);
@@ -196,16 +199,10 @@ class TodoIntegrationTests {
 		).andExpect(status().is(HttpStatus.OK.value()));
 	}
 
-	@Test
-	void cloneExistingTodo() throws Exception {
-		Long validTodoId = todoService.addTodo(
-			VALID_BOARD_ID,
-			Todo.builder()
-				.name(VALID_NAME + "3")
-				.description(VALID_DESCRIPTION)
-				.phase(VALID_PHASE)
-				.build()
-		).getId();
+	@ParameterizedTest
+	@MethodSource("provideTodosForCloning")
+	void cloneExistingTodo(Todo validTodo) throws Exception {
+		Long validTodoId = todoService.addTodo(VALID_BOARD_ID, validTodo).getId();
 		mockMvc.perform(
 			get(TodoCommon.todoPath + "/" + validTodoId + "/clone/" + VALID_PHASE + "/" + VALID_BOARD_ID)
 		).andExpect(status().is(HttpStatus.OK.value()));
@@ -354,6 +351,21 @@ class TodoIntegrationTests {
 			get(TodoCommon.todoPath + "/" + "phase-val-range")
 		).andExpect(status().is(HttpStatus.OK.value())
 		).andExpect(content().string(tempBodyStr));
+	}
+
+	private static Stream<Arguments> provideTodosForCloning() {
+		return Stream.of(
+			Arguments.of(Todo.builder()
+				.name(VALID_NAME + "3")
+				.description(VALID_DESCRIPTION)
+				.phase(VALID_PHASE)
+				.build()),
+			Arguments.of(Todo.builder() // name with maximum length
+				.name(EXTREME_LONG_NAME_TO_CLONE)
+				.description(VALID_DESCRIPTION)
+				.phase(VALID_PHASE)
+				.build())
+		);
 	}
 
 	private static Stream<Arguments> provideInvalidTodos() {

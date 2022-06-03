@@ -122,6 +122,14 @@ class TaskIntegrationTests {
 			)
 		).andExpect(status().is(HttpStatus.OK.value()));
 	}
+
+	@Test
+	void getTasks() throws Exception {
+		mockMvc.perform(
+			get(TodoCommon.taskPath)
+		).andExpect(status().is(HttpStatus.OK.value()));
+	}
+
 	@Test
 	void addValidTask() throws Exception {
 		Long initTaskCount = 1L;
