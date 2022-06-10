@@ -49,6 +49,7 @@ class TodoIntegrationTests {
 	private static String EXTREME_LONG_NAME_TO_CLONE;
 	private static final String VALID_NAME = "validName";
 	private static final String VALID_DESCRIPTION = "validDescription";
+	private static final int INVALID_PHASE = -1;
 	private static final int VALID_PHASE = 0;
 	private static final Long NON_EXISTENT_ID = 666L;
 
@@ -328,7 +329,7 @@ class TodoIntegrationTests {
 	@Test
 	void getNameMaxLength() throws Exception {
 		mockMvc.perform(
-			get(TodoCommon.todoPath + "/" + "name-max-length")
+			get(TodoCommon.todoPath + "/name-max-length")
 		).andExpect(status().is(HttpStatus.OK.value())
 		).andExpect(content().string(Long.toString(TodoCommon.maxTodoNameLength)));
 	}
@@ -336,7 +337,7 @@ class TodoIntegrationTests {
 	@Test
 	void getDescriptionMaxLength() throws Exception {
 		mockMvc.perform(
-			get(TodoCommon.todoPath + "/" + "description-max-length")
+			get(TodoCommon.todoPath + "/description-max-length")
 		).andExpect(status().is(HttpStatus.OK.value())
 		).andExpect(content().string(Long.toString(TodoCommon.maxTodoDescriptionLength)));
 	}
@@ -344,13 +345,29 @@ class TodoIntegrationTests {
 	@Test
 	void getTodoPhaseRange() throws Exception {
 		String tempBodyStr = new StringBuilder()
-			.append("[").append(Long.toString(TodoCommon.phaseMin))
-			.append(",").append(Long.toString(TodoCommon.phaseMax))
+			.append("[").append(Long.toString(TodoCommon.todoPhaseMin))
+			.append(",").append(Long.toString(TodoCommon.todoPhaseMax))
 			.append("]").toString();
 		mockMvc.perform(
-			get(TodoCommon.todoPath + "/" + "phase-val-range")
+			get(TodoCommon.todoPath + "/phase-val-range")
 		).andExpect(status().is(HttpStatus.OK.value())
 		).andExpect(content().string(tempBodyStr));
+	}
+
+	@Test
+	void getValidPhaseName() throws Exception {
+		mockMvc.perform(
+			get(TodoCommon.todoPath + "/phase-name/" + VALID_PHASE)
+		).andExpect(status().is(HttpStatus.OK.value())
+		).andExpect(content().string(TodoCommon.getTodoPhaseName(VALID_PHASE)));
+	}
+
+	@Test
+	void getInvalidPhaseName() throws Exception {
+		mockMvc.perform(
+			get(TodoCommon.todoPath + "/" + "phase-name/" + INVALID_PHASE)
+		).andExpect(status().is(HttpStatus.BAD_REQUEST.value())
+		).andExpect(content().string(ErrorMessages.TODO_PHASE_NOT_EXIST));
 	}
 
 	private static Stream<Arguments> provideTodosForCloning() {

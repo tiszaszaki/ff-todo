@@ -1,5 +1,8 @@
 package hu.feketefamily.fftodo.constants;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class TodoCommon {
 	public static final int maxBoardNameLength = 64;
 	public static final int maxBoardDescriptionLength = 1024;
@@ -10,9 +13,23 @@ public class TodoCommon {
 
 	public static final int maxTaskNameLength = 32;
 
-	public static final int phaseMin = 0;
-	public static final int phaseMax = 2;
+	public static final int todoPhaseMin = 0;
+	public static final int todoPhaseMax = 2;
 
+	public static String getTodoPhaseName(Integer idx)
+	{
+		String result = "";
+		Map<Integer, String> todoPhaseNames = new HashMap<>();
+
+		todoPhaseNames.put(0, "Backlog");
+		todoPhaseNames.put(1, "In progress");
+		todoPhaseNames.put(2, "Done");
+
+		if ((idx >= todoPhaseMin) && (idx <= todoPhaseMax))
+			result = todoPhaseNames.get(idx);
+
+		return result;
+	}
 
 	public static final String fieldTruncateStr = "...";
 

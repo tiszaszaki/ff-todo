@@ -34,8 +34,6 @@ public class TodoService {
 	@Autowired
 	private TaskRepository taskRepository;
 
-	public final Integer phaseMin= TodoCommon.phaseMin;
-	public final Integer phaseMax= TodoCommon.phaseMax;
 
 	public Todo getTodo(Long id, Boolean logTaskList) {
 		Todo result = todoRepository.findById(id).orElseThrow(() -> new NotExistException(TODO_NOT_EXIST_MESSAGE) );
@@ -194,9 +192,18 @@ public class TodoService {
 
 	public List<Integer> getTodoPhaseRange() {
 		List<Integer> results=new ArrayList<>();
-		results.add(TodoCommon.phaseMin);
-		results.add(TodoCommon.phaseMax);
+		results.add(TodoCommon.todoPhaseMin);
+		results.add(TodoCommon.todoPhaseMax);
 		log.info("Querying phase range setting for all Todos: {}", results.toString());
 		return results;
+	}
+
+	public String getTodoPhaseName(Integer idx) {
+		String result = TodoCommon.getTodoPhaseName(idx);
+		if (result != "")
+			log.info("Querying phase name with index ({}) for all Todos: {}", idx, result);
+		else
+			log.warn("Queried empty result for phase name with index ({})", idx);
+		return result;
 	}
 }

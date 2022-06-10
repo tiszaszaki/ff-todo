@@ -28,8 +28,8 @@ public class Todo {
 	@Column(length = TodoCommon.maxTodoDescriptionLength)
 	private String description;
 	@NotNull
-	@Min(TodoCommon.phaseMin)
-	@Max(TodoCommon.phaseMax)
+	@Min(TodoCommon.todoPhaseMin)
+	@Max(TodoCommon.todoPhaseMax)
 	private Integer phase;
 	@PastOrPresent
 	@Column(nullable = false)

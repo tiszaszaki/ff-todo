@@ -1,5 +1,6 @@
 package hu.feketefamily.fftodo.controller;
 
+import hu.feketefamily.fftodo.constants.ErrorMessages;
 import hu.feketefamily.fftodo.constants.TodoCommon;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -89,5 +90,14 @@ public class TodoController {
 	@GetMapping("/phase-val-range")
 	public ResponseEntity< List<Integer> > getTodoPhaseRange() {
 		return ResponseEntity.ok(todoService.getTodoPhaseRange());
+	}
+
+	@GetMapping("/phase-name/{idx}")
+	public ResponseEntity<String> getTodoPhaseName(@PathVariable Integer idx) {
+		String result = todoService.getTodoPhaseName(idx);
+		if (result != "")
+			return ResponseEntity.ok(result);
+		else
+			return ResponseEntity.badRequest().body(ErrorMessages.TODO_PHASE_NOT_EXIST);
 	}
 }
