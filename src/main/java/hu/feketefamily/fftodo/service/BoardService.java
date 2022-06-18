@@ -33,12 +33,13 @@ public class BoardService {
 
 	public Board addBoard(@Valid Board board)
 	{
-		Date now=new Date();
+		Date now=new Date(); Board newBoard;
 		board.setDateCreated(now);
 		board.setReadonlyTodos(false);
 		board.setReadonlyTasks(false);
-		log.info("Saving Board: {{}}", board.toString());
-		return boardRepository.save(board);
+		newBoard = boardRepository.save(board);
+		log.info("Saved new Board: {{}}", newBoard.toString());
+		return newBoard;
 	}
 
 	public void removeBoard(Long id) {
@@ -46,7 +47,7 @@ public class BoardService {
 			log.info("Deleting Board with id: {{}}", id);
 			boardRepository.deleteById(id);
 		} else {
-			log.warn("Deleting non-existing Board with id {{}}", id);
+			log.warn("No Boards were deleted with id {{}}", id);
 		}
 	}
 

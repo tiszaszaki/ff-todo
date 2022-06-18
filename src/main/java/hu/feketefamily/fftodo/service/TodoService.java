@@ -53,7 +53,7 @@ public class TodoService {
 
 	public List<Todo> getTodos(Boolean logPerTodo) {
 		List<Todo> result = todoRepository.findAll();
-		log.info("Queried {} Todos", result.size());
+		log.info("Queried {} Todo(s)", result.size());
 		if (logPerTodo) {
 			Integer i = 0;
 			for (Todo t : result) {
@@ -66,7 +66,7 @@ public class TodoService {
 	public List<Todo> getTodosFromBoard(Long id, Boolean logPerTodo)
 	{
 		List<Todo> result = todoRepository.findByBoardId(id);
-		log.info("Queried {} Todos from Board with id {{}}", result.size(), id);
+		log.info("Queried {} Todo(s) from Board with id {{}}", result.size(), id);
 		if (logPerTodo) {
 			Integer i = 0;
 			for (Todo t : result) {
@@ -78,19 +78,18 @@ public class TodoService {
 
 	public Todo addTodo(Long boardId, @Valid Todo todo) {
 		Calendar dateCalc=Calendar.getInstance();
-		Date now=new Date();
+		Date now=new Date(); Todo newTodo;
 
 		dateCalc.setTime(now);
-
 		todo.setDateCreated(now);
-
-		//dateCalc.add(Calendar.DAY_OF_MONTH, -5);
 		todo.setDateModified(dateCalc.getTime());
-
 		todo.setBoard(boardService.getBoard(boardId));
 
-		log.info("Saving Todo for Board with id {{}}: {{}}", boardId, todo.toString());
-		return todoRepository.save(todo);
+		newTodo = todoRepository.save(todo);
+
+		log.info("Saved new Todo for Board with id {{}}: {{}}", boardId, newTodo.toString());
+
+		return newTodo;
 	}
 
 	public void removeTodo(Long id) {
@@ -98,7 +97,7 @@ public class TodoService {
 			log.info("Deleting Todo with id: {{}}", id);
 			todoRepository.deleteById(id);
 		} else {
-			log.warn("Deleting non-existing Todo with id {{}}", id);
+			log.warn("No Todos were deleted with id {{}}", id);
 		}
 	}
 

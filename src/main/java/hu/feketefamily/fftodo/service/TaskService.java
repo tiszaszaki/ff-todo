@@ -31,7 +31,7 @@ public class TaskService {
 
 	public List<Task> getTasks(Boolean logPerTask) {
 		List<Task> result = taskRepository.findAll();
-		log.info("Queried {} Tasks", result.size());
+		log.info("Queried {} Task(s)", result.size());
 		if (logPerTask) {
 			Integer i = 0;
 			for (Task t : result) {
@@ -44,7 +44,7 @@ public class TaskService {
 	public List<Task> getTasksFromTodo(Long todoId, Boolean logPerTask)
 	{
 		List<Task> result = taskRepository.findByTodoId(todoId);
-		log.info("Queried {} Tasks from Todo with id {{}}", result.size(), todoId);
+		log.info("Queried {} Task(s) from Todo with id {{}}", result.size(), todoId);
 		if (logPerTask) {
 			Integer i = 0;
 			for (Task t : result) {
@@ -58,10 +58,12 @@ public class TaskService {
 	}
 
 	public Task addTask(Long todoId, Task task) {
+		Task newTask;
 		task.setTodo(todoService.getTodo(todoId, false));
-		log.info("Saving Task for Todo with id {{}}: {{}}", todoId, task.toString());
 		todoService.updateTodoDate(todoId);
-		return taskRepository.save(task);
+		newTask = taskRepository.save(task);
+		log.info("Saved new Task for Todo with id {{}}: {{}}", todoId, newTask.toString());
+		return newTask;
 	}
 
 	public void removeTask(Long id) {
@@ -74,7 +76,7 @@ public class TaskService {
 			} catch (NotExistException e) { }
 			taskRepository.deleteById(id);
 		} else {
-			log.warn("Deleting non-existing Task with id {{}}", id);
+			log.warn("No Tasks were deleted with id {{}}", id);
 		}
 	}
 
