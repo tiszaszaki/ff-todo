@@ -2,7 +2,9 @@ package hu.feketefamily.fftodo.service;
 
 import static hu.feketefamily.fftodo.constants.ErrorMessages.TODO_NOT_EXIST_MESSAGE;
 
+import hu.feketefamily.fftodo.constants.ErrorMessages;
 import hu.feketefamily.fftodo.constants.TodoCommon;
+import hu.feketefamily.fftodo.model.api.TodoPhaseNameResponse;
 import hu.feketefamily.fftodo.model.entity.Task;
 import hu.feketefamily.fftodo.model.repository.TaskRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -197,12 +199,13 @@ public class TodoService {
 		return results;
 	}
 
-	public String getTodoPhaseName(Integer idx) {
+	public TodoPhaseNameResponse getTodoPhaseName(Integer idx) {
 		String result = TodoCommon.getTodoPhaseName(idx);
-		if (result != "")
-			log.info("Querying phase name with index ({}) for all Todos: {}", idx, result);
-		else
-			log.warn("Queried empty result for phase name with index ({})", idx);
-		return result;
+		log.info("Querying phase name with index ({}) for all Todos: {}", idx, result);
+		if (result.equals("")) {
+			log.error("Queried empty result for phase name with index ({})", idx);
+			throw new NotExistException(ErrorMessages.TODO_PHASE_NOT_EXIST);
+		}
+		return TodoPhaseNameResponse.builder().phase(result).build();
 	}
 }

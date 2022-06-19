@@ -2,6 +2,8 @@ package hu.feketefamily.fftodo.controller;
 
 import hu.feketefamily.fftodo.constants.ErrorMessages;
 import hu.feketefamily.fftodo.constants.TodoCommon;
+import hu.feketefamily.fftodo.exception.NotExistException;
+import hu.feketefamily.fftodo.model.api.TodoPhaseNameResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -93,11 +95,7 @@ public class TodoController {
 	}
 
 	@GetMapping("/phase-name/{idx}")
-	public ResponseEntity<String> getTodoPhaseName(@PathVariable Integer idx) {
-		String result = todoService.getTodoPhaseName(idx);
-		if (result != "")
-			return ResponseEntity.ok(result);
-		else
-			return ResponseEntity.badRequest().body(ErrorMessages.TODO_PHASE_NOT_EXIST);
+	public ResponseEntity<TodoPhaseNameResponse> getTodoPhaseName(@PathVariable Integer idx) {
+		return ResponseEntity.ok(todoService.getTodoPhaseName(idx));
 	}
 }
