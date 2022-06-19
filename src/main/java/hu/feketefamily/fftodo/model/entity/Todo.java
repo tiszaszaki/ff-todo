@@ -47,15 +47,4 @@ public class Todo {
 	@JsonIgnore
 	@ToString.Exclude
 	private Board board;
-
-	/*
-	@AssertTrue
-	public Boolean isValid() {
-		Boolean result = true;
-		result &= (!this.dateModified.before(this.dateCreated));
-		result &= (!this.deadline.before(this.dateCreated));
-		result &= (!this.deadline.before(this.dateModified));
-		return result;
-	}
-	*/
 }

@@ -4,6 +4,8 @@ import hu.feketefamily.fftodo.constants.ErrorMessages;
 import hu.feketefamily.fftodo.constants.TodoCommon;
 import hu.feketefamily.fftodo.exception.NotExistException;
 import hu.feketefamily.fftodo.model.api.AddTaskRequest;
+import hu.feketefamily.fftodo.model.api.FetchTaskResponse;
+import hu.feketefamily.fftodo.model.api.FetchTodoResponse;
 import hu.feketefamily.fftodo.model.api.TodoPhaseNameResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -33,24 +35,23 @@ public class TodoController {
 	private TaskService taskService;
 
 	@GetMapping
-	public ResponseEntity<List<Todo>> getTodos() {
-		return ResponseEntity.ok(todoService.getTodos(true));
+	public ResponseEntity<List<FetchTodoResponse>> getTodos() {
+		return ResponseEntity.ok(todoService.getTodos());
 	}
 
 	@GetMapping("/{id}")
-	public ResponseEntity<Todo> getTodo(@PathVariable Long id) {
-		return ResponseEntity.ok(todoService.getTodo(id, true));
+	public ResponseEntity<FetchTodoResponse> getTodo(@PathVariable Long id) {
+		return ResponseEntity.ok(todoService.getTodoResponse(id));
 	}
 
 	@GetMapping("/{id}/tasks")
-	public ResponseEntity<List<Task>> getTasksFromTodo(@PathVariable Long id)
-	{
-		return ResponseEntity.ok(taskService.getTasksFromTodo(id, true));
+	public ResponseEntity<List<FetchTaskResponse>> getTasksFromTodo(@PathVariable Long id) {
+		return ResponseEntity.ok(taskService.getTasksResponseFromTodo(id, true));
 	}
 
 	@GetMapping("/name/{name}")
-	public ResponseEntity<Todo> getTodoByName(@PathVariable String name) {
-		return ResponseEntity.ok(todoService.getTodoByName(name));
+	public ResponseEntity<FetchTodoResponse> getTodoByName(@PathVariable String name) {
+		return ResponseEntity.ok(todoService.getTodoResponseByName(name));
 	}
 
 	@DeleteMapping("/{id}")

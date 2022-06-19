@@ -5,9 +5,12 @@ import static hu.feketefamily.fftodo.constants.ErrorMessages.TODO_NOT_EXIST_MESS
 import hu.feketefamily.fftodo.constants.ErrorMessages;
 import hu.feketefamily.fftodo.constants.TodoCommon;
 import hu.feketefamily.fftodo.model.api.AddTodoRequest;
+import hu.feketefamily.fftodo.model.api.FetchTaskResponse;
+import hu.feketefamily.fftodo.model.api.FetchTodoResponse;
 import hu.feketefamily.fftodo.model.api.TodoPhaseNameResponse;
 import hu.feketefamily.fftodo.model.entity.Task;
 import hu.feketefamily.fftodo.model.repository.TaskRepository;
+import org.hibernate.annotations.Fetch;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,46 +40,91 @@ public class TodoService {
 	@Autowired
 	private TaskRepository taskRepository;
 
+	private FetchTodoResponse buildFetchTodoResponse(Todo todo)
+	{
+		return FetchTodoResponse.builder()
+			.id(todo.getId())
+			.name(todo.getName())
+			.description(todo.getDescription())
+			.phase(todo.getPhase())
+			.dateCreated(todo.getDateCreated())
+			.dateModified(todo.getDateModified())
+			.deadline(todo.getDeadline())
+			.boardId(todo.getBoard().getId())
+			.build();
+	}
 
-	public Todo getTodo(Long id, Boolean logTaskList) {
+	private FetchTaskResponse buildFetchTaskResponse(Task task)
+	{
+		return FetchTaskResponse.builder()
+			.id(task.getId())
+			.name(task.getName())
+			.done(task.getDone())
+			.deadline(task.getDeadline())
+			.todoId(task.getTodo().getId())
+			.build();
+	}
+
+	public Todo getTodo(Long id) {
 		Todo result = todoRepository.findById(id).orElseThrow(() -> new NotExistException(TODO_NOT_EXIST_MESSAGE(id, "")) );
-		if (logTaskList)
-		{
-			Integer i = 0;
-			for (Task t : result.getTasks()) {
-				log.info("Task #{} for Todo with ID {{}}: {}", ++i, result.getId(), t.toString());
-			}
-		}
 		return result;
+	}
+
+	public FetchTodoResponse getTodoResponse(Long id) {
+		Todo result = todoRepository.findById(id).orElseThrow(() -> new NotExistException(TODO_NOT_EXIST_MESSAGE(id, "")) );
+		FetchTodoResponse response = buildFetchTodoResponse(result);
+		Integer i = 0;
+		log.info("Queried Todo by ID: {}", response.toString());
+		for (Task task : result.getTasks()) {
+			FetchTaskResponse taskResponse = buildFetchTaskResponse(task);
+			log.info("Task #{} for Todo with ID {{}}: {}", ++i, response.getId(), taskResponse.toString());
+		}
+		return response;
 	}
 
 	public Todo getTodoByName(String name) {
-		return todoRepository.findByName(name).orElseThrow(() -> new NotExistException(TODO_NOT_EXIST_MESSAGE(0L, name)) );
-	}
-
-	public List<Todo> getTodos(Boolean logPerTodo) {
-		List<Todo> result = todoRepository.findAll();
-		log.info("Queried {} Todo(s)", result.size());
-		if (logPerTodo) {
-			Integer i = 0;
-			for (Todo t : result) {
-				log.info("Todo #{}: {}", ++i, t.toString());
-			}
-		}
+		Todo result = todoRepository.findByName(name).orElseThrow(() -> new NotExistException(TODO_NOT_EXIST_MESSAGE(0L, name)) );
 		return result;
 	}
 
-	public List<Todo> getTodosFromBoard(Long id, Boolean logPerTodo)
+	public FetchTodoResponse getTodoResponseByName(String name) {
+		Todo result = todoRepository.findByName(name).orElseThrow(() -> new NotExistException(TODO_NOT_EXIST_MESSAGE(0L, name)) );
+		FetchTodoResponse response = buildFetchTodoResponse(result);
+		log.info("Queried Todo by name: {}", response.toString());
+		return response;
+	}
+
+	public List<FetchTodoResponse> getTodos() {
+		List<Todo> result = todoRepository.findAll();
+		List<FetchTodoResponse> responseList = new ArrayList<>();
+		Integer i = 0;
+		for (Todo todo : result)
+			responseList.add(buildFetchTodoResponse(todo));
+		log.info("Queried {} Todo(s)", result.size());
+		for (Todo t : result) {
+			log.info("Todo #{}: {}", ++i, t.toString());
+		}
+		return responseList;
+	}
+
+	public List<Todo> getTodosFromBoard(Long id)
 	{
 		List<Todo> result = todoRepository.findByBoardId(id);
-		log.info("Queried {} Todo(s) from Board with id {{}}", result.size(), id);
-		if (logPerTodo) {
-			Integer i = 0;
-			for (Todo t : result) {
-				log.info("Todo #{}: {}", ++i, t.toString());
-			}
-		}
 		return result;
+	}
+
+	public List<FetchTodoResponse> getTodosResponseFromBoard(Long id)
+	{
+		List<Todo> result = todoRepository.findByBoardId(id);
+		List<FetchTodoResponse> responseList = new ArrayList<>();
+		Integer i = 0;
+		for (Todo todo : result)
+			responseList.add(buildFetchTodoResponse(todo));
+		log.info("Queried {} Todo(s) from Board with id {{}}", result.size(), id);
+		for (Todo t : result) {
+			log.info("Todo #{}: {}", ++i, t.toString());
+		}
+		return responseList;
 	}
 
 	public Todo addTodo(Long boardId, @Valid AddTodoRequest request) {
@@ -121,7 +169,7 @@ public class TodoService {
 	@Transactional
 	public void updateTodoDate(Long id)
 	{
-		Todo tempTodo=getTodo(id, false);
+		Todo tempTodo=getTodo(id);
 		tempTodo.setDateModified(new Date());
 		log.info("Refreshing date modified for Todo with id {{}}", id);
 		updateTodo(id, tempTodo);
@@ -144,7 +192,7 @@ public class TodoService {
 	public Todo cloneTodo(Long id, Integer phase, Long boardId) {
 		Todo result = null;
 		if (todoRepository.existsById(id)) {
-			Todo originalTodo = getTodo(id, false);
+			Todo originalTodo = getTodo(id);
 			String originalTodoName = originalTodo.getName();
 			Integer lengthOverrun = (originalTodoName.length() + TodoCommon.todoCloneSuffix.length()) - TodoCommon.maxTodoNameLength;
 			if (lengthOverrun > 0) {

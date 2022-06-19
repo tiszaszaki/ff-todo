@@ -3,7 +3,7 @@ package hu.feketefamily.fftodo.service;
 import hu.feketefamily.fftodo.constants.TodoCommon;
 import hu.feketefamily.fftodo.exception.NotExistException;
 import hu.feketefamily.fftodo.model.api.AddTaskRequest;
-import hu.feketefamily.fftodo.model.entity.Todo;
+import hu.feketefamily.fftodo.model.api.FetchTaskResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,6 +15,7 @@ import lombok.extern.log4j.Log4j2;
 
 import javax.validation.Valid;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static hu.feketefamily.fftodo.constants.ErrorMessages.TASK_NOT_EXIST_MESSAGE;
@@ -30,21 +31,42 @@ public class TaskService {
 	@Autowired
 	private TaskRepository taskRepository;
 
-	public List<Task> getTasks(Boolean logPerTask) {
+	private FetchTaskResponse buildFetchTaskResponse(Task task)
+	{
+		return FetchTaskResponse.builder()
+			.id(task.getId())
+			.name(task.getName())
+			.done(task.getDone())
+			.deadline(task.getDeadline())
+			.todoId(task.getTodo().getId())
+			.build();
+	}
+
+	public List<FetchTaskResponse> getTasks() {
 		List<Task> result = taskRepository.findAll();
+		List<FetchTaskResponse> responseList = new ArrayList<>();
+		Integer i = 0;
+		for (Task task : result)
+			responseList.add(buildFetchTaskResponse(task));
 		log.info("Queried {} Task(s)", result.size());
-		if (logPerTask) {
-			Integer i = 0;
-			for (Task t : result) {
-				log.info("Task #{}: {}", ++i, t.toString());
-			}
+		for (Task t : result) {
+			log.info("Task #{}: {}", ++i, t.toString());
 		}
+		return responseList;
+	}
+
+	public List<Task> getTasksFromTodo(Long todoId)
+	{
+		List<Task> result = taskRepository.findByTodoId(todoId);
 		return result;
 	}
 
-	public List<Task> getTasksFromTodo(Long todoId, Boolean logPerTask)
+	public List<FetchTaskResponse> getTasksResponseFromTodo(Long todoId, Boolean logPerTask)
 	{
 		List<Task> result = taskRepository.findByTodoId(todoId);
+		List<FetchTaskResponse> responseList = new ArrayList<>();
+		for (Task task : result)
+			responseList.add(buildFetchTaskResponse(task));
 		log.info("Queried {} Task(s) from Todo with id {{}}", result.size(), todoId);
 		if (logPerTask) {
 			Integer i = 0;
@@ -52,17 +74,19 @@ public class TaskService {
 				log.info("Task #{}: {}", ++i, t.toString());
 			}
 		}
-		return result;
+		return responseList;
 	}
+
 	public Task getTask(Long id) {
-		return taskRepository.findById(id).orElseThrow(() -> new NotExistException(TASK_NOT_EXIST_MESSAGE(id, "")) );
+		Task result=taskRepository.findById(id).orElseThrow(() -> new NotExistException(TASK_NOT_EXIST_MESSAGE(id, "")) );
+		return result;
 	}
 
 	public Task addTask(Long todoId, AddTaskRequest request) {
 		Task task = Task.builder()
 			.name(request.getName())
 			.done(request.getDone())
-			.todo(todoService.getTodo(todoId, false))
+			.todo(todoService.getTodo(todoId))
 			.build();
 		Task newTask = taskRepository.save(task);
 
