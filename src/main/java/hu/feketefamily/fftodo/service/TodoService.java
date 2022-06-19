@@ -39,7 +39,7 @@ public class TodoService {
 
 
 	public Todo getTodo(Long id, Boolean logTaskList) {
-		Todo result = todoRepository.findById(id).orElseThrow(() -> new NotExistException(TODO_NOT_EXIST_MESSAGE) );
+		Todo result = todoRepository.findById(id).orElseThrow(() -> new NotExistException(TODO_NOT_EXIST_MESSAGE(id, "")) );
 		if (logTaskList)
 		{
 			Integer i = 0;
@@ -51,7 +51,7 @@ public class TodoService {
 	}
 
 	public Todo getTodoByName(String name) {
-		return todoRepository.findByName(name).orElseThrow(() -> new NotExistException(TODO_NOT_EXIST_MESSAGE) );
+		return todoRepository.findByName(name).orElseThrow(() -> new NotExistException(TODO_NOT_EXIST_MESSAGE(0L, name)) );
 	}
 
 	public List<Todo> getTodos(Boolean logPerTodo) {
@@ -205,7 +205,7 @@ public class TodoService {
 		log.info("Querying phase name with index ({}) for all Todos: {}", idx, result);
 		if (result.equals("")) {
 			log.error("Queried empty result for phase name with index ({})", idx);
-			throw new NotExistException(ErrorMessages.TODO_PHASE_NOT_EXIST);
+			throw new NotExistException(ErrorMessages.TODO_PHASE_NOT_EXIST(idx));
 		}
 		return TodoPhaseNameResponse.builder().phase(result).build();
 	}

@@ -10,7 +10,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.databind.ObjectMapper;
 import hu.feketefamily.fftodo.model.api.AddTaskRequest;
 import hu.feketefamily.fftodo.model.api.AddTodoRequest;
-import hu.feketefamily.fftodo.model.entity.Task;
 import hu.feketefamily.fftodo.service.TaskService;
 import hu.feketefamily.fftodo.service.TodoService;
 import lombok.extern.log4j.Log4j2;
@@ -91,7 +90,7 @@ class TodoIntegrationTests {
 		EXTREME_LONG_NAME_TO_CLONE = "a".repeat(TodoCommon.maxTodoNameLength);
 
 		VALID_TODO_CREATE_PATH = TodoCommon.boardTodoPath(VALID_BOARD_ID);
-		INVALID_TODO_CREATE_PATH = TodoCommon.boardTodoPath(666L);
+		INVALID_TODO_CREATE_PATH = TodoCommon.boardTodoPath(NON_EXISTENT_ID);
 	}
 
 	@Test
@@ -133,7 +132,7 @@ class TodoIntegrationTests {
 				))
 				.contentType(MediaType.APPLICATION_JSON)
 		).andExpect(status().is(HttpStatus.BAD_REQUEST.value()))
-			.andExpect(content().string(ErrorMessages.BOARD_NOT_EXIST_MESSAGE));
+			.andExpect(content().string(ErrorMessages.BOARD_NOT_EXIST_MESSAGE(NON_EXISTENT_ID, "")));
 	}
 
 	@Test
@@ -370,7 +369,7 @@ class TodoIntegrationTests {
 		mockMvc.perform(
 			get(TodoCommon.todoPath + "/" + "phase-name/" + INVALID_PHASE)
 		).andExpect(status().is(HttpStatus.BAD_REQUEST.value())
-		).andExpect(content().string(ErrorMessages.TODO_PHASE_NOT_EXIST));
+		).andExpect(content().string(ErrorMessages.TODO_PHASE_NOT_EXIST(INVALID_PHASE)));
 	}
 
 	private static Stream<Arguments> provideTodosForCloning() {

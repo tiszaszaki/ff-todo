@@ -24,7 +24,7 @@ public class BoardService {
 	private BoardRepository boardRepository;
 
 	public Board getBoard(Long id) {
-		return boardRepository.findById(id).orElseThrow(() -> new NotExistException(BOARD_NOT_EXIST_MESSAGE) );
+		return boardRepository.findById(id).orElseThrow(() -> new NotExistException(BOARD_NOT_EXIST_MESSAGE(id, "")) );
 	}
 
 	public Set<Long> getBoardsId() {

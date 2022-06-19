@@ -55,7 +55,7 @@ public class TaskService {
 		return result;
 	}
 	public Task getTask(Long id) {
-		return taskRepository.findById(id).orElseThrow(() -> new NotExistException(TASK_NOT_EXIST_MESSAGE) );
+		return taskRepository.findById(id).orElseThrow(() -> new NotExistException(TASK_NOT_EXIST_MESSAGE(id, "")) );
 	}
 
 	public Task addTask(Long todoId, AddTaskRequest request) {

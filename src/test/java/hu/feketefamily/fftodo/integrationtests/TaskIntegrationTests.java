@@ -178,7 +178,7 @@ class TaskIntegrationTests {
 				))
 				.contentType(MediaType.APPLICATION_JSON)
 		).andExpect(status().is(HttpStatus.BAD_REQUEST.value()))
-			.andExpect(content().string(ErrorMessages.TODO_NOT_EXIST_MESSAGE));
+			.andExpect(content().string(ErrorMessages.TODO_NOT_EXIST_MESSAGE(INVALID_TODO_ID, "")));
 	}
 
 	@Test
