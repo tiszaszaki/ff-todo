@@ -5,6 +5,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import hu.feketefamily.fftodo.model.api.AddTaskRequest;
+import hu.feketefamily.fftodo.model.api.AddTodoRequest;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -74,7 +76,7 @@ class TaskIntegrationTests {
 
 		VALID_TODO_ID = todoService.addTodo(
 			validBoardId,
-			Todo.builder()
+			AddTodoRequest.builder()
 				.name("todo")
 				.description("todo description")
 				.phase(1)
@@ -82,7 +84,7 @@ class TaskIntegrationTests {
 		).getId();
 		VALID_ID = taskService.addTask(
 			VALID_TODO_ID,
-			Task.builder()
+			AddTaskRequest.builder()
 				.name(VALID_NAME)
 				.done(VALID_DONE)
 				.build()
@@ -90,7 +92,7 @@ class TaskIntegrationTests {
 
 		NON_EMPTY_TASKLIST_TODO_ID = todoService.addTodo(
 			validBoardId,
-			Todo.builder()
+			AddTodoRequest.builder()
 				.name("todo with only one Task")
 				.description("todo description")
 				.phase(1)
@@ -98,7 +100,7 @@ class TaskIntegrationTests {
 		).getId();
 		taskService.addTask(
 			NON_EMPTY_TASKLIST_TODO_ID,
-			Task.builder()
+			AddTaskRequest.builder()
 				.name(VALID_NAME)
 				.done(VALID_DONE)
 				.build()
@@ -106,7 +108,7 @@ class TaskIntegrationTests {
 
 		EMPTY_TASKLIST_TODO_ID = todoService.addTodo(
 			validBoardId,
-			Todo.builder()
+			AddTodoRequest.builder()
 				.name("todo with empty Task list")
 				.description("todo description")
 				.phase(1)

@@ -3,6 +3,7 @@ package hu.feketefamily.fftodo.controller;
 import hu.feketefamily.fftodo.constants.ErrorMessages;
 import hu.feketefamily.fftodo.constants.TodoCommon;
 import hu.feketefamily.fftodo.exception.NotExistException;
+import hu.feketefamily.fftodo.model.api.AddTaskRequest;
 import hu.feketefamily.fftodo.model.api.TodoPhaseNameResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -70,8 +71,8 @@ public class TodoController {
 	}
 
 	@PutMapping("/{id}/task")
-	public ResponseEntity<Task> addTask(@PathVariable Long id, @RequestBody Task task) {
-		return ResponseEntity.ok(taskService.addTask(id, task));
+	public ResponseEntity<Task> addTask(@PathVariable Long id, @RequestBody AddTaskRequest request) {
+		return ResponseEntity.ok(taskService.addTask(id, request));
 	}
 
 	@DeleteMapping("/{id}/task/clear")

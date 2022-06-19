@@ -17,7 +17,7 @@ import lombok.*;
 @Table(name = "todo")
 public class Todo {
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(updatable = false, nullable = false)
 	private Long id;
 	@NotBlank

@@ -4,6 +4,7 @@ import static hu.feketefamily.fftodo.constants.ErrorMessages.TODO_NOT_EXIST_MESS
 
 import hu.feketefamily.fftodo.constants.ErrorMessages;
 import hu.feketefamily.fftodo.constants.TodoCommon;
+import hu.feketefamily.fftodo.model.api.AddTodoRequest;
 import hu.feketefamily.fftodo.model.api.TodoPhaseNameResponse;
 import hu.feketefamily.fftodo.model.entity.Task;
 import hu.feketefamily.fftodo.model.repository.TaskRepository;
@@ -78,16 +79,16 @@ public class TodoService {
 		return result;
 	}
 
-	public Todo addTodo(Long boardId, @Valid Todo todo) {
-		Calendar dateCalc=Calendar.getInstance();
-		Date now=new Date(); Todo newTodo;
-
-		dateCalc.setTime(now);
-		todo.setDateCreated(now);
-		todo.setDateModified(dateCalc.getTime());
-		todo.setBoard(boardService.getBoard(boardId));
-
-		newTodo = todoRepository.save(todo);
+	public Todo addTodo(Long boardId, @Valid AddTodoRequest request) {
+		Todo todo = Todo.builder()
+			.name(request.getName())
+			.description(request.getDescription())
+			.phase(request.getPhase())
+			.dateCreated(new Date())
+			.dateModified(new Date())
+			.board(boardService.getBoard(boardId))
+			.build();
+		Todo newTodo = todoRepository.save(todo);
 
 		log.info("Saved new Todo for Board with id {{}}: {{}}", boardId, newTodo.toString());
 

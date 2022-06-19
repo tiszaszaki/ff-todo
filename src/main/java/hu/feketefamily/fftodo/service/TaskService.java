@@ -2,6 +2,7 @@ package hu.feketefamily.fftodo.service;
 
 import hu.feketefamily.fftodo.constants.TodoCommon;
 import hu.feketefamily.fftodo.exception.NotExistException;
+import hu.feketefamily.fftodo.model.api.AddTaskRequest;
 import hu.feketefamily.fftodo.model.entity.Todo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -57,11 +58,16 @@ public class TaskService {
 		return taskRepository.findById(id).orElseThrow(() -> new NotExistException(TASK_NOT_EXIST_MESSAGE) );
 	}
 
-	public Task addTask(Long todoId, Task task) {
-		Task newTask;
-		task.setTodo(todoService.getTodo(todoId, false));
+	public Task addTask(Long todoId, AddTaskRequest request) {
+		Task task = Task.builder()
+			.name(request.getName())
+			.done(request.getDone())
+			.todo(todoService.getTodo(todoId, false))
+			.build();
+		Task newTask = taskRepository.save(task);
+
 		todoService.updateTodoDate(todoId);
-		newTask = taskRepository.save(task);
+
 		log.info("Saved new Task for Todo with id {{}}: {{}}", todoId, newTask.toString());
 		return newTask;
 	}

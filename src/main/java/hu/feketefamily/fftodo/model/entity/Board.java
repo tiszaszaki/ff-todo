@@ -19,7 +19,7 @@ import java.util.List;
 @Table(name = "board")
 public class Board {
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(updatable = false, nullable = false)
 	private Long id;
 	@NotBlank

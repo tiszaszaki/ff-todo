@@ -8,6 +8,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import hu.feketefamily.fftodo.model.api.AddTaskRequest;
+import hu.feketefamily.fftodo.model.api.AddTodoRequest;
 import hu.feketefamily.fftodo.model.entity.Task;
 import hu.feketefamily.fftodo.service.TaskService;
 import hu.feketefamily.fftodo.service.TodoService;
@@ -138,7 +140,7 @@ class TodoIntegrationTests {
 	void getExistingTodo() throws Exception {
 		Long validTodoId = todoService.addTodo(
 			VALID_BOARD_ID,
-			Todo.builder()
+			AddTodoRequest.builder()
 				.name(VALID_NAME + "2")
 				.description(VALID_DESCRIPTION)
 				.phase(VALID_PHASE)
@@ -153,7 +155,7 @@ class TodoIntegrationTests {
 	void getExistingTodoWithTasks() throws Exception {
 		Long validTodoId = todoService.addTodo(
 			VALID_BOARD_ID,
-			Todo.builder()
+			AddTodoRequest.builder()
 				.name(VALID_NAME + "2")
 				.description(VALID_DESCRIPTION)
 				.phase(VALID_PHASE)
@@ -161,7 +163,7 @@ class TodoIntegrationTests {
 		).getId();
 		taskService.addTask(
 			validTodoId,
-			Task.builder()
+			AddTaskRequest.builder()
 				.name("task-" + VALID_NAME + "-2")
 				.done(true)
 				.build()
@@ -175,7 +177,7 @@ class TodoIntegrationTests {
 	void getExistingTodoByName() throws Exception {
 		String validTodoName = todoService.addTodo(
 			VALID_BOARD_ID,
-			Todo.builder()
+			AddTodoRequest.builder()
 				.name(VALID_NAME + "2B")
 				.description(VALID_DESCRIPTION)
 				.phase(VALID_PHASE)
@@ -202,7 +204,7 @@ class TodoIntegrationTests {
 
 	@ParameterizedTest
 	@MethodSource("provideTodosForCloning")
-	void cloneExistingTodo(Todo validTodo) throws Exception {
+	void cloneExistingTodo(AddTodoRequest validTodo) throws Exception {
 		Long validTodoId = todoService.addTodo(VALID_BOARD_ID, validTodo).getId();
 		mockMvc.perform(
 			get(TodoCommon.todoPath + "/" + validTodoId + "/clone/" + VALID_PHASE + "/" + VALID_BOARD_ID)
@@ -215,19 +217,20 @@ class TodoIntegrationTests {
 		String originalTodoName = VALID_NAME + "3B";
 		String clonedTodoName = originalTodoName + TodoCommon.todoCloneSuffix;
 
-		Todo originalTodo =	Todo.builder()
+		AddTodoRequest originalTodo = AddTodoRequest.builder()
 			.name(originalTodoName)
 			.description(VALID_DESCRIPTION)
 			.phase(VALID_PHASE)
 			.build();
 		Long validTodoId = todoService.addTodo(VALID_BOARD_ID, originalTodo).getId();
+		Todo addedTodo = todoService.getTodo(validTodoId, false);
 		Todo clonedTodo;
 		Long clonedTodoId;
 
-		clonedTodo = todoService.cloneTodo(validTodoId, originalTodo.getPhase(), originalTodo.getBoard().getId());
+		clonedTodo = todoService.cloneTodo(validTodoId, addedTodo.getPhase(), addedTodo.getBoard().getId());
 		clonedTodoId = clonedTodo.getId();
 
-		log.info("{}(): original is {{}}", thisMethodName, originalTodo);
+		log.info("{}(): original is {{}}", thisMethodName, addedTodo);
 		log.info("{}(): cloned is   {{}}", thisMethodName, clonedTodo);
 
 		Assertions.assertEquals(clonedTodoName, clonedTodo.getName());
@@ -243,7 +246,7 @@ class TodoIntegrationTests {
 	void cloneExistingTodoWithTasks() throws Exception {
 		Long validTodoId = todoService.addTodo(
 			VALID_BOARD_ID,
-			Todo.builder()
+			AddTodoRequest.builder()
 				.name(VALID_NAME + "4")
 				.description(VALID_DESCRIPTION)
 				.phase(VALID_PHASE)
@@ -251,7 +254,7 @@ class TodoIntegrationTests {
 		).getId();
 		taskService.addTask(
 			validTodoId,
-			Task.builder()
+			AddTaskRequest.builder()
 				.name("task-" + VALID_NAME)
 				.done(false)
 				.build()
@@ -306,7 +309,7 @@ class TodoIntegrationTests {
 		Assertions.assertNotEquals(0, todos.size());
 		todoService.addTodo(
 			VALID_BOARD_ID,
-			Todo.builder()
+			AddTodoRequest.builder()
 				.name(VALID_NAME + "5")
 				.description(VALID_DESCRIPTION)
 				.phase(VALID_PHASE)
@@ -359,7 +362,7 @@ class TodoIntegrationTests {
 		mockMvc.perform(
 			get(TodoCommon.todoPath + "/phase-name/" + VALID_PHASE)
 		).andExpect(status().is(HttpStatus.OK.value())
-		).andExpect(content().string(TodoCommon.getTodoPhaseName(VALID_PHASE)));
+		).andExpect(content().json("{phase:" + TodoCommon.getTodoPhaseName(VALID_PHASE) + "}"));
 	}
 
 	@Test
@@ -372,12 +375,12 @@ class TodoIntegrationTests {
 
 	private static Stream<Arguments> provideTodosForCloning() {
 		return Stream.of(
-			Arguments.of(Todo.builder()
+			Arguments.of(AddTodoRequest.builder()
 				.name(VALID_NAME + "3")
 				.description(VALID_DESCRIPTION)
 				.phase(VALID_PHASE)
 				.build()),
-			Arguments.of(Todo.builder() // name with maximum length
+			Arguments.of(AddTodoRequest.builder() // name with maximum length
 				.name(EXTREME_LONG_NAME_TO_CLONE)
 				.description(VALID_DESCRIPTION)
 				.phase(VALID_PHASE)

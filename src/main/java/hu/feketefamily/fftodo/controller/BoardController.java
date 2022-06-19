@@ -1,6 +1,7 @@
 package hu.feketefamily.fftodo.controller;
 
 import hu.feketefamily.fftodo.constants.TodoCommon;
+import hu.feketefamily.fftodo.model.api.AddTodoRequest;
 import hu.feketefamily.fftodo.model.entity.Board;
 import hu.feketefamily.fftodo.model.entity.Todo;
 import hu.feketefamily.fftodo.service.BoardService;
@@ -55,8 +56,8 @@ public class BoardController {
 	}
 
 	@PutMapping("/{id}/todo")
-	public ResponseEntity<Todo> addTodo(@PathVariable Long id, @RequestBody Todo todo) {
-		return ResponseEntity.ok(todoService.addTodo(id, todo));
+	public ResponseEntity<Todo> addTodo(@PathVariable Long id, @RequestBody AddTodoRequest request) {
+		return ResponseEntity.ok(todoService.addTodo(id, request));
 	}
 
 	@DeleteMapping("/{id}/todo/clear")
