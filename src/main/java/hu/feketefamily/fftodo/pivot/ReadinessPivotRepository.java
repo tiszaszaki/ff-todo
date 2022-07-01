@@ -9,21 +9,23 @@ import java.util.Set;
 @Repository
 public interface ReadinessPivotRepository extends JpaRepository<ReadinessRecord, Long> {
 	@Query(
-		"select b.id, b.name, COUNT() as doneTaskCount, COUNT() as taskCount" +
-		"from Board b" +
-		"left join Todo to on to.boardId = b.id" +
-		"left join Task ta on ta.todoId = to.id" +
-		"group by b.id" +
-		"where ta.done = true"
+		"SELECT b.id, b.name, " +
+		"COUNT(CASE WHEN ta.done THEN 1 ELSE 0 END) AS doneTaskCount, " +
+		"COUNT(CASE WHEN ta.name IS NOT NULL THEN 1 ELSE 0 END) AS taskCount\n" +
+		"FROM Board b\n" +
+		"LEFT OUTER JOIN b.todos to\n" +
+		"LEFT OUTER JOIN to.tasks ta\n" +
+		"GROUP BY b.id, b.name\n"
 	)
 	Set<ReadinessRecord> getAllBoardsReadiness();
 
 	@Query(
-		"select b.id, b.name, COUNT() as doneTaskCount, COUNT() as taskCount" +
-		"from Todo to" +
-		"left join Task ta on ta.todoId = to.id" +
-		"group by to.id" +
-		"where ta.done = true"
+		"SELECT to.id, to.name, " +
+		"COUNT(CASE WHEN ta.done THEN 1 ELSE 0 END) AS doneTaskCount, " +
+		"COUNT(CASE WHEN ta.name IS NOT NULL THEN 1 ELSE 0 END) AS taskCount\n" +
+		"FROM Todo to\n" +
+		"LEFT OUTER JOIN to.tasks ta\n" +
+		"GROUP BY to.id, to.name\n"
 	)
 	Set<ReadinessRecord> getAllTodosReadiness();
 }
