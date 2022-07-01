@@ -38,6 +38,7 @@ public class TodoCommon {
 	public static final String boardPath = "/ff-todo/board";
 	public static final String todoPath = "/ff-todo/todo";
 	public static final String taskPath = "/ff-todo/task";
+	public static final String pivotPath = "/ff-todo/pivot";
 
 	public static String boardTodoPath(Long id) {
 		return boardPath + "/" + id + "/todo";
