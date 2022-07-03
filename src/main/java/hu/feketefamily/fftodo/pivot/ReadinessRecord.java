@@ -11,6 +11,10 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 @Data
 @Builder
@@ -18,6 +22,23 @@ import javax.validation.constraints.Size;
 @AllArgsConstructor
 @Entity
 public class ReadinessRecord {
+	public static List<String> fieldOrder() {
+		var res = new LinkedList<String>();
+		res.add("id"); res.add("name");
+		res.add("doneTaskCount"); res.add("taskCount");
+		res.add("doneTaskPercent");
+		return res;
+	}
+	public static Map<String, String> fieldRoles() {
+		var res = new HashMap<String, String>();
+		res.put("id", "Key");
+		res.put("name", "Key");
+		res.put("doneTaskCount", "");
+		res.put("taskCount", "");
+		res.put("doneTaskPercent", "Percent");
+		return res;
+	}
+
 	@Id
 	@Column(updatable = false, nullable = false)
 	private Long id;

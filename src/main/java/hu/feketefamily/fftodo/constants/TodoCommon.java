@@ -40,6 +40,9 @@ public class TodoCommon {
 	public static final String taskPath = "/ff-todo/task";
 	public static final String pivotPath = "/ff-todo/pivot";
 
+	public static final String pivotLabel1 = "board-readiness";
+	public static final String pivotLabel2 = "todo-readiness";
+
 	public static String boardTodoPath(Long id) {
 		return boardPath + "/" + id + "/todo";
 	}

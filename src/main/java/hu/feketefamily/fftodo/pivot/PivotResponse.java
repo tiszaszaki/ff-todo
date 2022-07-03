@@ -3,9 +3,7 @@ package hu.feketefamily.fftodo.pivot;
 import lombok.Builder;
 import lombok.Data;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Data
 @Builder
@@ -21,5 +19,6 @@ public class PivotResponse<T> {
 	}
 
 	private Map<String, String> fields;
-	private List<T> records;
+	private List<String> fieldOrder;
+	private Set<T> records;
 }
