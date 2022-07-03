@@ -46,8 +46,10 @@ public class ReadinessRecord {
 	@Size(max = TodoCommon.maxBoardNameLength)
 	@Column(updatable = false, nullable = false, unique = true)
 	private String name;
-	@Column(updatable = false, nullable = false)
+	@Column(name = "done_task_count", updatable = false, nullable = false)
 	private Long doneTaskCount;
-	@Column(updatable = false, nullable = false)
+	@Column(name = "task_count", updatable = false, nullable = false)
 	private Long taskCount;
+	@Column(name = "done_task_percent", updatable = false, nullable = false)
+	private Double doneTaskPercent;
 }

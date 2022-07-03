@@ -16,9 +16,9 @@ public class PivotService {
 	@Autowired
 	private ReadinessPivotRepository readinessPivotRepository;
 
-	public PivotResponse resultReadinessPivot(Set<Long> records, String queryLabel)
+	public PivotResponse resultReadinessPivot(Set<ReadinessRecord> records, String queryLabel)
 	{
-		var results = new PivotResponse<Long>();
+		var results = new PivotResponse<ReadinessRecord>();
 		var tempFields = results.extractFieldsFromType(ReadinessRecord.class);
 		var tempFieldOrder = ReadinessRecord.fieldOrder();
 		var tempRoles = ReadinessRecord.fieldRoles();
@@ -36,6 +36,8 @@ public class PivotService {
 			var newVal = oldVal + ',' + tempVal;
 			tempFields.replace(f, oldVal, newVal);
 		}
+		for (var r : results.getRecords())
+			r.setDoneTaskPercent((r.getDoneTaskCount() + 0.0) / r.getTaskCount());
 		return results;
 	}
 	public PivotResponse getBoardsReadiness() {
