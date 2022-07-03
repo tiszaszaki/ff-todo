@@ -1,20 +1,24 @@
 package hu.feketefamily.fftodo.pivot;
 
-import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 
 import java.util.*;
 
 @Data
-@Builder
+@NoArgsConstructor
 public class PivotResponse<T> {
 
-	public static Map<String, String> ExtractFieldsFromType(Class c)
+	public static Map<String, String> extractFieldsFromType(Class c)
 	{
 		var res = new HashMap<String, String>();
 		var fields = c.getFields();
-		for (var f : fields)
-			res.put(f.getName(), f.getClass().getName());
+		for (var f : fields) {
+			var fieldName = f.getName();
+			var fieldType= f.getType().getName();
+			res.put(fieldName, fieldType);
+		}
 		return res;
 	}
 

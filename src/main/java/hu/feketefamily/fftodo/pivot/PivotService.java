@@ -1,5 +1,6 @@
 package hu.feketefamily.fftodo.pivot;
 
+import hu.feketefamily.fftodo.constants.TodoCommon;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,19 +16,24 @@ public class PivotService {
 	@Autowired
 	private ReadinessPivotRepository readinessPivotRepository;
 
-	public PivotResponse resultReadinessPivot(Set<ReadinessRecord> records)
+	public PivotResponse resultReadinessPivot(Set<Long> records, String queryLabel)
 	{
-		var results =
-			PivotResponse.builder()
-				.records(Collections.singleton(records))
-				.fields(PivotResponse.ExtractFieldsFromType(ReadinessRecord.class))
-				.fieldOrder(ReadinessRecord.fieldOrder()).build();
-		var tempFields = results.getFields();
+		var results = new PivotResponse<Long>();
+		var tempFields = results.extractFieldsFromType(ReadinessRecord.class);
+		var tempFieldOrder = ReadinessRecord.fieldOrder();
 		var tempRoles = ReadinessRecord.fieldRoles();
-		for (var f : results.getFieldOrder())
+		if (queryLabel.equals("")) queryLabel = "default-pivot-query";
+		results.setRecords(records);
+		results.setFields(tempFields);
+		results.setFieldOrder(tempFieldOrder);
+		log.info("Created response object for pivot query with ID '{}'", queryLabel);
+		log.info("Number of fields in order: {}, number of roles: {}", tempFieldOrder.size(), tempRoles.size());
+		for (var f : tempFieldOrder)
 		{
-			var oldVal = tempFields.get(f).trim();
-			var newVal = oldVal + ',' + tempRoles.get(f).trim();
+			var oldVal = tempFields.get(f);//.trim();
+			var tempVal = tempRoles.get(f);//.trim();
+			log.info("Iterated ReadinessRecord field: '{}', '{}', '{}'", f, oldVal, tempVal);
+			var newVal = oldVal + ',' + tempVal;
 			tempFields.replace(f, oldVal, newVal);
 		}
 		return results;
@@ -35,12 +41,12 @@ public class PivotService {
 	public PivotResponse getBoardsReadiness() {
 		var records=readinessPivotRepository.getAllBoardsReadiness();
 		log.info("Fetched {} Board(s) with readiness", records.size());
-		return resultReadinessPivot(records);
+		return resultReadinessPivot(records, TodoCommon.pivotLabel1);
 	}
 
 	public PivotResponse getTodosReadiness() {
 		var records=readinessPivotRepository.getAllTodosReadiness();
 		log.info("Fetched {} Todo(s) with readiness", records.size());
-		return resultReadinessPivot(records);
+		return resultReadinessPivot(records, TodoCommon.pivotLabel2);
 	}
 }
