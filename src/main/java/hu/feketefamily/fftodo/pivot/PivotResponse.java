@@ -28,6 +28,7 @@ public class PivotResponse<T> {
 	}
 
 	private Set<PivotResponseFieldPair> fields;
+	private Set<PivotResponseFieldPair> fieldDisplay;
 	private List<String> fieldOrder;
 	private Set<T> records;
 }

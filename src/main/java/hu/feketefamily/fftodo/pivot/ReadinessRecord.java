@@ -11,10 +11,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Data
 @Builder
@@ -36,6 +33,16 @@ public class ReadinessRecord {
 		res.put("doneTaskCount", "");
 		res.put("taskCount", "");
 		res.put("doneTaskPercent", "Percent");
+		return res;
+	}
+
+	public static Set<PivotResponseFieldPair> fieldDisplay() {
+		var res = new HashSet<PivotResponseFieldPair>();
+		res.add(new PivotResponseFieldPair("id", "ID"));
+		res.add(new PivotResponseFieldPair("name", "Name"));
+		res.add(new PivotResponseFieldPair("doneTaskCount", "Count of tasks done"));
+		res.add(new PivotResponseFieldPair("taskCount", "Count of all tasks"));
+		res.add(new PivotResponseFieldPair("doneTaskPercent", "% of tasks done"));
 		return res;
 	}
 

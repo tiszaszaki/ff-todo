@@ -25,6 +25,7 @@ public class PivotService {
 		results.setRecords(records);
 		results.setFields(tempFields);
 		results.setFieldOrder(tempFieldOrder);
+		results.setFieldDisplay(ReadinessRecord.fieldDisplay());
 		log.info("Created response object for pivot query with ID '{}'", queryLabel);
 		log.info("Number of fields in ReadinessRecord: {}", tempFields.size());
 		log.info("Number of fields in order: {}, number of roles: {}", tempFieldOrder.size(), tempRoles.size());
@@ -50,8 +51,12 @@ public class PivotService {
 			}
 			log.info("Iterated ReadinessRecord field: '{}', '{}', '{}'", f, oldVal, tempVal);
 		}
-		for (var r : results.getRecords())
-			r.setDoneTaskPercent((r.getDoneTaskCount() + 0.0) / r.getTaskCount());
+		for (var r : results.getRecords()) {
+			if (r.getTaskCount() != 0)
+				r.setDoneTaskPercent((r.getDoneTaskCount() + 0.0) / r.getTaskCount());
+			else
+				r.setDoneTaskPercent(-1.0);
+		}
 		return results;
 	}
 	public PivotResponse getBoardsReadiness() {
