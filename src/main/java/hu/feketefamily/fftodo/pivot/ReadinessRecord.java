@@ -41,15 +41,20 @@ public class ReadinessRecord {
 
 	@Id
 	@Column(updatable = false, nullable = false)
+	@PivotResponse.PivotFetch
 	private Long id;
 	@NotBlank
 	@Size(max = TodoCommon.maxBoardNameLength)
 	@Column(updatable = false, nullable = false, unique = true)
+	@PivotResponse.PivotFetch
 	private String name;
 	@Column(name = "done_task_count", updatable = false, nullable = false)
+	@PivotResponse.PivotFetch
 	private Long doneTaskCount;
 	@Column(name = "task_count", updatable = false, nullable = false)
+	@PivotResponse.PivotFetch
 	private Long taskCount;
 	@Column(name = "done_task_percent", updatable = false, nullable = false)
+	@PivotResponse.PivotFetch
 	private Double doneTaskPercent;
 }

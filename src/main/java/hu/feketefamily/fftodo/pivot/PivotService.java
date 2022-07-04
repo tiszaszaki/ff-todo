@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
-import java.util.Collections;
 import java.util.Set;
 
 @Log4j2
@@ -27,6 +26,7 @@ public class PivotService {
 		results.setFields(tempFields);
 		results.setFieldOrder(tempFieldOrder);
 		log.info("Created response object for pivot query with ID '{}'", queryLabel);
+		log.info("Number of fields in ReadinessRecord: {}", tempFields.size());
 		log.info("Number of fields in order: {}, number of roles: {}", tempFieldOrder.size(), tempRoles.size());
 		for (var f : tempFieldOrder)
 		{
