@@ -1,8 +1,6 @@
 package hu.feketefamily.fftodo.controller;
 
-import hu.feketefamily.fftodo.constants.ErrorMessages;
 import hu.feketefamily.fftodo.constants.TodoCommon;
-import hu.feketefamily.fftodo.exception.NotExistException;
 import hu.feketefamily.fftodo.model.api.AddTaskRequest;
 import hu.feketefamily.fftodo.model.api.FetchTaskResponse;
 import hu.feketefamily.fftodo.model.api.FetchTodoResponse;

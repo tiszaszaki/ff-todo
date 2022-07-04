@@ -3,7 +3,6 @@ package hu.feketefamily.fftodo.controller;
 import hu.feketefamily.fftodo.constants.TodoCommon;
 import hu.feketefamily.fftodo.model.api.FetchTaskResponse;
 import hu.feketefamily.fftodo.model.entity.Task;
-import hu.feketefamily.fftodo.model.entity.Todo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

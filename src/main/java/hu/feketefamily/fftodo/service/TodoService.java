@@ -10,14 +10,12 @@ import hu.feketefamily.fftodo.model.api.FetchTodoResponse;
 import hu.feketefamily.fftodo.model.api.TodoPhaseNameResponse;
 import hu.feketefamily.fftodo.model.entity.Task;
 import hu.feketefamily.fftodo.model.repository.TaskRepository;
-import org.hibernate.annotations.Fetch;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import javax.validation.Valid;

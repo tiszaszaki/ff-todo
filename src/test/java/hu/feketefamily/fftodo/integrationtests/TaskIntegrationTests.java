@@ -28,7 +28,6 @@ import hu.feketefamily.fftodo.constants.ErrorMessages;
 import hu.feketefamily.fftodo.constants.TodoCommon;
 import hu.feketefamily.fftodo.model.entity.Board;
 import hu.feketefamily.fftodo.model.entity.Task;
-import hu.feketefamily.fftodo.model.entity.Todo;
 import hu.feketefamily.fftodo.service.BoardService;
 import hu.feketefamily.fftodo.service.TaskService;
 import hu.feketefamily.fftodo.service.TodoService;

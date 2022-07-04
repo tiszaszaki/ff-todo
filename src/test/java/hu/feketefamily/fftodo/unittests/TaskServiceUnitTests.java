@@ -2,11 +2,9 @@ package hu.feketefamily.fftodo.unittests;
 
 import hu.feketefamily.fftodo.model.repository.TaskRepository;
 import hu.feketefamily.fftodo.service.TaskService;
-import hu.feketefamily.fftodo.service.TodoService;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import static org.mockito.Mockito.*;

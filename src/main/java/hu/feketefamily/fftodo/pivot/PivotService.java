@@ -30,11 +30,25 @@ public class PivotService {
 		log.info("Number of fields in order: {}, number of roles: {}", tempFieldOrder.size(), tempRoles.size());
 		for (var f : tempFieldOrder)
 		{
-			var oldVal = tempFields.get(f);//.trim();
-			var tempVal = tempRoles.get(f);//.trim();
+			PivotResponseFieldPair tempEntry = new PivotResponseFieldPair("","");
+			var oldVal = "";
+			for (var e : tempFields)
+			{
+				if (e.key == f) {
+					tempEntry = e;
+					oldVal = e.value;
+					break;
+				}
+			}
+			var tempVal = tempRoles.get(f);
+			if (!tempVal.equals("")) {
+				var newVal = oldVal + ',' + tempVal;
+				tempFields.remove(tempEntry);
+				tempEntry.setKey(f);
+				tempEntry.setValue(newVal);
+				tempFields.add(tempEntry);
+			}
 			log.info("Iterated ReadinessRecord field: '{}', '{}', '{}'", f, oldVal, tempVal);
-			var newVal = oldVal + ',' + tempVal;
-			tempFields.replace(f, oldVal, newVal);
 		}
 		for (var r : results.getRecords())
 			r.setDoneTaskPercent((r.getDoneTaskCount() + 0.0) / r.getTaskCount());
