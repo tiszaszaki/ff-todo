@@ -10,27 +10,27 @@ import java.util.Set;
 public interface ReadinessPivotRepository extends JpaRepository<ReadinessRecord, Long> {
 	@Query(
 		value =
-		"SELECT b.id, b.name" +
-		", COUNT(CASE WHEN ta.done THEN 1 ELSE 0 END) AS done_task_count" +
-		", COUNT(CASE WHEN ta.name IS NOT NULL THEN 1 ELSE 0 END) AS task_count" +
-		", 0.0 AS done_task_percent\n" +
-		"FROM Board AS b\n" +
-		"LEFT JOIN Todo AS t ON b.id = t.board_id\n" +
-		"LEFT JOIN Task AS ta ON t.id = ta.todo_id\n" +
-		"GROUP BY b.id, b.name\n"
+		"select b.id, b.name" +
+		", sum(coalesce(done_todos.dtc, 0)) as done_task_count, sum(coalesce(done_todos.tc, 0)) as task_count, 0.0 as done_task_percent from board as b\n" +
+		"left join\n" +
+		"(select t.board_id, coalesce(done_tasks.dtc, 0) as dtc, coalesce(done_tasks.tc, 0) as tc from todo t\n" +
+		"left join\n" +
+		"(select ta.todo_id, count(case when ta.done then 1 end) as dtc, count(*) as tc from task ta group by ta.todo_id) as done_tasks\n" +
+		"on t.id = done_tasks.todo_id) as done_todos\n" +
+		"on b.id = done_todos.board_id\n" +
+		"group by b.id, b.name\n"
 		, nativeQuery = true
 	)
 	Set<ReadinessRecord> getAllBoardsReadiness();
 
 	@Query(
 		value =
-		"SELECT t.id, t.name" +
-		", COUNT(CASE WHEN ta.done THEN 1 ELSE 0 END) AS done_task_count" +
-		", COUNT(CASE WHEN ta.name IS NOT NULL THEN 1 ELSE 0 END) AS task_count" +
-		", 0.0 AS done_task_percent\n" +
-		"FROM Todo AS t\n" +
-		"LEFT JOIN Task AS ta ON t.id = ta.todo_id\n" +
-		"GROUP BY t.id, t.name\n"
+		"select t.id, t.name" +
+		", sum(coalesce(done_tasks.dtc, 0)) as done_task_count, sum(coalesce(done_tasks.tc, 0)) as task_count, 0.0 as done_task_percent from todo as t\n" +
+		"left join\n" +
+		"(select ta.todo_id, count(case when ta.done then 1 end) as dtc, count(*) as tc from task ta group by ta.todo_id) as done_tasks\n" +
+		"on t.id = done_tasks.todo_id\n" +
+		"group by t.id, t.name\n"
 		, nativeQuery = true
 	)
 	Set<ReadinessRecord> getAllTodosReadiness();

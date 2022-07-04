@@ -72,7 +72,8 @@ public class TodoService {
 		Todo result = todoRepository.findById(id).orElseThrow(() -> new NotExistException(TODO_NOT_EXIST_MESSAGE(id, "")) );
 		FetchTodoResponse response = buildFetchTodoResponse(result);
 		Integer i = 0;
-		log.info("Queried Todo by ID: {}", response.toString());
+		log.info("Queried Todo by ID {{}} with doneTasks: {}", id, result.getDoneTasks());
+		log.info("Queried Todo by ID: {{}}", response.toString());
 		for (Task task : result.getTasks()) {
 			FetchTaskResponse taskResponse = buildFetchTaskResponse(task);
 			log.info("Task #{} for Todo with ID {{}}: {}", ++i, response.getId(), taskResponse.toString());

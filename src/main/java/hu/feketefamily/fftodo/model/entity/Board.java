@@ -44,4 +44,8 @@ public class Board {
 	@JsonIgnore
 	@ToString.Exclude
 	private List<Todo> todos;
+
+	public Long getDoneTasks() {
+		return todos.stream().map(Todo::getDoneTasks).reduce(0L, Long::sum);
+	}
 }

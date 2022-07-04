@@ -24,7 +24,9 @@ public class BoardService {
 	private BoardRepository boardRepository;
 
 	public Board getBoard(Long id) {
-		return boardRepository.findById(id).orElseThrow(() -> new NotExistException(BOARD_NOT_EXIST_MESSAGE(id, "")) );
+		Board result = boardRepository.findById(id).orElseThrow(() -> new NotExistException(BOARD_NOT_EXIST_MESSAGE(id, "")));
+		log.info("Queried Board by ID {{}} with doneTasks: {}", id, result.getDoneTasks());
+		return result;
 	}
 
 	public Set<Long> getBoardsId() {

@@ -8,6 +8,7 @@ import javax.validation.constraints.*;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import hu.feketefamily.fftodo.constants.TodoCommon;
 import lombok.*;
+import org.hibernate.annotations.Formula;
 
 @Data
 @Builder
@@ -47,4 +48,8 @@ public class Todo {
 	@JsonIgnore
 	@ToString.Exclude
 	private Board board;
+
+	public Long getDoneTasks() {
+		return tasks.stream().filter(Task::getDone).count();
+	}
 }
