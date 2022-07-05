@@ -48,9 +48,11 @@ public class Todo {
 	@ToString.Exclude
 	private Board board;
 
+	@JsonIgnore
 	public Long getDoneTaskCount() {
 		return tasks.stream().filter(Task::getDone).count();
 	}
+	@JsonIgnore
 	public Long getTaskCount() {
 		return Long.valueOf(tasks.size());
 	}

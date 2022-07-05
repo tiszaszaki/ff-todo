@@ -20,7 +20,7 @@ public class PivotService {
 	@Autowired
 	private TodoRepository todoRepository;
 
-	public PivotResponse resultReadinessPivot(Set<ReadinessRecord> records, String queryLabel)
+	private PivotResponse resultReadinessPivot(Set<ReadinessRecord> records, String queryLabel)
 	{
 		var results = new PivotResponse<ReadinessRecord>();
 		var tempFields = results.extractFieldsFromType(ReadinessRecord.class);
@@ -59,6 +59,7 @@ public class PivotService {
 				r.setDoneTaskPercent(-1.0);
 		}
 		log.info("Created response object for pivot query with ID '{}'", queryLabel);
+		log.debug("");
 		return results;
 	}
 	public PivotResponse getBoardsReadiness() {
@@ -73,7 +74,7 @@ public class PivotService {
 				.taskCount(e.getTaskCount())
 				.build());
 		}
-		log.info("Fetched {} Board(s) with readiness", records.size());
+		log.info("Fetched {} Board(s) with readiness ({})", records.size(), TodoCommon.pivotLabel1);
 		return resultReadinessPivot(records, TodoCommon.pivotLabel1);
 	}
 
@@ -89,7 +90,7 @@ public class PivotService {
 				.taskCount(e.getTaskCount())
 				.build());
 		}
-		log.info("Fetched {} Todo(s) with readiness", records.size());
+		log.info("Fetched {} Todo(s) with readiness ({})", records.size(), TodoCommon.pivotLabel2);
 		return resultReadinessPivot(records, TodoCommon.pivotLabel2);
 	}
 }
