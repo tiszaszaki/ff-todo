@@ -58,6 +58,8 @@ public class TodoService {
 			.id(task.getId())
 			.name(task.getName())
 			.done(task.getDone())
+			.dateCreated(task.getDateCreated())
+			.dateModified(task.getDateModified())
 			.deadline(task.getDeadline())
 			.todoId(task.getTodo().getId())
 			.build();
@@ -167,8 +169,9 @@ public class TodoService {
 
 	@Transactional
 	public void updateTodo(Long id, @Valid Todo patchedTodo) {
+		patchedTodo.setDateModified(new Date());
 		if (todoRepository.updateById(id, patchedTodo.getName(), patchedTodo.getDescription(), patchedTodo.getPhase(),
-			new Date(), patchedTodo.getDeadline()) >= 1)
+			patchedTodo.getDateModified(), patchedTodo.getDeadline()) >= 1)
 		{
 			log.info("Successfully updated Todo with id {{}}: {}", id, patchedTodo);
 		}

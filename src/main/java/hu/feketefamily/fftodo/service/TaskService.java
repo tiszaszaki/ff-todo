@@ -38,6 +38,8 @@ public class TaskService {
 			.id(task.getId())
 			.name(task.getName())
 			.done(task.getDone())
+			.dateCreated(task.getDateCreated())
+			.dateModified(task.getDateModified())
 			.deadline(task.getDeadline())
 			.todoId(task.getTodo().getId())
 			.build();
@@ -113,10 +115,9 @@ public class TaskService {
 
 	@Transactional
 	public void updateTask(Long id, @Valid Task patchedTask) {
-		if (taskRepository.updateById(id, patchedTask.getName(), patchedTask.getDone(), patchedTask.getDeadline(), new Date()) >= 1)
+		patchedTask.setDateModified(new Date());
+		if (taskRepository.updateById(id, patchedTask.getName(), patchedTask.getDone(), patchedTask.getDateModified(), patchedTask.getDeadline()) >= 1)
 		{
-			Task tempTask=getTask(id);
-			Long todoId=tempTask.getTodo().getId();
 			log.info("Successfully updated Task with id {{}}: {}", id, patchedTask.toString());
 		}
 		else

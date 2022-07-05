@@ -56,7 +56,8 @@ public class BoardService {
 
 	@Transactional
 	public void updateBoard(Long id, @Valid Board patchedBoard) {
-		if (boardRepository.updateById(id, patchedBoard.getName(), patchedBoard.getDescription(), patchedBoard.getAuthor(), new Date()) >= 1)
+		patchedBoard.setDateModified(new Date());
+		if (boardRepository.updateById(id, patchedBoard.getName(), patchedBoard.getDescription(), patchedBoard.getAuthor(), patchedBoard.getDateModified()) >= 1)
 		{
 			log.info("Successfully updated Board with id {{}}: {}", id, patchedBoard);
 		}
