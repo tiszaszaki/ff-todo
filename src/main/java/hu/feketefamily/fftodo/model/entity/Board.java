@@ -45,7 +45,10 @@ public class Board {
 	@ToString.Exclude
 	private List<Todo> todos;
 
-	public Long getDoneTasks() {
-		return todos.stream().map(Todo::getDoneTasks).reduce(0L, Long::sum);
+	public Long getDoneTaskCount() {
+		return todos.stream().map(Todo::getDoneTaskCount).reduce(0L, Long::sum);
+	}
+	public Long getTaskCount() {
+		return todos.stream().map(Todo::getTaskCount).reduce(0L, Long::sum);
 	}
 }

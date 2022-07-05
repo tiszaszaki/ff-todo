@@ -25,7 +25,7 @@ public class BoardService {
 
 	public Board getBoard(Long id) {
 		Board result = boardRepository.findById(id).orElseThrow(() -> new NotExistException(BOARD_NOT_EXIST_MESSAGE(id, "")));
-		log.info("Queried Board by ID {{}} with doneTasks: {}", id, result.getDoneTasks());
+		log.info("Queried Board by id {{}}: {}", id, result.toString());
 		return result;
 	}
 

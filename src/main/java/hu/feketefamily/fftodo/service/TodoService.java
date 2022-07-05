@@ -72,11 +72,10 @@ public class TodoService {
 		Todo result = todoRepository.findById(id).orElseThrow(() -> new NotExistException(TODO_NOT_EXIST_MESSAGE(id, "")) );
 		FetchTodoResponse response = buildFetchTodoResponse(result);
 		Integer i = 0;
-		log.info("Queried Todo by ID {{}} with doneTasks: {}", id, result.getDoneTasks());
-		log.info("Queried Todo by ID: {{}}", response.toString());
+		log.info("Queried Todo by id {{}}: {}", id, response.toString());
 		for (Task task : result.getTasks()) {
 			FetchTaskResponse taskResponse = buildFetchTaskResponse(task);
-			log.info("Task #{} for Todo with ID {{}}: {}", ++i, response.getId(), taskResponse.toString());
+			log.info("Queried Task #{} for Todo by id {{}}: {}", ++i, response.getId(), taskResponse.toString());
 		}
 		return response;
 	}
@@ -119,7 +118,7 @@ public class TodoService {
 		Integer i = 0;
 		for (Todo todo : result)
 			responseList.add(buildFetchTodoResponse(todo));
-		log.info("Queried {} Todo(s) from Board with id {{}}", result.size(), id);
+		log.info("Queried {} Todo(s) from Board by id {{}}", result.size(), id);
 		for (Todo t : result) {
 			log.info("Todo #{}: {}", ++i, t.toString());
 		}

@@ -1,11 +1,14 @@
 package hu.feketefamily.fftodo.pivot;
 
 import hu.feketefamily.fftodo.constants.TodoCommon;
+import hu.feketefamily.fftodo.model.repository.BoardRepository;
+import hu.feketefamily.fftodo.model.repository.TodoRepository;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
+import java.util.HashSet;
 import java.util.Set;
 
 @Log4j2
@@ -13,7 +16,9 @@ import java.util.Set;
 @Validated
 public class PivotService {
 	@Autowired
-	private ReadinessPivotRepository readinessPivotRepository;
+	private BoardRepository boardRepository;
+	@Autowired
+	private TodoRepository todoRepository;
 
 	public PivotResponse resultReadinessPivot(Set<ReadinessRecord> records, String queryLabel)
 	{
@@ -26,9 +31,6 @@ public class PivotService {
 		results.setFields(tempFields);
 		results.setFieldOrder(tempFieldOrder);
 		results.setFieldDisplay(ReadinessRecord.fieldDisplay());
-		log.info("Created response object for pivot query with ID '{}'", queryLabel);
-		log.info("Number of fields in ReadinessRecord: {}", tempFields.size());
-		log.info("Number of fields in order: {}, number of roles: {}", tempFieldOrder.size(), tempRoles.size());
 		for (var f : tempFieldOrder)
 		{
 			PivotResponseFieldPair tempEntry = new PivotResponseFieldPair("","");
@@ -49,7 +51,6 @@ public class PivotService {
 				tempEntry.setValue(newVal);
 				tempFields.add(tempEntry);
 			}
-			log.info("Iterated ReadinessRecord field: '{}', '{}', '{}'", f, oldVal, tempVal);
 		}
 		for (var r : results.getRecords()) {
 			if (r.getTaskCount() != 0)
@@ -57,16 +58,37 @@ public class PivotService {
 			else
 				r.setDoneTaskPercent(-1.0);
 		}
+		log.info("Created response object for pivot query with ID '{}'", queryLabel);
 		return results;
 	}
 	public PivotResponse getBoardsReadiness() {
-		var records=readinessPivotRepository.getAllBoardsReadiness();
+		var temp=boardRepository.findAll();
+		var records = new HashSet<ReadinessRecord>();
+		for (var e : temp)
+		{
+			records.add(ReadinessRecord.builder()
+				.id(e.getId())
+				.name(e.getName())
+				.doneTaskCount(e.getDoneTaskCount())
+				.taskCount(e.getTaskCount())
+				.build());
+		}
 		log.info("Fetched {} Board(s) with readiness", records.size());
 		return resultReadinessPivot(records, TodoCommon.pivotLabel1);
 	}
 
 	public PivotResponse getTodosReadiness() {
-		var records=readinessPivotRepository.getAllTodosReadiness();
+		var temp=todoRepository.findAll();
+		var records = new HashSet<ReadinessRecord>();
+		for (var e : temp)
+		{
+			records.add(ReadinessRecord.builder()
+				.id(e.getId())
+				.name(e.getName())
+				.doneTaskCount(e.getDoneTaskCount())
+				.taskCount(e.getTaskCount())
+				.build());
+		}
 		log.info("Fetched {} Todo(s) with readiness", records.size());
 		return resultReadinessPivot(records, TodoCommon.pivotLabel2);
 	}

@@ -67,7 +67,7 @@ public class TaskService {
 		List<FetchTaskResponse> responseList = new ArrayList<>();
 		for (Task task : result)
 			responseList.add(buildFetchTaskResponse(task));
-		log.info("Queried {} Task(s) from Todo with id {{}}", result.size(), todoId);
+		log.info("Queried {} Task(s) from Todo by id {{}}", result.size(), todoId);
 		if (logPerTask) {
 			Integer i = 0;
 			for (Task t : result) {
