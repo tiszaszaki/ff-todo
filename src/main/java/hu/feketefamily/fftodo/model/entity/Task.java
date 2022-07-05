@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.PastOrPresent;
 import javax.validation.constraints.Size;
 
 import hu.feketefamily.fftodo.constants.TodoCommon;
@@ -28,6 +29,14 @@ public class Task {
 	private String name;
 	@Column(nullable = false)
 	private Boolean done;
+	@PastOrPresent
+	@Column(nullable = false)
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date dateCreated;
+	@PastOrPresent
+	@Column(nullable = false)
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date dateModified;
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date deadline;
 	@ManyToOne

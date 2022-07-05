@@ -132,6 +132,7 @@ public class TodoService {
 			.phase(request.getPhase())
 			.dateCreated(new Date())
 			.dateModified(new Date())
+			.deadline(request.getDeadline())
 			.board(boardService.getBoard(boardId))
 			.build();
 		Todo newTodo = todoRepository.save(todo);
@@ -162,15 +163,6 @@ public class TodoService {
 		}
 
 		return temp_count;
-	}
-
-	@Transactional
-	public void updateTodoDate(Long id)
-	{
-		Todo tempTodo=getTodo(id);
-		tempTodo.setDateModified(new Date());
-		log.info("Refreshing date modified for Todo with id {{}}", id);
-		updateTodo(id, tempTodo);
 	}
 
 	@Transactional

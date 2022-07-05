@@ -23,9 +23,10 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
 	int cloneByTodoId(@Param("id") Long todoId, @Param("name") String todoName);
 
 	@Modifying
-	@Query("UPDATE Task t SET t.name = :name, t.done = :done, t.deadline = :deadline WHERE t.id = :id")
+	@Query("UPDATE Task t SET t.name = :name, t.done = :done, t.deadline = :deadline," +
+		"t.dateModified = :now WHERE t.id = :id")
 	int updateById(@Param("id") Long id, @Param("name") String name, @Param("done") Boolean done,
-		@Param("deadline") Date deadline);
+				   @Param("now") Date dateModified, @Param("deadline") Date deadline);
 	int deleteByTodoId(Long todoId);
 	List<Task> findByTodoId(Long todoId);
 	List<Task> findByTodoId(Long todoId, Sort sort);

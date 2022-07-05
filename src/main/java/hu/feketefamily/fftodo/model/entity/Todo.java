@@ -39,6 +39,7 @@ public class Todo {
 	@Column(nullable = false)
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date dateModified;
+	@Temporal(TemporalType.TIMESTAMP)
 	private Date deadline;
 	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE, mappedBy = "todo")
 	private List<Task> tasks;

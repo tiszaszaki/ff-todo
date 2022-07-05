@@ -16,6 +16,7 @@ import lombok.extern.log4j.Log4j2;
 import javax.validation.Valid;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import static hu.feketefamily.fftodo.constants.ErrorMessages.TASK_NOT_EXIST_MESSAGE;
@@ -87,10 +88,11 @@ public class TaskService {
 			.name(request.getName())
 			.done(request.getDone())
 			.todo(todoService.getTodo(todoId))
+			.dateCreated(new Date())
+			.dateModified(new Date())
+			.deadline(request.getDeadline())
 			.build();
 		Task newTask = taskRepository.save(task);
-
-		todoService.updateTodoDate(todoId);
 
 		log.info("Saved new Task for Todo with id {{}}: {{}}", todoId, newTask.toString());
 		return newTask;
@@ -102,7 +104,6 @@ public class TaskService {
 			try {
 				Task tempTask = getTask(id);
 				Long todoId = tempTask.getTodo().getId();
-				todoService.updateTodoDate(todoId);
 			} catch (NotExistException e) { }
 			taskRepository.deleteById(id);
 		} else {
@@ -112,12 +113,11 @@ public class TaskService {
 
 	@Transactional
 	public void updateTask(Long id, @Valid Task patchedTask) {
-		if (taskRepository.updateById(id, patchedTask.getName(), patchedTask.getDone(), patchedTask.getDeadline()) >= 1)
+		if (taskRepository.updateById(id, patchedTask.getName(), patchedTask.getDone(), patchedTask.getDeadline(), new Date()) >= 1)
 		{
 			Task tempTask=getTask(id);
 			Long todoId=tempTask.getTodo().getId();
 			log.info("Successfully updated Task with id {{}}: {}", id, patchedTask.toString());
-			todoService.updateTodoDate(todoId);
 		}
 		else
 		{
@@ -133,8 +133,6 @@ public class TaskService {
 			log.info("Successfully deleted {} Task(s) from Todo with id {{}}", temp_count, id);
 		else
 			log.warn("No Tasks were deleted from Todo with id {{}}", id);
-
-		todoService.updateTodoDate(id);
 
 		return temp_count;
 	}

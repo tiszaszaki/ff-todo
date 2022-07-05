@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.Date;
 import java.util.Set;
 
 @Repository
@@ -15,8 +16,10 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
 	Set<Long> getAllIds();
 
 	@Modifying
-	@Query("UPDATE Board b SET b.name = :name, b.description = :description, b.author = :author WHERE b.id = :id")
-	int updateById(@Param("id") Long id, @Param("name") String name, @Param("description") String description, @Param("author") String author);
+	@Query("UPDATE Board b SET b.name = :name, b.description = :description, b.author = :author," +
+		"b.dateModified = :now WHERE b.id = :id")
+	int updateById(@Param("id") Long id, @Param("name") String name, @Param("description") String description,
+				   @Param("author") String author, @Param("now") Date dateModified);
 
 	@Modifying
 	@Query("UPDATE Board b SET b.readonlyTodos = :readonly WHERE b.id = :id")

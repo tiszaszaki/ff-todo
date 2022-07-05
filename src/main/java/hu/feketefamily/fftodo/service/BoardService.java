@@ -37,6 +37,7 @@ public class BoardService {
 	{
 		Date now=new Date(); Board newBoard;
 		board.setDateCreated(now);
+		board.setDateModified(now);
 		board.setReadonlyTodos(false);
 		board.setReadonlyTasks(false);
 		newBoard = boardRepository.save(board);
@@ -55,7 +56,7 @@ public class BoardService {
 
 	@Transactional
 	public void updateBoard(Long id, @Valid Board patchedBoard) {
-		if (boardRepository.updateById(id, patchedBoard.getName(), patchedBoard.getDescription(), patchedBoard.getAuthor()) >= 1)
+		if (boardRepository.updateById(id, patchedBoard.getName(), patchedBoard.getDescription(), patchedBoard.getAuthor(), new Date()) >= 1)
 		{
 			log.info("Successfully updated Board with id {{}}: {}", id, patchedBoard);
 		}

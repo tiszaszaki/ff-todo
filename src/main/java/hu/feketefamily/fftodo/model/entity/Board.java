@@ -36,6 +36,10 @@ public class Board {
 	@Column(updatable = false, nullable = false)
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date dateCreated;
+	@PastOrPresent
+	@Column(nullable = false)
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date dateModified;
 	@Column(nullable = false)
 	private Boolean readonlyTodos;
 	@Column(nullable = false)
