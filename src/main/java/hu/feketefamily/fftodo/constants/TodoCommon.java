@@ -42,6 +42,8 @@ public class TodoCommon {
 
 	public static final String pivotLabel1 = "board-readiness";
 	public static final String pivotLabel2 = "todo-readiness";
+	public static final String pivotLabel3 = "board-latest-update";
+	public static final String pivotLabel4 = "todo-latest-update";
 
 	public static String boardTodoPath(Long id) {
 		return boardPath + "/" + id + "/todo";

@@ -8,8 +8,10 @@ import javax.validation.constraints.PastOrPresent;
 import javax.validation.constraints.Size;
 
 import hu.feketefamily.fftodo.constants.TodoCommon;
+import hu.feketefamily.fftodo.pivot.LatestUpdateRecord;
 import lombok.*;
 
+import java.util.Calendar;
 import java.util.Date;
 
 @Data
@@ -44,4 +46,22 @@ public class Task {
 	@JsonIgnore
 	@ToString.Exclude
 	private Todo todo;
+
+	@JsonIgnore
+	public Date getLatestUpdated()
+	{
+		var compareVal = dateCreated.compareTo(dateModified);
+		if (compareVal < 0)
+			return dateModified;
+		else
+			return dateCreated;
+	}
+	@JsonIgnore
+	public LatestUpdateRecord.LatestUpdateEvent getLatestEvent()
+	{
+		if (getLatestUpdated().compareTo(dateModified) == 0)
+			return LatestUpdateRecord.LatestUpdateEvent.UPDATE_TASK;
+		else
+			return LatestUpdateRecord.LatestUpdateEvent.ADD_TASK;
+	}
 }

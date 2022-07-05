@@ -86,12 +86,13 @@ public class TaskService {
 	}
 
 	public Task addTask(Long todoId, AddTaskRequest request) {
+		Date now = new Date();
 		Task task = Task.builder()
 			.name(request.getName())
 			.done(request.getDone())
 			.todo(todoService.getTodo(todoId))
-			.dateCreated(new Date())
-			.dateModified(new Date())
+			.dateCreated(now)
+			.dateModified(now)
 			.deadline(request.getDeadline())
 			.build();
 		Task newTask = taskRepository.save(task);

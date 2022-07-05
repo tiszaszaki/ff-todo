@@ -20,4 +20,14 @@ public class PivotController {
 	public ResponseEntity<PivotResponse> getTodosReadiness() {
 		return ResponseEntity.ok(pivotService.getTodosReadiness());
 	}
+
+	@GetMapping(TodoCommon.pivotLabel3)
+	public ResponseEntity<PivotResponse> getBoardsLatestUpdate() {
+		return ResponseEntity.ok(pivotService.getBoardsLatestUpdate());
+	}
+
+	@GetMapping(TodoCommon.pivotLabel4)
+	public ResponseEntity<PivotResponse> getTodosLatestUpdate() {
+		return ResponseEntity.ok(pivotService.getTodosLatestUpdate());
+	}
 }

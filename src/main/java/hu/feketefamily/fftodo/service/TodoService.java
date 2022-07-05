@@ -128,12 +128,13 @@ public class TodoService {
 	}
 
 	public Todo addTodo(Long boardId, @Valid AddTodoRequest request) {
+		Date now = new Date();
 		Todo todo = Todo.builder()
 			.name(request.getName())
 			.description(request.getDescription())
 			.phase(request.getPhase())
-			.dateCreated(new Date())
-			.dateModified(new Date())
+			.dateCreated(now)
+			.dateModified(now)
 			.deadline(request.getDeadline())
 			.board(boardService.getBoard(boardId))
 			.build();

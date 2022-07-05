@@ -2,6 +2,7 @@ package hu.feketefamily.fftodo.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import hu.feketefamily.fftodo.constants.TodoCommon;
+import hu.feketefamily.fftodo.pivot.LatestUpdateRecord;
 import lombok.*;
 
 import javax.persistence.*;
@@ -56,5 +57,79 @@ public class Board {
 	@JsonIgnore
 	public Long getTaskCount() {
 		return todos.stream().map(Todo::getTaskCount).reduce(0L, Long::sum);
+	}
+
+	@JsonIgnore
+	public Date getLatestBoardUpdated()
+	{
+		var compareVal = dateCreated.compareTo(dateModified);
+		if (compareVal < 0)
+			return dateModified;
+		else
+			return dateCreated;
+	}
+	@JsonIgnore
+	public LatestUpdateRecord.LatestUpdateEvent getLatestBoardEvent()
+	{
+		if (getLatestBoardUpdated().compareTo(dateModified) == 0)
+			return LatestUpdateRecord.LatestUpdateEvent.UPDATE_BOARD;
+		else
+			return LatestUpdateRecord.LatestUpdateEvent.ADD_BOARD;
+	}
+
+	@JsonIgnore
+	public Date getLatestUpdated()
+	{
+		var result = getLatestBoardUpdated();
+		if (todos.size() > 0) {
+			var temp = todos.stream().map(t -> t.getLatestUpdated()).max(Date::compareTo).get();
+			var compareVal = result.compareTo(temp);
+			if (compareVal < 0)
+				result = temp;
+		}
+		return result;
+	}
+	@JsonIgnore
+	public LatestUpdateRecord.LatestUpdateEvent getLatestEvent()
+	{
+		var result = getLatestBoardEvent();
+		if (todos.size() > 0) {
+			var temp1 = getLatestBoardUpdated();
+			var temp2 = todos.stream().map(t -> t.getLatestUpdated()).max(Date::compareTo).get();
+			var temp3 = todos.stream().filter(t -> t.getLatestUpdated() == temp2).findFirst().orElseThrow().getLatestEvent();
+			var compareVal = temp1.compareTo(temp2);
+			if (compareVal < 0)
+				result = temp3;
+		}
+		return result;
+	}
+
+	@JsonIgnore
+	public Long getAffectedId()
+	{
+		var result = id;
+		if (todos.size() > 0) {
+			var temp1 = getLatestBoardUpdated();
+			var temp2 = todos.stream().map(t -> t.getLatestUpdated()).max(Date::compareTo).get();
+			var temp3 = todos.stream().filter(t -> t.getLatestUpdated() == temp2).findFirst().orElseThrow().getId();
+			var compareVal = temp1.compareTo(temp2);
+			if (compareVal < 0)
+				result = temp3;
+		}
+		return result;
+	}
+	@JsonIgnore
+	public String getAffectedName()
+	{
+		var result = name;
+		if (todos.size() > 0) {
+			var temp1 = getLatestBoardUpdated();
+			var temp2 = todos.stream().map(t -> t.getLatestUpdated()).max(Date::compareTo).get();
+			var temp3 = todos.stream().filter(t -> t.getLatestUpdated() == temp2).findFirst().orElseThrow().getName();
+			var compareVal = temp1.compareTo(temp2);
+			if (compareVal < 0)
+				result = temp3;
+		}
+		return result;
 	}
 }

@@ -20,7 +20,7 @@ public class PivotService {
 	@Autowired
 	private TodoRepository todoRepository;
 
-	private PivotResponse resultReadinessPivot(Set<ReadinessRecord> records, String queryLabel)
+	private PivotResponse prepareResultReadinessPivot(Set records, String queryLabel)
 	{
 		var results = new PivotResponse<ReadinessRecord>();
 		var tempFields = results.extractFieldsFromType(ReadinessRecord.class);
@@ -58,10 +58,48 @@ public class PivotService {
 			else
 				r.setDoneTaskPercent(-1.0);
 		}
-		log.info("Created response object for pivot query with ID '{}'", queryLabel);
+		log.info("Created readiness response object for pivot query with ID '{}'", queryLabel);
 		log.debug("");
 		return results;
 	}
+
+	private PivotResponse prepareResultLatestUpdatePivot(Set records, String queryLabel)
+	{
+		var results = new PivotResponse<LatestUpdateRecord>();
+		var tempFields = results.extractFieldsFromType(LatestUpdateRecord.class);
+		var tempFieldOrder = LatestUpdateRecord.fieldOrder();
+		var tempRoles = LatestUpdateRecord.fieldRoles();
+		if (queryLabel.equals("")) queryLabel = "default-pivot-query";
+		results.setRecords(records);
+		results.setFields(tempFields);
+		results.setFieldOrder(tempFieldOrder);
+		results.setFieldDisplay(LatestUpdateRecord.fieldDisplay());
+		for (var f : tempFieldOrder)
+		{
+			PivotResponseFieldPair tempEntry = new PivotResponseFieldPair("","");
+			var oldVal = "";
+			for (var e : tempFields)
+			{
+				if (e.key == f) {
+					tempEntry = e;
+					oldVal = e.value;
+					break;
+				}
+			}
+			var tempVal = tempRoles.get(f);
+			if (!tempVal.equals("")) {
+				var newVal = oldVal + ',' + tempVal;
+				tempFields.remove(tempEntry);
+				tempEntry.setKey(f);
+				tempEntry.setValue(newVal);
+				tempFields.add(tempEntry);
+			}
+		}
+		log.info("Created latest update response object for pivot query with ID '{}'", queryLabel);
+		log.debug("");
+		return results;
+	}
+
 	public PivotResponse getBoardsReadiness() {
 		var temp=boardRepository.findAll();
 		var records = new HashSet<ReadinessRecord>();
@@ -75,9 +113,8 @@ public class PivotService {
 				.build());
 		}
 		log.info("Fetched {} Board(s) with readiness ({})", records.size(), TodoCommon.pivotLabel1);
-		return resultReadinessPivot(records, TodoCommon.pivotLabel1);
+		return prepareResultReadinessPivot(records, TodoCommon.pivotLabel1);
 	}
-
 	public PivotResponse getTodosReadiness() {
 		var temp=todoRepository.findAll();
 		var records = new HashSet<ReadinessRecord>();
@@ -91,6 +128,41 @@ public class PivotService {
 				.build());
 		}
 		log.info("Fetched {} Todo(s) with readiness ({})", records.size(), TodoCommon.pivotLabel2);
-		return resultReadinessPivot(records, TodoCommon.pivotLabel2);
+		return prepareResultReadinessPivot(records, TodoCommon.pivotLabel2);
+	}
+
+	public PivotResponse getBoardsLatestUpdate() {
+		var temp=boardRepository.findAll();
+		var records = new HashSet<LatestUpdateRecord>();
+		for (var e : temp)
+		{
+			records.add(LatestUpdateRecord.builder()
+				.id(e.getId())
+				.name(e.getName())
+				.latestUpdated(e.getLatestUpdated())
+				.latestEvent(e.getLatestEvent())
+				.affectedId(e.getAffectedId())
+				.affectedName(e.getAffectedName())
+				.build());
+		}
+		log.info("Fetched {} Board(s) with latest update ({})", records.size(), TodoCommon.pivotLabel3);
+		return prepareResultLatestUpdatePivot(records, TodoCommon.pivotLabel3);
+	}
+	public PivotResponse getTodosLatestUpdate() {
+		var temp=todoRepository.findAll();
+		var records = new HashSet<LatestUpdateRecord>();
+		for (var e : temp)
+		{
+			records.add(LatestUpdateRecord.builder()
+				.id(e.getId())
+				.name(e.getName())
+				.latestUpdated(e.getLatestUpdated())
+				.latestEvent(e.getLatestEvent())
+				.affectedId(e.getAffectedId())
+				.affectedName(e.getAffectedName())
+				.build());
+		}
+		log.info("Fetched {} Todo(s) with latest update ({})", records.size(), TodoCommon.pivotLabel4);
+		return prepareResultLatestUpdatePivot(records, TodoCommon.pivotLabel4);
 	}
 }
