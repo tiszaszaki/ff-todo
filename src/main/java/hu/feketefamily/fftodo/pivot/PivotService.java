@@ -140,7 +140,7 @@ public class PivotService {
 				.id(e.getId())
 				.name(e.getName())
 				.latestUpdated(e.getLatestUpdated())
-				.latestEvent(e.getLatestEvent())
+				.latestEvent(e.getLatestEvent().toString())
 				.affectedId(e.getAffectedId())
 				.affectedName(e.getAffectedName())
 				.build());
@@ -157,7 +157,7 @@ public class PivotService {
 				.id(e.getId())
 				.name(e.getName())
 				.latestUpdated(e.getLatestUpdated())
-				.latestEvent(e.getLatestEvent())
+				.latestEvent(e.getLatestEvent().toString())
 				.affectedId(e.getAffectedId())
 				.affectedName(e.getAffectedName())
 				.build());

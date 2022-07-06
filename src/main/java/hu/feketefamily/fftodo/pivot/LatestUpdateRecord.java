@@ -72,7 +72,7 @@ public class LatestUpdateRecord {
 	private Date latestUpdated;
 	@Column(name = "latest_event", updatable = false, nullable = false)
 	@PivotResponse.PivotFetch
-	private LatestUpdateEvent latestEvent;
+	private String latestEvent;
 	@Column(updatable = false, nullable = false)
 	@PivotResponse.PivotFetch
 	private Long affectedId;

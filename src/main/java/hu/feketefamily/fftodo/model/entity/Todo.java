@@ -1,5 +1,6 @@
 package hu.feketefamily.fftodo.model.entity;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.*;
@@ -8,6 +9,7 @@ import javax.validation.constraints.*;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import hu.feketefamily.fftodo.constants.TodoCommon;
 import hu.feketefamily.fftodo.pivot.LatestUpdateRecord;
+import hu.feketefamily.fftodo.pivot.PivotEntityEvent;
 import lombok.*;
 
 @Data
@@ -60,76 +62,53 @@ public class Todo {
 	}
 
 	@JsonIgnore
-	public Date getLatestTodoUpdated()
+	public List<PivotEntityEvent> getEvents()
 	{
-		var compareVal = dateCreated.compareTo(dateModified);
-		if (compareVal < 0)
-			return dateModified;
-		else
-			return dateCreated;
-	}
-	@JsonIgnore
-	public LatestUpdateRecord.LatestUpdateEvent getLatestTodoEvent()
-	{
-		if (getLatestTodoUpdated().compareTo(dateModified) == 0)
-			return LatestUpdateRecord.LatestUpdateEvent.UPDATE_TODO;
-		else
-			return LatestUpdateRecord.LatestUpdateEvent.ADD_TODO;
+		var result = new ArrayList<PivotEntityEvent>();
+		result.add(PivotEntityEvent.builder()
+			.type(LatestUpdateRecord.LatestUpdateEvent.ADD_TODO)
+			.time(dateCreated)
+			.affectedId(id)
+			.affectedName(name)
+			.build());
+		result.add(PivotEntityEvent.builder()
+			.type(LatestUpdateRecord.LatestUpdateEvent.UPDATE_TODO)
+			.time(dateModified)
+			.affectedId(id)
+			.affectedName(name)
+			.build());
+		if (tasks != null) {
+			for (var t : tasks) {
+				result.add(PivotEntityEvent.builder()
+					.type(t.getLatestEvent())
+					.time(t.getLatestUpdated())
+					.affectedId(t.getId())
+					.affectedName(t.getName())
+					.build());
+			}
+		}
+		return result;
 	}
 
 	@JsonIgnore
 	public Date getLatestUpdated()
 	{
-		var result = getLatestTodoUpdated();
-		if (tasks.size() > 0) {
-			var temp = tasks.stream().map(t -> t.getLatestUpdated()).max(Date::compareTo).get();
-			var compareVal = result.compareTo(temp);
-			if (compareVal < 0)
-				result = temp;
-		}
-		return result;
+		return getEvents().stream().map(e -> e.getTime()).max(Date::compareTo).orElseThrow();
 	}
 	@JsonIgnore
 	public LatestUpdateRecord.LatestUpdateEvent getLatestEvent()
 	{
-		var result = getLatestTodoEvent();
-		if (tasks.size() > 0) {
-			var temp1 = getLatestTodoUpdated();
-			var temp2 = tasks.stream().map(t -> t.getLatestUpdated()).max(Date::compareTo).get();
-			var temp3 = tasks.stream().filter(t -> t.getLatestUpdated() == temp2).findFirst().orElseThrow().getLatestEvent();
-			var compareVal = temp1.compareTo(temp2);
-			if (compareVal < 0)
-				result = temp3;
-		}
-		return result;
+		return getEvents().stream().filter(e -> e.getTime() == getLatestUpdated()).findFirst().orElseThrow().getType();
 	}
 
 	@JsonIgnore
 	public Long getAffectedId()
 	{
-		var result = id;
-		if (tasks.size() > 0) {
-			var temp1 = getLatestTodoUpdated();
-			var temp2 = tasks.stream().map(t -> t.getLatestUpdated()).max(Date::compareTo).get();
-			var temp3 = tasks.stream().filter(t -> t.getLatestUpdated() == temp2).findFirst().orElseThrow().getId();
-			var compareVal = temp1.compareTo(temp2);
-			if (compareVal < 0)
-				result = temp3;
-		}
-		return result;
+		return getEvents().stream().filter(e -> e.getTime() == getLatestUpdated()).findFirst().orElseThrow().getAffectedId();
 	}
 	@JsonIgnore
 	public String getAffectedName()
 	{
-		var result = name;
-		if (tasks.size() > 0) {
-			var temp1 = getLatestTodoUpdated();
-			var temp2 = tasks.stream().map(t -> t.getLatestUpdated()).max(Date::compareTo).get();
-			var temp3 = tasks.stream().filter(t -> t.getLatestUpdated() == temp2).findFirst().orElseThrow().getName();
-			var compareVal = temp1.compareTo(temp2);
-			if (compareVal < 0)
-				result = temp3;
-		}
-		return result;
+		return getEvents().stream().filter(e -> e.getTime() == getLatestUpdated()).findFirst().orElseThrow().getAffectedName();
 	}
 }

@@ -9,10 +9,12 @@ import javax.validation.constraints.Size;
 
 import hu.feketefamily.fftodo.constants.TodoCommon;
 import hu.feketefamily.fftodo.pivot.LatestUpdateRecord;
+import hu.feketefamily.fftodo.pivot.PivotEntityEvent;
 import lombok.*;
 
-import java.util.Calendar;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Data
 @Builder
@@ -48,20 +50,32 @@ public class Task {
 	private Todo todo;
 
 	@JsonIgnore
+	public List<PivotEntityEvent> getEvents()
+	{
+		var result = new ArrayList<PivotEntityEvent>();
+		result.add(PivotEntityEvent.builder()
+			.type(LatestUpdateRecord.LatestUpdateEvent.ADD_TASK)
+			.time(dateCreated)
+			.affectedId(id)
+			.affectedName(name)
+			.build());
+		result.add(PivotEntityEvent.builder()
+			.type(LatestUpdateRecord.LatestUpdateEvent.UPDATE_TASK)
+			.time(dateModified)
+			.affectedId(id)
+			.affectedName(name)
+			.build());
+		return result;
+	}
+
+	@JsonIgnore
 	public Date getLatestUpdated()
 	{
-		var compareVal = dateCreated.compareTo(dateModified);
-		if (compareVal < 0)
-			return dateModified;
-		else
-			return dateCreated;
+		return getEvents().stream().map(e -> e.getTime()).max(Date::compareTo).orElseThrow();
 	}
 	@JsonIgnore
 	public LatestUpdateRecord.LatestUpdateEvent getLatestEvent()
 	{
-		if (getLatestUpdated().compareTo(dateModified) == 0)
-			return LatestUpdateRecord.LatestUpdateEvent.UPDATE_TASK;
-		else
-			return LatestUpdateRecord.LatestUpdateEvent.ADD_TASK;
+		return getEvents().stream().filter(e -> e.getTime() == getLatestUpdated()).findFirst().orElseThrow().getType();
 	}
 }
