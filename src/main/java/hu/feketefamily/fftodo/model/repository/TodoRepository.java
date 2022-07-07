@@ -18,9 +18,9 @@ public interface TodoRepository extends JpaRepository<Todo, Long> {
 	@Modifying
 	@Query(
 		"INSERT INTO Todo (name, description, phase, dateCreated, dateModified, board)\n" +
-		"SELECT CONCAT(t.name,'" + TodoCommon.todoCloneSuffix + "'), t.description, :phase, " +
+		"SELECT :name_new, t.description, :phase, " +
 		":date_new, :date_new, (SELECT b FROM Board AS b WHERE b.id = :boardId) FROM Todo AS t WHERE t.id = :id\n")
-	int cloneById(@Param("id") Long id, @Param("phase") Integer phase, @Param("boardId") Long boardId, @Param("date_new") Date dateNew);
+	int cloneById(@Param("id") Long id, @Param("name_new") String nameNew, @Param("phase") Integer phase, @Param("boardId") Long boardId, @Param("date_new") Date dateNew);
 
 	@Modifying
 	@Query("UPDATE Todo t SET t.name = :name, t.description = :description, t.phase = :phase," +

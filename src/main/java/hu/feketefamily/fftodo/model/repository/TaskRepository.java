@@ -17,10 +17,10 @@ import java.util.List;
 public interface TaskRepository extends JpaRepository<Task, Long> {
 	@Modifying
 	@Query(
-		"INSERT INTO Task (name, done, todo)\n" +
-		"SELECT name, done, (SELECT t2 FROM Todo AS t2 WHERE t2.name = CONCAT(:name,'" + TodoCommon.todoCloneSuffix + "'))" +
-		"FROM Task AS t WHERE t.todo.id = :id")
-	int cloneByTodoId(@Param("id") Long todoId, @Param("name") String todoName);
+		"INSERT INTO Task (name, done, todo, dateCreated, dateModified)\n" +
+		"SELECT name, done, (SELECT t2 FROM Todo AS t2 WHERE t2.name = :name_new), " +
+		":date_new, :date_new FROM Task AS t WHERE t.todo.id = :id")
+	int cloneByTodoId(@Param("id") Long todoId, @Param("name_new") String todoNameNew, @Param("date_new") Date dateNew);
 
 	@Modifying
 	@Query("UPDATE Task t SET t.name = :name, t.done = :done," +

@@ -187,27 +187,26 @@ public class TodoService {
 		Todo result = null;
 		if (todoRepository.existsById(id)) {
 			Todo originalTodo = getTodo(id);
-			String originalTodoName = originalTodo.getName();
+			String originalTodoName = originalTodo.getName(), modifiedOriginalTodoName = originalTodoName;
 			Integer lengthOverrun = (originalTodoName.length() + TodoCommon.todoCloneSuffix.length()) - TodoCommon.maxTodoNameLength;
 			if (lengthOverrun > 0) {
 				Integer strTruncateIdx = TodoCommon.maxTodoNameLength / 2, lengthOverrunHalf;
-				String modifiedOriginalTodoName = "";
 				lengthOverrun += TodoCommon.fieldTruncateStr.length();
 				lengthOverrunHalf = lengthOverrun / 2;
+				modifiedOriginalTodoName = "";
 				modifiedOriginalTodoName += originalTodoName.substring(0, strTruncateIdx - lengthOverrunHalf);
 				modifiedOriginalTodoName += TodoCommon.fieldTruncateStr;
 				modifiedOriginalTodoName += originalTodoName.substring(strTruncateIdx + lengthOverrun - lengthOverrunHalf);
-				originalTodo.setName(modifiedOriginalTodoName);
-				log.warn("Truncated name of Todo with id {{}} from \"{}\" to \"{}\"", id, originalTodoName, modifiedOriginalTodoName);
+				log.warn("Truncated new name of Todo with id {{}} from \"{}\" to \"{}\"", id, originalTodoName, modifiedOriginalTodoName);
 			}
-			if (todoRepository.cloneById(id, phase, boardId, new Date()) >= 1) {
-				String clonedTodoName = originalTodo.getName() + TodoCommon.todoCloneSuffix;
-				Todo clonedTodo = getTodoByName(clonedTodoName);
+			modifiedOriginalTodoName += TodoCommon.todoCloneSuffix;
+			if (todoRepository.cloneById(id, modifiedOriginalTodoName, phase, boardId, new Date()) >= 1) {
+				Todo clonedTodo = getTodoByName(modifiedOriginalTodoName);
 				Integer results;
 
-				log.info("Successfully cloned Todo with id {{}} to phase {} on Board with id {{}}", id, phase, boardId);
+				log.info("Successfully cloned Todo with id {{}} and name \"{}\" to phase {} on Board with id {{}}", id, modifiedOriginalTodoName, phase, boardId);
 
-				if ((results = taskRepository.cloneByTodoId(id, originalTodo.getName())) >= 1) {
+				if ((results = taskRepository.cloneByTodoId(id, modifiedOriginalTodoName, new Date())) >= 1) {
 					log.info("Successfully cloned {} Tasks from Todo with id {{}}", results, id);
 				} else {
 					log.warn("No Tasks were cloned with from Todo with id {{}}", id);
