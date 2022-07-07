@@ -20,87 +20,35 @@ public class PivotService {
 	@Autowired
 	private TodoRepository todoRepository;
 
-	private PivotResponse prepareResultReadinessPivot(Set records, String queryLabel)
+	private PivotResponse<ReadinessRecord> prepareResultReadinessPivot(Set<ReadinessRecord> records, String queryLabel)
 	{
 		var results = new PivotResponse<ReadinessRecord>();
-		var tempFields = results.extractFieldsFromType(ReadinessRecord.class);
-		var tempFieldOrder = ReadinessRecord.fieldOrder();
-		var tempRoles = ReadinessRecord.fieldRoles();
 		if (queryLabel.equals("")) queryLabel = "default-pivot-query";
 		results.setRecords(records);
-		results.setFields(tempFields);
-		results.setFieldOrder(tempFieldOrder);
-		results.setFieldDisplay(ReadinessRecord.fieldDisplay());
-		for (var f : tempFieldOrder)
-		{
-			PivotResponseFieldPair tempEntry = new PivotResponseFieldPair("","");
-			var oldVal = "";
-			for (var e : tempFields)
-			{
-				if (e.key == f) {
-					tempEntry = e;
-					oldVal = e.value;
-					break;
-				}
-			}
-			var tempVal = tempRoles.get(f);
-			if (!tempVal.equals("")) {
-				var newVal = oldVal + ',' + tempVal;
-				tempFields.remove(tempEntry);
-				tempEntry.setKey(f);
-				tempEntry.setValue(newVal);
-				tempFields.add(tempEntry);
-			}
-		}
-		for (var r : results.getRecords()) {
-			if (r.getTaskCount() != 0)
-				r.setDoneTaskPercent((r.getDoneTaskCount() + 0.0) / r.getTaskCount());
-			else
-				r.setDoneTaskPercent(-1.0);
-		}
+		results.setFields(PivotResponse.extractFieldsFromType(ReadinessRecord.class));
+		results.setFieldOrder(PivotResponse.extractFieldOrderFromType(ReadinessRecord.class));
+		results.setFieldDisplay(PivotResponse.extractFieldDisplayFromType(ReadinessRecord.class));
+		for (var r : results.getRecords())
+			r.setDoneTaskPercent(ReadinessRecord.GetPercent(r.getDoneTaskCount(), r.getTaskCount()));
 		log.info("Created readiness response object for pivot query with ID '{}'", queryLabel);
 		log.debug("");
 		return results;
 	}
 
-	private PivotResponse prepareResultLatestUpdatePivot(Set records, String queryLabel)
+	private PivotResponse<LatestUpdateRecord> prepareResultLatestUpdatePivot(Set<LatestUpdateRecord> records, String queryLabel)
 	{
 		var results = new PivotResponse<LatestUpdateRecord>();
-		var tempFields = results.extractFieldsFromType(LatestUpdateRecord.class);
-		var tempFieldOrder = LatestUpdateRecord.fieldOrder();
-		var tempRoles = LatestUpdateRecord.fieldRoles();
 		if (queryLabel.equals("")) queryLabel = "default-pivot-query";
 		results.setRecords(records);
-		results.setFields(tempFields);
-		results.setFieldOrder(tempFieldOrder);
-		results.setFieldDisplay(LatestUpdateRecord.fieldDisplay());
-		for (var f : tempFieldOrder)
-		{
-			PivotResponseFieldPair tempEntry = new PivotResponseFieldPair("","");
-			var oldVal = "";
-			for (var e : tempFields)
-			{
-				if (e.key == f) {
-					tempEntry = e;
-					oldVal = e.value;
-					break;
-				}
-			}
-			var tempVal = tempRoles.get(f);
-			if (!tempVal.equals("")) {
-				var newVal = oldVal + ',' + tempVal;
-				tempFields.remove(tempEntry);
-				tempEntry.setKey(f);
-				tempEntry.setValue(newVal);
-				tempFields.add(tempEntry);
-			}
-		}
+		results.setFields(PivotResponse.extractFieldsFromType(LatestUpdateRecord.class));
+		results.setFieldOrder(PivotResponse.extractFieldOrderFromType(LatestUpdateRecord.class));
+		results.setFieldDisplay(PivotResponse.extractFieldDisplayFromType(LatestUpdateRecord.class));
 		log.info("Created latest update response object for pivot query with ID '{}'", queryLabel);
 		log.debug("");
 		return results;
 	}
 
-	public PivotResponse getBoardsReadiness() {
+	public PivotResponse<ReadinessRecord> getBoardsReadiness() {
 		var temp=boardRepository.findAll();
 		var records = new HashSet<ReadinessRecord>();
 		for (var e : temp)
@@ -115,7 +63,7 @@ public class PivotService {
 		log.info("Fetched {} Board(s) with readiness ({})", records.size(), TodoCommon.pivotLabel1);
 		return prepareResultReadinessPivot(records, TodoCommon.pivotLabel1);
 	}
-	public PivotResponse getTodosReadiness() {
+	public PivotResponse<ReadinessRecord> getTodosReadiness() {
 		var temp=todoRepository.findAll();
 		var records = new HashSet<ReadinessRecord>();
 		for (var e : temp)
@@ -131,7 +79,7 @@ public class PivotService {
 		return prepareResultReadinessPivot(records, TodoCommon.pivotLabel2);
 	}
 
-	public PivotResponse getBoardsLatestUpdate() {
+	public PivotResponse<LatestUpdateRecord> getBoardsLatestUpdate() {
 		var temp=boardRepository.findAll();
 		var records = new HashSet<LatestUpdateRecord>();
 		for (var e : temp)
@@ -148,7 +96,7 @@ public class PivotService {
 		log.info("Fetched {} Board(s) with latest update ({})", records.size(), TodoCommon.pivotLabel3);
 		return prepareResultLatestUpdatePivot(records, TodoCommon.pivotLabel3);
 	}
-	public PivotResponse getTodosLatestUpdate() {
+	public PivotResponse<LatestUpdateRecord> getTodosLatestUpdate() {
 		var temp=todoRepository.findAll();
 		var records = new HashSet<LatestUpdateRecord>();
 		for (var e : temp)
