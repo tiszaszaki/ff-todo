@@ -29,25 +29,25 @@ public class LatestUpdateRecord {
 
 	@Id
 	@Column(updatable = false, nullable = false)
-	@PivotResponse.PivotFetch(order = 1, role = "Key", display = "ID")
+	@PivotFetch(order = 1, role = "Key", display = "ID")
 	private Long id;
 	@NotBlank
 	@Size(max = TodoCommon.maxBoardNameLength)
 	@Column(updatable = false, nullable = false, unique = true)
-	@PivotResponse.PivotFetch(order = 2, role = "Key", display = "Name")
+	@PivotFetch(order = 2, role = "Key", display = "Name")
 	private String name;
 	@PastOrPresent
 	@Column(name = "latest_updated", updatable = false, nullable = false)
 	@Temporal(TemporalType.TIMESTAMP)
-	@PivotResponse.PivotFetch(order = 3, display = "Date of latest event")
+	@PivotFetch(order = 3, display = "Date of latest event")
 	private Date latestUpdated;
 	@Column(name = "latest_event", updatable = false, nullable = false)
-	@PivotResponse.PivotFetch(order = 4, display = "Type of latest event")
+	@PivotFetch(order = 4, display = "Type of latest event")
 	private String latestEvent;
 	@Column(updatable = false, nullable = false)
-	@PivotResponse.PivotFetch(order = 5, display = "ID of entity affected")
+	@PivotFetch(order = 5, display = "ID of entity affected")
 	private Long affectedId;
 	@Column(updatable = false, nullable = false)
-	@PivotResponse.PivotFetch(order = 6, display = "Name of entity affected")
+	@PivotFetch(order = 6, display = "Name of entity affected")
 	private String affectedName;
 }

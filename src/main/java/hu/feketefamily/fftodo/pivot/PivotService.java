@@ -25,9 +25,9 @@ public class PivotService {
 		var results = new PivotResponse<ReadinessRecord>();
 		if (queryLabel.equals("")) queryLabel = "default-pivot-query";
 		results.setRecords(records);
-		results.setFields(PivotResponse.extractFieldsFromType(ReadinessRecord.class));
-		results.setFieldOrder(PivotResponse.extractFieldOrderFromType(ReadinessRecord.class));
-		results.setFieldDisplay(PivotResponse.extractFieldDisplayFromType(ReadinessRecord.class));
+		results.setFields(PivotResponseTools.extractFieldsFromType(ReadinessRecord.class));
+		results.setFieldOrder(PivotResponseTools.extractFieldOrderFromType(ReadinessRecord.class));
+		results.setFieldDisplay(PivotResponseTools.extractFieldDisplayFromType(ReadinessRecord.class));
 		for (var r : results.getRecords())
 			r.setDoneTaskPercent(ReadinessRecord.GetPercent(r.getDoneTaskCount(), r.getTaskCount()));
 		log.info("Created readiness response object for pivot query with ID '{}'", queryLabel);
@@ -40,9 +40,9 @@ public class PivotService {
 		var results = new PivotResponse<LatestUpdateRecord>();
 		if (queryLabel.equals("")) queryLabel = "default-pivot-query";
 		results.setRecords(records);
-		results.setFields(PivotResponse.extractFieldsFromType(LatestUpdateRecord.class));
-		results.setFieldOrder(PivotResponse.extractFieldOrderFromType(LatestUpdateRecord.class));
-		results.setFieldDisplay(PivotResponse.extractFieldDisplayFromType(LatestUpdateRecord.class));
+		results.setFields(PivotResponseTools.extractFieldsFromType(LatestUpdateRecord.class));
+		results.setFieldOrder(PivotResponseTools.extractFieldOrderFromType(LatestUpdateRecord.class));
+		results.setFieldDisplay(PivotResponseTools.extractFieldDisplayFromType(LatestUpdateRecord.class));
 		log.info("Created latest update response object for pivot query with ID '{}'", queryLabel);
 		log.debug("");
 		return results;
