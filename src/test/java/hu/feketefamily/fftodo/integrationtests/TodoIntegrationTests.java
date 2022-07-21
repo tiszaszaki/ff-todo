@@ -396,7 +396,7 @@ class TodoIntegrationTests {
 				.name("")
 				.description(VALID_DESCRIPTION)
 				.build()),
-			Arguments.of(Todo.builder() // description with invalid length
+			Arguments.of(Todo.builder() // name with invalid length
 				.name("a".repeat(TodoCommon.maxTodoNameLength + 1))
 				.description(VALID_DESCRIPTION)
 				.build()),

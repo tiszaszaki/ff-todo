@@ -237,7 +237,7 @@ public class BoardIntegrationTests {
 				.description("a".repeat(TodoCommon.maxBoardDescriptionLength + 1))
 				.author(VALID_AUTHOR)
 				.build()),
-			Arguments.of(Board.builder() // author with invalid length
+			Arguments.of(Board.builder() // author's name with invalid length
 				.name(VALID_NAME)
 				.description(VALID_DESCRIPTION)
 				.author("a".repeat(TodoCommon.maxBoardAuthorLength + 1))

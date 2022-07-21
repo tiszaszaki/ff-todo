@@ -264,7 +264,7 @@ class TaskIntegrationTests {
 			Arguments.of(Task.builder() // blank name
 				.name("")
 				.build()),
-			Arguments.of(Task.builder() // description with invalid length
+			Arguments.of(Task.builder() // name with invalid length
 				.name("a".repeat(TodoCommon.maxTaskNameLength + 1))
 				.build())
 		);
